@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script src="assets/sentinel.js"></script>
+
+    <title>Direct &amp; WhatsApp Download Settings | MovieStream (සිංහල උපසිරැසි)</title>
+    <meta name="description" content="Download HD movies and complete TV series with Sinhala subtitles directly via encrypted Cloud CDN, 1DM/IDM, or WhatsApp Data-Saver Bot on MovieStream.top." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="canonical" href="https://moviestream.top/download.html" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MovieStream" />
+    <meta property="og:url" content="https://moviestream.top/download.html" />
+    <meta property="og:title" content="Direct &amp; WhatsApp Download Center | MovieStream" />
+    <meta property="og:description" content="Fast encrypted Direct Download (1080p/720p/480p), 1DM/IDM support &amp; WhatsApp Bot delivery with Sinhala Subtitles." />
+    <meta property="og:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
+
+    <link rel="icon" href="/favicon.ico?v=10" sizes="any" />
+    <link rel="shortcut icon" href="/favicon.ico?v=10" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png?v=10" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png?v=10" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png?v=10" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=10" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" /></noscript>
+
+    <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+    <header class="ms-header">
+        <div class="ms-container ms-header-inner">
+            <a href="index.html" class="ms-brand" aria-label="MovieStream Home">
+                <img src="images/logo-sm.webp" alt="MovieStream Logo" width="36" height="36" class="ms-brand-logo" />
+                <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
+            </a>
+
+            <nav class="ms-nav" aria-label="Primary Navigation">
+                <a href="index.html" class="ms-nav-link">Home</a>
+                <a href="category.html?cat=movies" class="ms-nav-link">Movies</a>
+                <a href="category.html?cat=tvshows" class="ms-nav-link">TV Shows</a>
+                <a href="category.html?cat=complete" class="ms-nav-link">Complete Series</a>
+                <a href="category.html?cat=sinhala" class="ms-nav-link">Sinhala Movies</a>
+                <a href="category.html" class="ms-nav-link">All Categories</a>
+            </nav>
+
+            <div class="ms-header-actions">
+                <button type="button" onclick="MovieStream.openSearch()" class="ms-search-pill" aria-label="Search movies and TV shows">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <span style="flex:1;text-align:left;">Search movies...</span>
+                    <kbd class="ms-kbd">Ctrl+K</kbd>
+                </button>
+                <a href="index.html" class="ms-btn ms-btn-outline" style="padding:8px 14px;font-size:0.8rem;">&larr; Home</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="ms-container ms-dl-shell">
+        <nav aria-label="Breadcrumb" style="font-size:0.82rem;color:var(--ms-text-muted);margin-bottom:14px;display:flex;align-items:center;gap:8px;font-weight:600;">
+            <a href="index.html" style="color:var(--ms-red-dark);">Home</a>
+            <span>/</span>
+            <a href="category.html" style="color:var(--ms-red-dark);">Catalog</a>
+            <span>/</span>
+            <span>Download Settings</span>
+        </nav>
+
+        <!-- Movie Header Info Card -->
+        <section class="ms-dl-card" style="margin-bottom:20px;">
+            <div style="display:flex;flex-wrap:wrap;gap:22px;align-items:flex-start;">
+                <img id="dl_poster" src="images/seo-banner.jpg" alt="Movie Poster" width="140" height="210"
+                    style="width:130px;height:195px;object-fit:cover;border-radius:14px;border:1px solid var(--ms-border);flex-shrink:0;"
+                    onerror="this.onerror=null;this.src='https://moviestream.top/images/seo-banner.jpg?v=8'" />
+                <div style="flex:1;min-width:240px;">
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:10px;">
+                        <span class="ms-chip active" style="font-size:11px;padding:4px 10px;">ENCRYPTED CLOUD CDN</span>
+                        <span id="dl_year_badge" class="ms-chip" style="font-size:11px;padding:4px 10px;">2026</span>
+                        <span id="dl_source_badge" class="ms-chip" style="font-size:11px;padding:4px 10px;">Sinhala Subtitles</span>
+                    </div>
+                    <h1 id="dl_movie_title" style="margin:0 0 8px;font-size:clamp(1.3rem,2.5vw,1.85rem);font-weight:900;line-height:1.2;">Loading Movie Details...</h1>
+                    <p id="dl_movie_desc" style="margin:0 0 14px;font-size:0.9rem;color:var(--ms-text-muted);">Prepare direct high-speed download mirrors, configure preferred quality, or request via WhatsApp Data-Saver Bot.</p>
+
+                    <div id="dl_series_picker" class="hidden" style="background:var(--ms-surface-alt);border:1px solid var(--ms-border);border-radius:12px;padding:12px;margin-bottom:14px;">
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
+                            <div class="ms-field">
+                                <label for="dl_season_select">Season</label>
+                                <select id="dl_season_select" class="ms-select"></select>
+                            </div>
+                            <div class="ms-field">
+                                <label for="dl_episode_select">Episode</label>
+                                <select id="dl_episode_select" class="ms-select"></select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                        <button type="button" id="dl_watch_btn" class="ms-btn ms-btn-primary">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Watch Online (Inline)</span>
+                        </button>
+                        <button type="button" id="dl_report_btn" class="ms-btn ms-btn-outline">
+                            <span>Report Broken Link</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Inline Player Preview (Hidden until Watch clicked) -->
+            <div id="dl_player_wrap" class="hidden" style="margin-top:20px;">
+                <div class="ms-player-box">
+                    <video id="dl_video_player" controls playsinline class="hidden"></video>
+                    <iframe id="dl_iframe_player" allowfullscreen class="hidden" title="Stream Player"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- Download Settings & Quality Selection Grid -->
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:20px;align-items:start;">
+
+            <!-- Column 1: Quality Mirrors + Direct Download Controls -->
+            <section class="ms-dl-card">
+                <h2 style="margin:0 0 6px;font-size:1.15rem;font-weight:800;">1. Select Video Quality &amp; Mirror</h2>
+                <p style="margin:0 0 14px;font-size:0.83rem;color:var(--ms-text-muted);">Choose resolution, configure filename/IDM settings, and start encrypted direct download.</p>
+
+                <!-- Saved Preferences Settings Box -->
+                <div style="background:var(--ms-surface-alt);border:1px solid var(--ms-border);border-radius:14px;padding:12px;margin-bottom:16px;">
+                    <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--ms-text-muted);margin-bottom:8px;">Download Preferences (Saved)</div>
+                    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                        <div class="ms-field">
+                            <label for="pref_default_quality">Auto Preferred Quality</label>
+                            <select id="pref_default_quality" class="ms-select">
+                                <option value="auto">Auto (Best Match)</option>
+                                <option value="1080p">1080p Full HD</option>
+                                <option value="720p">720p HD (Balanced)</option>
+                                <option value="480p">480p SD (Data Saver)</option>
+                            </select>
+                        </div>
+                        <div class="ms-field">
+                            <label for="pref_dl_engine">Download Engine</label>
+                            <select id="pref_dl_engine" class="ms-select">
+                                <option value="proxy">Stealth Proxy (IDM / Browser)</option>
+                                <option value="1dm">1DM Android / Multi-Thread</option>
+                                <option value="direct">Direct Mirror Fallback</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quality Options List -->
+                <div id="dl_quality_list" style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;">
+                    <div class="ms-skeleton" style="height:56px;border-radius:12px;"></div>
+                    <div class="ms-skeleton" style="height:56px;border-radius:12px;"></div>
+                </div>
+
+                <!-- Output Filename Preview -->
+                <div style="background:var(--ms-blue-soft);border:1px solid #bfdbfe;border-radius:12px;padding:10px 12px;margin-bottom:14px;">
+                    <div style="font-size:11px;font-weight:700;color:var(--ms-blue);margin-bottom:2px;">Output Filename:</div>
+                    <div id="dl_filename_preview" style="font-family:monospace;font-size:0.8rem;color:var(--ms-text);word-break:break-all;font-weight:700;">Movie MovieStream.mp4</div>
+                </div>
+
+                <!-- Progress Monitor (Visible during download) -->
+                <div id="dl_progress_box" class="hidden" style="background:var(--ms-surface-alt);border:1px solid var(--ms-border);border-radius:14px;padding:14px;margin-bottom:14px;">
+                    <div style="display:flex;justify-content:space-between;font-size:0.82rem;font-weight:700;margin-bottom:6px;">
+                        <span id="dl_progress_status">Connecting to Cloud Server...</span>
+                        <span id="dl_progress_pct" style="color:var(--ms-blue);">0%</span>
+                    </div>
+                    <div class="ms-progress-track"><div id="dl_progress_fill" class="ms-progress-fill"></div></div>
+                    <div id="dl_manual_fallback" style="margin-top:10px;font-size:0.78rem;color:var(--ms-text-muted);">
+                        Not starting? <a id="dl_manual_link" href="#" style="color:var(--ms-blue);font-weight:800;text-decoration:underline;">Click manual mirror link</a>
+                    </div>
+                </div>
+
+                <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                    <button type="button" id="dl_start_btn" class="ms-btn ms-btn-blue" style="flex:1;padding:14px 18px;font-size:0.95rem;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+                        <span>Start Direct Download</span>
+                    </button>
+                    <button type="button" id="dl_copy_btn" class="ms-btn ms-btn-outline" title="Copy Download Link for IDM / 1DM">
+                        <span>Copy Link</span>
+                    </button>
+                </div>
+
+                <p style="margin:12px 0 0;font-size:0.76rem;color:var(--ms-text-subtle);">
+                    💡 Tip: For maximum speed on mobile use <strong>1DM / ADM</strong>; on PC use <strong>IDM</strong> with our encrypted cloud tunnel.
+                </p>
+            </section>
+
+            <!-- Column 2: WhatsApp Bot & 2GB+ Settings -->
+            <section class="ms-dl-card">
+                <h2 style="margin:0 0 6px;font-size:1.15rem;font-weight:800;">2. WhatsApp Bot Delivery</h2>
+                <p style="margin:0 0 14px;font-size:0.83rem;color:var(--ms-text-muted);">Data-saver delivery directly to your WhatsApp chat using a secure one-time 6-digit PIN.</p>
+
+                <div id="dl_2gb_warning" class="hidden" style="background:#fefce8;border:1px solid #fde047;color:#854d0e;border-radius:12px;padding:12px;font-size:0.82rem;margin-bottom:14px;font-weight:600;">
+                    ⚠️ <strong>2GB+ Large File Notice:</strong> Files larger than 2GB may take extra processing time over WhatsApp. Choosing 720p HD is recommended for fast WhatsApp delivery.
+                </div>
+
+                <div style="background:var(--ms-green-soft);border:1px solid #bbf7d0;border-radius:14px;padding:14px;margin-bottom:16px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span style="font-size:0.82rem;font-weight:800;color:var(--ms-green);">Selected Quality for Bot</span>
+                        <span id="wa_selected_badge" class="ms-chip" style="background:#ffffff;color:var(--ms-green);border-color:#86efac;font-size:11px;">720p HD</span>
+                    </div>
+                    <div style="font-size:0.8rem;color:#166534;">
+                        WhatsApp Bot will verify your PIN &amp; deliver the file directly to your chat with Sinhala subtitles.
+                    </div>
+                </div>
+
+                <div id="dl_telegram_box" class="hidden" style="background:#eff6ff;border:1px solid #93c5fd;border-radius:14px;padding:14px;margin-bottom:14px;">
+                    <div style="font-weight:800;font-size:0.85rem;color:#1e40af;margin-bottom:6px;">Sinhala Direct Source Ready</div>
+                    <p style="margin:0 0 10px;font-size:0.8rem;color:#1e3a8a;">Open this movie directly or send via WhatsApp Bot below.</p>
+                    <a id="dl_tg_open_link" href="#" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-blue" style="width:100%;">Open Direct Stream</a>
+                </div>
+
+                <button type="button" id="dl_wa_send_btn" class="ms-btn ms-btn-green" style="width:100%;padding:14px 18px;font-size:0.95rem;margin-bottom:12px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                    <span>Send via WhatsApp Bot</span>
+                </button>
+
+                <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--ms-border);font-size:0.78rem;color:var(--ms-text-muted);">
+                    <span>Official Channel Updates</span>
+                    <a data-social-key="whatsappChannel" href="https://whatsapp.com/channel/0029Vb8TOKv3LdQTui689i0W" target="_blank" rel="noopener noreferrer" style="color:var(--ms-green);font-weight:800;">Join WhatsApp Channel &rsaquo;</a>
+                </div>
+
+                <!-- Adsterra Banner Slot -->
+                <div class="ms-ad-slot">
+                    <span style="font-size:10px;font-weight:700;color:var(--ms-text-subtle);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:4px;">Sponsored</span>
+                    <script async="async" data-cfasync="false" src="https://pl31408761.profitableratecpmnetwork.com/7571eb086837a548fa62ae1cc60dbfed/invoke.js"></script>
+                    <div id="container-7571eb086837a548fa62ae1cc60dbfed"></div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Spotlight Search Modal -->
+    <div id="ms_search_overlay" class="ms-modal-backdrop hidden" onclick="if(event.target===this)MovieStream.closeSearch()">
+        <div class="ms-modal-panel" style="max-width:780px;padding:22px;">
+            <div style="display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ms-border);padding-bottom:12px;margin-bottom:12px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <input id="ms_spotlight_input" type="search" oninput="MovieStream.liveSearch(this.value)" placeholder="Search movies, TV series, Sinhala movies..." style="flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--ms-text);" />
+                <button type="button" onclick="MovieStream.closeSearch()" class="ms-btn ms-btn-outline" style="padding:6px 12px;">Esc</button>
+            </div>
+            <p id="ms_search_status" style="margin:0 0 14px;font-size:0.84rem;color:var(--ms-text-muted);">Type at least 2 characters to search across MovieStream Catalog &amp; Sinhala Movies...</p>
+            <div id="ms_search_results" class="ms-grid"></div>
+        </div>
+    </div>
+
+    <!-- Clean White Footer with 6 3D Tactile Social Media Badges -->
+    <footer class="ms-footer">
+        <div class="ms-container">
+            <div class="ms-footer-grid">
+                <div>
+                    <div class="ms-brand" style="margin-bottom:10px;">
+                        <img src="images/logo-sm.webp" alt="MovieStream Logo" width="32" height="32" class="ms-brand-logo" />
+                        <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
+                    </div>
+                    <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">Sri Lanka's fastest HD Movie &amp; TV Series portal with Sinhala Subtitles, Direct encrypted CDN downloads, and instant WhatsApp delivery.</p>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Browse</h3>
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:0.83rem;color:var(--ms-text-muted);">
+                        <a href="category.html?cat=movies">All Movies</a>
+                        <a href="category.html?cat=tvshows">TV Series</a>
+                        <a href="category.html?cat=complete">Complete Series</a>
+                        <a href="category.html?cat=sinhala">Sinhala Movies</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Popular Languages</h3>
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:0.83rem;color:var(--ms-text-muted);">
+                        <a href="category.html?lang=english">English</a>
+                        <a href="category.html?lang=tamil">Tamil</a>
+                        <a href="category.html?lang=hindi">Hindi</a>
+                        <a href="category.html?lang=korea">Korean / K-Drama</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 12px;font-size:0.85rem;font-weight:800;">Connect With Us</h3>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                        <a data-social-key="facebook" href="https://www.facebook.com/share/1DxNnVeAsr/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-3d-btn social-3d-fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg></a>
+                        <a data-social-key="whatsappChannel" href="https://whatsapp.com/channel/0029Vb8TOKv3LdQTui689i0W" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Channel" class="social-3d-btn social-3d-wa"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.391c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969s-4.453-9.984-9.969-9.984zm5.422 14.125c-.234.656-1.359 1.25-1.875 1.328-.484.078-1.109.109-1.781-.109-.422-.141-.953-.312-1.641-.609-2.859-1.234-4.719-4.125-4.859-4.312-.141-.188-1.156-1.547-1.156-2.953s.734-2.094 1-2.375c.266-.281.578-.359.766-.359s.391.016.562.016c.188 0 .422-.062.656.516.25.594.844 2.062.922 2.219.078.156.125.328.016.547-.109.219-.156.344-.312.531-.156.188-.328.422-.469.562-.156.156-.312.328-.141.625.172.297.766 1.266 1.641 2.047 1.125 1 2.078 1.312 2.375 1.469.297.156.469.125.641-.078.172-.203.75-.875.953-1.172.203-.297.406-.25.672-.141.266.109 1.719.812 2.016.953.297.141.484.219.562.344.078.125.078.734-.156 1.391z"/></svg></a>
+                        <a data-social-key="linkedin" href="https://www.linkedin.com/in/kaveesha-theekshana-664290299" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-3d-btn social-3d-li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
+                        <a data-social-key="instagram" href="https://www.instagram.com/kaveez.exe" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-3d-btn social-3d-ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg></a>
+                        <a data-social-key="threads" href="https://www.threads.com/@kaveez.exe" target="_blank" rel="noopener noreferrer" aria-label="Threads" class="social-3d-btn social-3d-th"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32l-1.757-1.18c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></a>
+                        <a data-social-key="tiktok" href="https://www.tiktok.com/@kaveez.exe" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-3d-btn social-3d-tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:26px;padding-top:16px;border-top:1px solid var(--ms-border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:0.78rem;color:var(--ms-text-subtle);">
+                <span>&copy; 2026 MovieStream.top &mdash; Protected by KaveezCloud.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Native Mobile App Bottom Tab Navigation -->
+    <nav class="ms-mobile-tabbar" aria-label="Mobile Navigation">
+        <a href="index.html" class="ms-mob-tab" data-mob-tab="home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="category.html?cat=complete" class="ms-mob-tab" data-mob-tab="explore">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            <span>Explore</span>
+        </a>
+        <button type="button" onclick="MovieStream.openSearch()" class="ms-mob-tab" data-mob-tab="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span>Search</span>
+        </button>
+        <a href="category.html?cat=sinhala" class="ms-mob-tab" data-mob-tab="sinhala">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <span>Sinhala</span>
+        </a>
+        <a href="index.html#continue-watching-section" class="ms-mob-tab" data-mob-tab="recent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Recent</span>
+        </a>
+    </nav>
+
+    <script defer src="assets/catalog-fallback.js"></script>
+    <script defer src="assets/app-core.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (window.__KV_BLOCKED) return;
+            const MS = window.MovieStream;
+            const params = new URLSearchParams(window.location.search);
+
+            let state = {};
+            try {
+                state = JSON.parse(sessionStorage.getItem("ms_pending_download") || "{}");
+            } catch (_) { state = {}; }
+
+            const urlParam = params.get("url") || state.url || "";
+            const titleParam = params.get("title") || state.title || "Selected Movie";
+            const sourceParam = params.get("source") || state.source || (urlParam.includes("t.me") ? "sinhala" : "cs");
+            const imgParam = params.get("img") || state.imgUrl || "https://moviestream.top/images/seo-banner.jpg?v=8";
+
+            const stateData = {
+                title: titleParam,
+                url: urlParam,
+                movieUrl: state.movieUrl || urlParam,
+                source: sourceParam,
+                imgUrl: imgParam,
+                year: state.year || "",
+                season: params.get("season") || state.season || "",
+                episode: params.get("episode") || state.episode || "",
+                links: Array.isArray(state.download_links) ? state.download_links : [],
+                seasons: [],
+                selectedUrl: state.directLink || "",
+                selectedQuality: "720p HD"
+            };
+
+            const titleEl = document.getElementById("dl_movie_title");
+            const posterEl = document.getElementById("dl_poster");
+            const yearEl = document.getElementById("dl_year_badge");
+            const sourceEl = document.getElementById("dl_source_badge");
+            const descEl = document.getElementById("dl_movie_desc");
+            const prefQuality = document.getElementById("pref_default_quality");
+            const prefEngine = document.getElementById("pref_dl_engine");
+
+            prefQuality.value = localStorage.getItem("ms_dl_pref_quality") || "auto";
+            prefEngine.value = localStorage.getItem("ms_dl_pref_engine") || "proxy";
+            prefQuality.onchange = () => {
+                localStorage.setItem("ms_dl_pref_quality", prefQuality.value);
+                renderQualityOptions(stateData.links);
+            };
+            prefEngine.onchange = () => localStorage.setItem("ms_dl_pref_engine", prefEngine.value);
+
+            titleEl.textContent = MS.cleanDisplayTitle(stateData.title);
+            posterEl.src = MS.optimizePosterUrl(stateData.imgUrl);
+            if (stateData.year) yearEl.textContent = stateData.year;
+            sourceEl.textContent = stateData.source === "sinhala" ? "Sinhala Movies" : "Sinhala Subtitles";
+
+            function updateFilenamePreview() {
+                const isTv = Boolean(stateData.season || stateData.episode || (stateData.seasons && stateData.seasons.length));
+                const fn = MS.getCleanDownloadFileName(stateData.title, stateData.season, stateData.episode, isTv, stateData.selectedUrl);
+                document.getElementById("dl_filename_preview").textContent = fn;
+            }
+
+            function renderQualityOptions(links) {
+                const listEl = document.getElementById("dl_quality_list");
+                const filtered = (links || []).map((l) => {
+                    const raw = MS.unwrapNestedDownloadUrl(l.real_direct_download_url || l.url || l.link || l.cinesubz_link || "");
+                    const label = l.quality_info || l.quality || l.name || "Direct HD";
+                    return { label, raw, size: l.size || MS.parseQualitySize(label) };
+                }).filter(x => x.raw && !x.raw.includes("CineSubzAdmin"));
+
+                if (!filtered.length && stateData.source === "sinhala" && stateData.url) {
+                    const tgRaw = MS.unwrapNestedDownloadUrl(stateData.url);
+                    filtered.push(
+                        { label: "480p SD • Data Saver", raw: tgRaw, size: "~450 MB" },
+                        { label: "720p HD • Recommended", raw: tgRaw, size: "~950 MB" },
+                        { label: "1080p Full HD • Master", raw: tgRaw, size: "~1.8 GB" }
+                    );
+                }
+
+                if (!filtered.length) {
+                    listEl.innerHTML = `<div style="padding:14px;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;color:#b91c1c;font-size:0.84rem;font-weight:600;">No direct mirror links resolved automatically. Use WhatsApp Bot delivery on the right or try Watch Online.</div>`;
+                    updateFilenamePreview();
+                    return;
+                }
+
+                const pref = prefQuality.value;
+                let defaultIdx = 0;
+                if (pref !== "auto") {
+                    const matchIdx = filtered.findIndex(x => x.label.toLowerCase().includes(pref));
+                    if (matchIdx >= 0) defaultIdx = matchIdx;
+                }
+
+                listEl.innerHTML = filtered.map((item, idx) => `
+                    <button type="button" class="ms-quality-card ${idx === defaultIdx ? "selected" : ""}" data-dl-idx="${idx}">
+                        <div>
+                            <div style="font-weight:800;font-size:0.9rem;color:var(--ms-text);">${MS.escapeHtml(item.label)}</div>
+                            <div style="font-size:0.75rem;color:var(--ms-text-muted);">Encrypted CDN Tunnel &bull; Resumable</div>
+                        </div>
+                        <span class="ms-chip ${idx === defaultIdx ? "active" : ""}">${MS.escapeHtml(item.size)}</span>
+                    </button>
+                `).join("");
+
+                const selectIdx = (idx) => {
+                    const chosen = filtered[idx];
+                    if (!chosen) return;
+                    listEl.querySelectorAll(".ms-quality-card").forEach((c, ci) => c.classList.toggle("selected", ci === idx));
+                    stateData.selectedUrl = chosen.raw;
+                    stateData.selectedQuality = chosen.label;
+                    document.getElementById("wa_selected_badge").textContent = `${chosen.label}`;
+                    const warnEl = document.getElementById("dl_2gb_warning");
+                    if (warnEl) warnEl.classList.toggle("hidden", !MS.isSizeOver2GB(chosen.size + " " + chosen.label));
+                    updateFilenamePreview();
+                };
+
+                listEl.querySelectorAll(".ms-quality-card").forEach((btn) => {
+                    btn.onclick = () => selectIdx(Number(btn.getAttribute("data-dl-idx")));
+                });
+                selectIdx(defaultIdx);
+            }
+
+            // Load live movie/episode details when coming via URL or lacking links
+            if (stateData.source !== "sinhala" && (stateData.movieUrl || stateData.url)) {
+                try {
+                    const data = await MS.fetchCineSubzAPI(`/api/details?url=${encodeURIComponent(stateData.movieUrl || stateData.url)}`);
+                    const details = data?.details || data || {};
+                    if (details.title) {
+                        stateData.title = details.title;
+                        titleEl.textContent = MS.cleanDisplayTitle(details.title);
+                    }
+                    if (details.description) descEl.textContent = details.description;
+                    if (details.poster || details.image) posterEl.src = MS.optimizePosterUrl(details.poster || details.image);
+
+                    if (Array.isArray(details.seasons) && details.seasons.length) {
+                        stateData.seasons = details.seasons;
+                        const picker = document.getElementById("dl_series_picker");
+                        const sSel = document.getElementById("dl_season_select");
+                        const eSel = document.getElementById("dl_episode_select");
+                        picker.classList.remove("hidden");
+
+                        sSel.innerHTML = details.seasons.map((s, si) => `<option value="${si}">${MS.escapeHtml(s.name || "Season " + (si + 1))}</option>`).join("");
+                        const populateEps = async (sIdx) => {
+                            const season = details.seasons[sIdx];
+                            const eps = season?.episodes || [];
+                            stateData.season = season?.name || `Season ${sIdx + 1}`;
+                            eSel.innerHTML = eps.map((ep, ei) => `<option value="${ei}">EP ${MS.escapeHtml(ep.num || ei + 1)} - ${MS.escapeHtml(ep.title || "")}</option>`).join("");
+                            const loadEpLinks = async (eIdx) => {
+                                const ep = eps[eIdx];
+                                if (!ep) return;
+                                stateData.episode = ep.num || `E${eIdx + 1}`;
+                                let epLinks = ep.download_links || ep.links || [];
+                                if (!epLinks.length && ep.url) {
+                                    const res = await MS.fetchCineSubzAPI(`/api/episode?url=${encodeURIComponent(ep.url)}`);
+                                    epLinks = res?.details?.download_links || res?.download_links || [];
+                                }
+                                stateData.links = epLinks;
+                                renderQualityOptions(epLinks);
+                            };
+                            eSel.onchange = () => loadEpLinks(Number(eSel.value));
+                            if (eps.length) loadEpLinks(0);
+                        };
+                        sSel.onchange = () => populateEps(Number(sSel.value));
+                        populateEps(0);
+                    } else if (!stateData.links.length) {
+                        stateData.links = details.download_links || details.links || details.qualities || [];
+                    }
+                } catch (_) {}
+            }
+
+            if (!stateData.seasons.length) {
+                renderQualityOptions(stateData.links);
+            }
+
+            // Build final encrypted download URL based on engine preference
+            function buildFinalDownloadUrl() {
+                let rawTarget = MS.unwrapNestedDownloadUrl(stateData.selectedUrl || stateData.url);
+                if (!rawTarget) return "";
+                if (rawTarget.includes("pixeldrain.com/u/")) rawTarget = rawTarget.replace("/u/", "/api/file/") + "?download";
+                else if ((rawTarget.includes("skylines") || rawTarget.includes("terracloud") || rawTarget.includes("drive")) && !rawTarget.includes("dl=1") && !rawTarget.includes("wodocloud")) {
+                    rawTarget += (rawTarget.includes("?") ? "&" : "?") + "dl=1";
+                }
+                if (prefEngine.value === "direct" && rawTarget.startsWith("http") && !rawTarget.includes("csplayer")) {
+                    return rawTarget;
+                }
+                const fn = document.getElementById("dl_filename_preview").textContent;
+                const token = MS.encryptMovieUrl(rawTarget);
+                return `${MS.getApiBase()}/api/download?token=${token}&download=1&filename=${encodeURIComponent(fn)}`;
+            }
+
+            // Direct Download Trigger + Live Progress Animation
+            document.getElementById("dl_start_btn").onclick = function () {
+                const rawTarget = stateData.selectedUrl || stateData.url;
+                if (!rawTarget) {
+                    MS.showToast("No download mirror available. Try WhatsApp delivery.");
+                    return;
+                }
+                if (rawTarget.includes("t.me/") && !rawTarget.includes("t.me/c/")) {
+                    window.open(rawTarget, "_blank", "noopener,noreferrer");
+                    return;
+                }
+                if (rawTarget.includes("t.me/c/")) {
+                    window.open(rawTarget, "_blank", "noopener,noreferrer");
+                    return;
+                }
+
+                const finalUrl = buildFinalDownloadUrl();
+                const fn = document.getElementById("dl_filename_preview").textContent;
+
+                document.getElementById("dl_progress_box").classList.remove("hidden");
+                document.getElementById("dl_manual_link").href = finalUrl;
+                const fillEl = document.getElementById("dl_progress_fill");
+                const pctEl = document.getElementById("dl_progress_pct");
+                const stEl = document.getElementById("dl_progress_status");
+
+                let pct = 15;
+                fillEl.style.width = "15%";
+                pctEl.textContent = "15%";
+                stEl.textContent = "Generating Encrypted Cloud Tunnel...";
+
+                const a = document.createElement("a");
+                a.href = finalUrl;
+                a.setAttribute("download", fn);
+                a.style.display = "none";
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => a.remove(), 800);
+
+                const timer = setInterval(() => {
+                    pct = Math.min(100, pct + 18);
+                    fillEl.style.width = `${pct}%`;
+                    pctEl.textContent = `${pct}%`;
+                    if (pct >= 100) {
+                        clearInterval(timer);
+                        stEl.textContent = "Download started cleanly! Check your browser or IDM/1DM.";
+                    } else if (pct > 60) {
+                        stEl.textContent = "Streaming via High-Speed CDN...";
+                    }
+                }, 140);
+            };
+
+            document.getElementById("dl_copy_btn").onclick = async function () {
+                const url = buildFinalDownloadUrl();
+                if (!url) return MS.showToast("No link ready to copy.");
+                try {
+                    await navigator.clipboard.writeText(url);
+                    MS.showToast("Encrypted link copied for IDM / 1DM!");
+                } catch (_) {
+                    MS.showToast("Link ready: click Manual Link.");
+                }
+            };
+
+            document.getElementById("dl_watch_btn").onclick = function () {
+                const rawTarget = MS.unwrapNestedDownloadUrl(stateData.selectedUrl || stateData.url);
+                if (!rawTarget) return MS.showToast("No stream URL available.");
+                const wrap = document.getElementById("dl_player_wrap");
+                const video = document.getElementById("dl_video_player");
+                const iframe = document.getElementById("dl_iframe_player");
+                wrap.classList.remove("hidden");
+                let streamUrl = rawTarget;
+                if (streamUrl.includes("t.me/c/")) {
+                    const m = streamUrl.match(/t\.me\/c\/\d+\/(\d+)/);
+                    if (m) streamUrl = `https://moviestream.top/api/stream/${m[1]}`;
+                } else if (streamUrl.includes("/api/download")) {
+                    streamUrl = streamUrl.replace(/([?&]download=)1\b/, "$10");
+                } else if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => streamUrl.includes(d))) {
+                    streamUrl = `${MS.getApiBase()}/api/download?token=${MS.encryptMovieUrl(rawTarget)}&download=0`;
+                }
+                iframe.classList.add("hidden");
+                video.classList.remove("hidden");
+                video.src = streamUrl;
+                video.play().catch(() => {});
+                wrap.scrollIntoView({ behavior: "smooth", block: "center" });
+            };
+
+            document.getElementById("dl_report_btn").onclick = function () {
+                const msg = encodeURIComponent(`Hello MovieStream Developer, link issue reported for "${stateData.title}" (${stateData.url || "N/A"}).`);
+                window.open(`https://wa.me/94760246304?text=${msg}`, "_blank", "noopener,noreferrer");
+            };
+
+            // WhatsApp Bot PIN Delivery
+            document.getElementById("dl_wa_send_btn").onclick = async function () {
+                const btn = this;
+                btn.disabled = true;
+                const origHtml = btn.innerHTML;
+                btn.textContent = "Generating Bot PIN...";
+
+                let pin = Math.floor(100000 + Math.random() * 900000).toString();
+                let botNum = localStorage.getItem("moviestream_bot_number") || "94722926276";
+                const headers = await MS.genApiHeaders();
+                headers["Content-Type"] = "application/json";
+
+                const pinBase = MS.isLocalLiveServer() ? "https://moviestream.top" : "";
+                try {
+                    const res = await fetch(`${pinBase}/api/movie-pin`, {
+                        method: "POST",
+                        headers,
+                        body: JSON.stringify({
+                            movieName: stateData.title,
+                            directLink: stateData.selectedUrl || stateData.url,
+                            quality: stateData.selectedQuality || "720p",
+                            source: stateData.source === "sinhala" ? "telegram" : "cinesubz"
+                        }),
+                        signal: AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined
+                    });
+                    if (res.ok) {
+                        const data = await res.json();
+                        if (data.pin) pin = data.pin;
+                        if (data.botNumber) botNum = String(data.botNumber).replace(/[^0-9]/g, "");
+                    }
+                } catch (_) {}
+
+                const msg = `${MS.cleanDisplayTitle(stateData.title)} - ${pin}`;
+                window.open(`https://wa.me/${botNum}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+            };
+        });
+    </script>
+</body>
+</html>
+

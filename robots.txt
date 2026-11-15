@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+Allow: /index.html
+Allow: /movie.html
+Allow: /category.html
+Allow: /download.html
+Allow: /images/
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: https://moviestream.top/sitemap.xml

@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script src="assets/sentinel.js"></script>
+
+    <!-- Primary SEO Meta Tags -->
+    <title>Browse Movies &amp; Complete TV Series by Year, Language &amp; Genre | MovieStream.top</title>
+    <meta name="description" content="Filter and browse all Sinhala subtitled movies, complete TV series, Tamil, Hindi, Malayalam, Korean K-Dramas, and Sinhala Movies by year (1973–2026), language, genre, and quality." />
+    <meta name="keywords" content="moviestream category, cinesubz complete series, sinhala subtitles movies 2026, tamil sinhala sub, hindi sinhala sub, malayalam movies, korean drama sinhala sub, sinhala movies" />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="canonical" href="https://moviestream.top/category.html" />
+
+    <!-- Open Graph / Social Link Preview -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="MovieStream.top" />
+    <meta property="og:url" content="https://moviestream.top/category.html" />
+    <meta property="og:title" content="Browse Movies &amp; Complete TV Series | MovieStream.top" />
+    <meta property="og:description" content="Explore complete TV series, 20 languages, 19 genres, and release years 1973–2026 with Sinhala Subtitles &amp; encrypted Direct Downloads." />
+    <meta property="og:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
+    <meta property="og:image:type" content="image/jpeg" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Browse Movies &amp; Complete TV Series | MovieStream.top" />
+    <meta name="twitter:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
+
+    <link rel="icon" href="/favicon.ico?v=10" sizes="any" />
+    <link rel="shortcut icon" href="/favicon.ico?v=10" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png?v=10" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png?v=10" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png?v=10" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=10" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" /></noscript>
+
+    <link rel="stylesheet" href="assets/styles.css" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "CollectionPage",
+      "name": "MovieStream Complete Catalog Explorer",
+      "url": "https://moviestream.top/category.html",
+      "isPartOf": {
+        "@type": "WebSite",
+        "name": "MovieStream.top",
+        "url": "https://moviestream.top/"
+      }
+    }
+    </script>
+</head>
+<body>
+    <!-- Clean White Sticky Header -->
+    <header class="ms-header">
+        <div class="ms-container ms-header-inner">
+            <a href="index.html" class="ms-brand" aria-label="MovieStream Home">
+                <img src="images/logo-sm.webp" alt="MovieStream Logo" width="36" height="36" class="ms-brand-logo" />
+                <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
+            </a>
+
+            <nav class="ms-nav" aria-label="Main Navigation">
+                <a href="index.html" class="ms-nav-link">Home</a>
+                <a href="category.html?cat=movies" class="ms-nav-link" data-nav-cat="movies">Movies</a>
+                <a href="category.html?cat=tvshows" class="ms-nav-link" data-nav-cat="tvshows">TV Shows</a>
+                <a href="category.html?cat=complete" class="ms-nav-link" data-nav-cat="complete">Complete Series</a>
+                <a href="category.html?cat=sinhala" class="ms-nav-link" data-nav-cat="sinhala">Sinhala Movies</a>
+                <a href="category.html?cat=imdbtop250" class="ms-nav-link" data-nav-cat="imdbtop250">Top 250</a>
+                <a href="category.html" class="ms-nav-link active" data-nav-cat="all">Explorer</a>
+            </nav>
+
+            <div class="ms-header-actions">
+                <button type="button" onclick="MovieStream.openSearch()" class="ms-search-pill" aria-label="Search movies and TV series">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                    <span style="flex:1;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">Search catalog...</span>
+                    <kbd class="ms-kbd">Ctrl+K</kbd>
+                </button>
+                <button type="button" id="mobile_nav_btn" onclick="toggleMobileNav()" class="ms-icon-btn ms-mobile-toggle" aria-label="Toggle navigation menu" aria-expanded="false" aria-controls="mobile_nav_drawer">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                </button>
+            </div>
+        </div>
+
+        <div id="mobile_nav_drawer" class="ms-mobile-menu hidden">
+            <div class="ms-container ms-mobile-menu-grid">
+                <a href="index.html" class="ms-nav-link">Home</a>
+                <a href="category.html?cat=movies" class="ms-nav-link">All Movies</a>
+                <a href="category.html?cat=tvshows" class="ms-nav-link">TV Series</a>
+                <a href="category.html?cat=complete" class="ms-nav-link">Complete Series</a>
+                <a href="category.html?cat=sinhala" class="ms-nav-link">Sinhala Movies</a>
+                <a href="category.html?cat=imdbtop250" class="ms-nav-link">Top IMDB 250</a>
+                <a href="category.html?lang=tamil" class="ms-nav-link">Tamil Movies</a>
+                <a href="category.html?lang=hindi" class="ms-nav-link">Hindi Movies</a>
+            </div>
+        </div>
+    </header>
+
+    <main class="ms-container" style="padding-top:20px;">
+        <!-- Breadcrumb & Category Header -->
+        <nav aria-label="Breadcrumb" style="font-size:0.82rem;color:var(--ms-text-muted);margin-bottom:10px;display:flex;align-items:center;gap:8px;font-weight:600;">
+            <a href="index.html" style="color:var(--ms-red-dark);">Home</a>
+            <span>/</span>
+            <span id="cat_breadcrumb_label">Complete Catalog</span>
+        </nav>
+
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:14px;">
+            <div>
+                <h1 id="cat_heading" style="margin:0 0 4px;font-size:clamp(1.4rem,3vw,2.1rem);font-weight:900;letter-spacing:-0.02em;color:var(--ms-text);">
+                    All Sinhala Subtitled Releases
+                </h1>
+                <p id="cat_subheading" style="margin:0;font-size:0.88rem;color:var(--ms-text-muted);">
+                    Filter easily by Collection, Language (20), Genre (19), Release Year (1973–2026), Quality, or Keyword.
+                </p>
+            </div>
+            <span id="cat_count_pill" class="ms-chip active" style="font-size:0.8rem;">Loading...</span>
+        </div>
+
+        <!-- Cast / Director Filmography Banner (shown when browsing ?person=...) -->
+        <section id="cat_person_banner" class="ms-person-banner hidden" aria-label="Person Filmography Profile">
+            <div id="cat_person_avatar" class="ms-person-avatar">&#9733;</div>
+            <div style="flex:1;min-width:200px;">
+                <div id="cat_person_role" style="font-size:0.72rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--ms-red-dark);margin-bottom:4px;">Cast Filmography</div>
+                <h2 id="cat_person_name" style="margin:0 0 4px;font-size:1.35rem;font-weight:900;color:var(--ms-text);">Artist</h2>
+                <p id="cat_person_sub" style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);">Showing all Sinhala subtitled movies &amp; series featuring this artist.</p>
+            </div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                <button type="button" data-no-ad="1" onclick="clearPersonFilter()" class="ms-btn ms-btn-outline" style="padding:9px 14px;font-size:0.8rem;">&larr; Browse Full Catalog</button>
+            </div>
+        </section>
+
+        <!-- Clean White Multi-Filter Panel -->
+        <section id="cat_filter_section" class="ms-filter-bar" aria-label="Catalog Filters">
+            <form id="cat_filter_form" class="ms-filter-controls" onsubmit="event.preventDefault(); applyCatalogFilters(1, true);">
+                <div class="ms-field">
+                    <label for="cf_cat">Collection</label>
+                    <select id="cf_cat" class="ms-select">
+                        <option value="all">All Collections</option>
+                        <option value="movies">All Movies</option>
+                        <option value="tvshows">TV Series</option>
+                        <option value="complete">Complete TV Series</option>
+                        <option value="incomplete">Ongoing Series</option>
+                        <option value="trending">Trending Now</option>
+                        <option value="imdbtop250">Top IMDB 250</option>
+                        <option value="sinhala">Sinhala Movies</option>
+                    </select>
+                </div>
+                <div class="ms-field">
+                    <label for="cf_lang">Language</label>
+                    <select id="cf_lang" class="ms-select">
+                        <option value="all">All Languages (20)</option>
+                    </select>
+                </div>
+                <div class="ms-field">
+                    <label for="cf_genre">Genre</label>
+                    <select id="cf_genre" class="ms-select">
+                        <option value="all">All Genres (19)</option>
+                    </select>
+                </div>
+                <div class="ms-field">
+                    <label for="cf_year">Year</label>
+                    <select id="cf_year" class="ms-select">
+                        <option value="all">All Years (1973–2026)</option>
+                    </select>
+                </div>
+                <div class="ms-field">
+                    <label for="cf_q">Title / Quality</label>
+                    <input id="cf_q" type="search" class="ms-input" placeholder="e.g. Jailer, 2026, S01..." />
+                </div>
+                <div style="display:flex;gap:8px;align-items:center;">
+                    <button type="submit" class="ms-btn ms-btn-primary" style="height:40px;padding:0 18px;">
+                        <span>Apply</span>
+                    </button>
+                    <button type="button" onclick="resetCatalogFilters()" class="ms-btn ms-btn-outline" style="height:40px;padding:0 12px;">
+                        <span>Reset</span>
+                    </button>
+                </div>
+            </form>
+
+            <div class="ms-quick-chips no-scrollbar" id="cat_quick_chips" aria-label="Quick Switch Categories"></div>
+        </section>
+
+        <!-- Catalog Results Grid -->
+        <section aria-label="Catalog Results" style="margin-bottom:28px;">
+            <div id="cat_results_grid" class="ms-grid"></div>
+
+            <div id="cat_pagination_wrap" style="margin-top:28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
+                <button type="button" id="cat_load_more_btn" onclick="loadMoreCatalogPage()" class="ms-btn ms-btn-primary hidden">
+                    <span>Load More Releases (Page 2)</span>
+                </button>
+            </div>
+        </section>
+
+        <!-- Adsterra Native Banner Slot -->
+        <div class="ms-ad-slot">
+            <span style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--ms-text-subtle);margin-bottom:4px;">SPONSORED</span>
+            <div id="container-7571eb086837a548fa62ae1cc60dbfed"></div>
+        </div>
+    </main>
+
+    <!-- Movie Preview & Watch Online Modal -->
+    <div id="ms_movie_modal" class="ms-modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="modal_title"
+        onclick="if(event.target===this)MovieStream.closeMovieModal()">
+        <div class="ms-modal-panel">
+            <button type="button" onclick="MovieStream.closeMovieModal()" class="ms-modal-close" aria-label="Close movie preview modal">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M18 6L6 18M6 6l12 12"/></svg>
+            </button>
+            <div class="ms-modal-banner">
+                <img id="modal_hero_img" src="images/seo-banner.jpg" alt="Movie Poster Backdrop" referrerpolicy="no-referrer" />
+                <div class="ms-modal-banner-grad"></div>
+                <div class="ms-modal-head-text">
+                    <h2 id="modal_title" style="margin:0 0 8px;font-size:clamp(1.25rem,2.6vw,1.9rem);font-weight:900;">Movie Title</h2>
+                    <div id="modal_meta" class="ms-hero-meta" style="margin-bottom:0;"></div>
+                </div>
+            </div>
+            <div class="ms-modal-body">
+                <p id="modal_desc" style="margin:0 0 14px;font-size:0.9rem;color:var(--ms-text-muted);line-height:1.6;">Loading details...</p>
+                <div id="modal_loader" class="hidden" style="display:flex;align-items:center;gap:10px;margin-bottom:14px;font-size:0.85rem;font-weight:700;color:var(--ms-red-dark);">
+                    <span>Fetching mirror options &amp; subtitle tracks...</span>
+                </div>
+                <div id="modal_tv_section" class="hidden" style="margin-bottom:16px;padding:14px;border-radius:14px;background:var(--ms-surface-alt);border:1px solid var(--ms-border);">
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;">
+                        <label for="modal_season_select" style="font-size:0.82rem;font-weight:800;color:var(--ms-text);">Select Season &amp; Episode</label>
+                        <select id="modal_season_select" class="ms-select" style="width:auto;min-width:190px;background:#ffffff;"></select>
+                    </div>
+                    <div id="modal_episodes_list" class="ms-ep-grid"></div>
+                </div>
+                <div id="modal_player_section" class="ms-player-box hidden">
+                    <video id="html5_player" controls playsinline preload="metadata"></video>
+                    <iframe id="iframe_player" class="hidden" allowfullscreen allow="autoplay; fullscreen"></iframe>
+                </div>
+                <div id="modal_action_box"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spotlight Search Modal -->
+    <div id="ms_search_overlay" class="ms-modal-backdrop hidden" role="dialog" aria-modal="true" aria-label="Search Catalog"
+        onclick="if(event.target===this)MovieStream.closeSearch()">
+        <div class="ms-modal-panel" style="max-width:860px;padding:22px;">
+            <div style="display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--ms-border);padding-bottom:12px;margin-bottom:12px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+                <label for="ms_spotlight_input" class="sr-only">Search catalog</label>
+                <input id="ms_spotlight_input" type="search" oninput="MovieStream.liveSearch(this.value)" placeholder="Search movies, series, Sinhala Movies..." style="flex:1;border:none;outline:none;font-size:1rem;background:transparent;color:var(--ms-text);" />
+                <button type="button" onclick="MovieStream.closeSearch()" class="ms-btn ms-btn-outline" style="padding:6px 12px;">Esc</button>
+            </div>
+            <p id="ms_search_status" style="margin:0 0 14px;font-size:0.84rem;color:var(--ms-text-muted);">Type at least 2 characters to search across MovieStream Catalog &amp; Sinhala Movies...</p>
+            <div id="ms_search_results" class="ms-grid"></div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/94772115904?text=Hi%20MovieStream%20Bot%2C%20I%20need%20a%20movie%20link!" target="_blank" rel="noopener noreferrer" class="ms-floating-wa" aria-label="Chat with MovieStream WhatsApp Bot">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.391c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969s-4.453-9.984-9.969-9.984zm5.422 14.125c-.234.656-1.359 1.25-1.875 1.328-.484.078-1.109.109-1.781-.109-.422-.141-.953-.312-1.641-.609-2.859-1.234-4.719-4.125-4.859-4.312-.141-.188-1.156-1.547-1.156-2.953s.734-2.094 1-2.375c.266-.281.578-.359.766-.359s.391.016.562.016c.188 0 .422-.062.656.516.25.594.844 2.062.922 2.219.078.156.125.328.016.547-.109.219-.156.344-.312.531-.156.188-.328.422-.469.562-.156.156-.312.328-.141.625.172.297.766 1.266 1.641 2.047 1.125 1 2.078 1.312 2.375 1.469.297.156.469.125.641-.078.172-.203.75-.875.953-1.172.203-.297.406-.25.672-.141.266.109 1.719.812 2.016.953.297.141.484.219.562.344.078.125.078.734-.156 1.391z"/></svg>
+        <span>WhatsApp Movie Bot</span>
+    </a>
+
+    <!-- Clean White Footer with 6 3D Tactile Social Media Badges -->
+    <footer class="ms-footer">
+        <div class="ms-container">
+            <div class="ms-footer-grid">
+                <div>
+                    <div class="ms-brand" style="margin-bottom:10px;">
+                        <img src="images/logo-sm.webp" alt="MovieStream Logo" width="32" height="32" class="ms-brand-logo" />
+                        <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
+                    </div>
+                    <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">Sri Lanka's fastest HD Movie &amp; TV Series portal with Sinhala Subtitles, Direct encrypted CDN downloads, and instant WhatsApp delivery.</p>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Browse</h3>
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:0.83rem;color:var(--ms-text-muted);">
+                        <a href="category.html?cat=movies">All Movies</a>
+                        <a href="category.html?cat=tvshows">TV Series</a>
+                        <a href="category.html?cat=complete">Complete Series</a>
+                        <a href="category.html?cat=sinhala">Sinhala Movies</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Languages</h3>
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:0.83rem;color:var(--ms-text-muted);">
+                        <a href="category.html?lang=english">English</a>
+                        <a href="category.html?lang=tamil">Tamil</a>
+                        <a href="category.html?lang=hindi">Hindi</a>
+                        <a href="category.html?lang=korea">Korean / K-Drama</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 12px;font-size:0.85rem;font-weight:800;">Connect With Us</h3>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                        <a data-social-key="facebook" href="https://www.facebook.com/share/1DxNnVeAsr/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-3d-btn social-3d-fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg></a>
+                        <a data-social-key="whatsappChannel" href="https://whatsapp.com/channel/0029Vb8TOKv3LdQTui689i0W" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Channel" class="social-3d-btn social-3d-wa"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.391c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969s-4.453-9.984-9.969-9.984zm5.422 14.125c-.234.656-1.359 1.25-1.875 1.328-.484.078-1.109.109-1.781-.109-.422-.141-.953-.312-1.641-.609-2.859-1.234-4.719-4.125-4.859-4.312-.141-.188-1.156-1.547-1.156-2.953s.734-2.094 1-2.375c.266-.281.578-.359.766-.359s.391.016.562.016c.188 0 .422-.062.656.516.25.594.844 2.062.922 2.219.078.156.125.328.016.547-.109.219-.156.344-.312.531-.156.188-.328.422-.469.562-.156.156-.312.328-.141.625.172.297.766 1.266 1.641 2.047 1.125 1 2.078 1.312 2.375 1.469.297.156.469.125.641-.078.172-.203.75-.875.953-1.172.203-.297.406-.25.672-.141.266.109 1.719.812 2.016.953.297.141.484.219.562.344.078.125.078.734-.156 1.391z"/></svg></a>
+                        <a data-social-key="linkedin" href="https://www.linkedin.com/in/kaveesha-theekshana-664290299?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-3d-btn social-3d-li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
+                        <a data-social-key="instagram" href="https://www.instagram.com/kaveez.exe?exln=ZXhoaXhhaXR1Zzk2" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-3d-btn social-3d-ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg></a>
+                        <a data-social-key="threads" href="https://www.threads.com/@kaveez.exe" target="_blank" rel="noopener noreferrer" aria-label="Threads" class="social-3d-btn social-3d-th"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32l-1.757-1.18c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></a>
+                        <a data-social-key="tiktok" href="https://www.tiktok.com/@kaveez.exe" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-3d-btn social-3d-tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:26px;padding-top:16px;border-top:1px solid var(--ms-border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:0.78rem;color:var(--ms-text-subtle);">
+                <span>&copy; 2026 MovieStream.top &mdash; Protected by KaveezCloud.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Native Mobile App Bottom Tab Navigation -->
+    <nav class="ms-mobile-tabbar" aria-label="Mobile Navigation">
+        <a href="index.html" class="ms-mob-tab" data-mob-tab="home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="category.html?cat=complete" class="ms-mob-tab" data-mob-tab="explore">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            <span>Explore</span>
+        </a>
+        <button type="button" onclick="MovieStream.openSearch()" class="ms-mob-tab" data-mob-tab="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span>Search</span>
+        </button>
+        <a href="category.html?cat=sinhala" class="ms-mob-tab" data-mob-tab="sinhala">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <span>Sinhala</span>
+        </a>
+        <a href="index.html#continue-watching-section" class="ms-mob-tab" data-mob-tab="recent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Recent</span>
+        </a>
+    </nav>
+
+    <script defer src="assets/catalog-fallback.js"></script>
+    <script defer src="assets/app-core.js"></script>
+    <script>
+        let _catPage = 1;
+        let _catAccumulated = [];
+        let _catIsTelegram = false;
+        let _catPerson = null;
+
+        function toggleMobileNav() {
+            const drawer = document.getElementById("mobile_nav_drawer");
+            const btn = document.getElementById("mobile_nav_btn");
+            if (!drawer || !btn) return;
+            const willOpen = drawer.classList.contains("hidden");
+            drawer.classList.toggle("hidden", !willOpen);
+            btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+        }
+
+        function populateTaxonomyControls() {
+            const tax = window.CINESUBZ_TAXONOMY;
+            if (!tax) return;
+            const MS = window.MovieStream;
+
+            const langSel = document.getElementById("cf_lang");
+            if (langSel && Array.isArray(tax.languages)) {
+                langSel.innerHTML = `<option value="all">All Languages (${tax.languages.length})</option>` +
+                    tax.languages.map(l => `<option value="${MS.escapeHtml(l.slug)}">${MS.escapeHtml(l.name)}</option>`).join("");
+            }
+
+            const genreSel = document.getElementById("cf_genre");
+            if (genreSel && Array.isArray(tax.genres)) {
+                genreSel.innerHTML = `<option value="all">All Genres (${tax.genres.length})</option>` +
+                    tax.genres.map(g => `<option value="${MS.escapeHtml(g.slug)}">${MS.escapeHtml(g.name)}</option>`).join("");
+            }
+
+            const yearSel = document.getElementById("cf_year");
+            if (yearSel && Array.isArray(tax.years)) {
+                yearSel.innerHTML = `<option value="all">All Years (${tax.years[tax.years.length - 1]}–${tax.years[0]})</option>` +
+                    tax.years.map(y => `<option value="${MS.escapeHtml(y)}">${MS.escapeHtml(y)}</option>`).join("");
+            }
+
+            const chipsEl = document.getElementById("cat_quick_chips");
+            if (chipsEl) {
+                const quickLinks = [
+                    { label: "All Releases", href: "category.html" },
+                    { label: "Complete Series", href: "category.html?cat=complete" },
+                    { label: "Trending", href: "category.html?cat=trending" },
+                    { label: "Sinhala Movies", href: "category.html?cat=sinhala" },
+                    { label: "Top IMDB 250", href: "category.html?cat=imdbtop250" },
+                    { label: "2026 New", href: "category.html?year=2026" },
+                    { label: "Tamil", href: "category.html?lang=tamil" },
+                    { label: "Hindi", href: "category.html?lang=hindi" },
+                    { label: "Malayalam", href: "category.html?lang=malayalam" },
+                    { label: "Korean", href: "category.html?lang=korea" },
+                    { label: "English", href: "category.html?lang=english" },
+                    { label: "Action", href: "category.html?genre=action" },
+                    { label: "Horror", href: "category.html?genre=horror" },
+                    { label: "Animation", href: "category.html?genre=animation" },
+                    { label: "18+", href: "category.html?genre=18" }
+                ];
+                chipsEl.innerHTML = quickLinks.map(item =>
+                    `<a href="${item.href}" class="ms-chip">${MS.escapeHtml(item.label)}</a>`
+                ).join("");
+            }
+        }
+
+        function formatPersonTitleCase(slug) {
+            return String(slug || "").replace(/-/g, " ").replace(/\b\w/g, ch => ch.toUpperCase());
+        }
+
+        function renderPersonBanner() {
+            const MS = window.MovieStream;
+            const banner = document.getElementById("cat_person_banner");
+            const filterSec = document.getElementById("cat_filter_section");
+            const avatarEl = document.getElementById("cat_person_avatar");
+            const roleEl = document.getElementById("cat_person_role");
+            const nameEl = document.getElementById("cat_person_name");
+            const subEl = document.getElementById("cat_person_sub");
+            if (!banner) return;
+
+            if (!_catPerson || !_catPerson.slug) {
+                banner.classList.add("hidden");
+                if (filterSec) filterSec.classList.remove("hidden");
+                return;
+            }
+
+            banner.classList.remove("hidden");
+            if (filterSec) filterSec.classList.add("hidden");
+
+            const name = _catPerson.name || formatPersonTitleCase(_catPerson.slug);
+            const roleLabel = (_catPerson.type === "director" || _catPerson.type === "creator")
+                ? "Director / Creator Filmography"
+                : "Actor / Cast Filmography";
+            if (roleEl) roleEl.textContent = roleLabel;
+            if (nameEl) nameEl.textContent = name;
+            if (subEl) subEl.textContent = `Showing all Sinhala subtitled movies & series with ${name}.`;
+            if (avatarEl) {
+                const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join("") || "★";
+                const safeImg = _catPerson.img && String(_catPerson.img).startsWith("http") ? _catPerson.img : "";
+                if (safeImg) {
+                    const optImg = MS.optimizePosterUrl(safeImg);
+                    avatarEl.innerHTML = `<img src="${MS.escapeHtml(optImg)}" alt="${MS.escapeHtml(name)}" referrerpolicy="no-referrer" onerror="this.parentNode.textContent='${MS.escapeHtml(initials)}'" />`;
+                } else {
+                    avatarEl.textContent = initials;
+                }
+            }
+        }
+
+        function clearPersonFilter() {
+            _catPerson = null;
+            renderPersonBanner();
+            applyCatalogFilters(1, true);
+        }
+
+        function syncControlsFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            let cat = params.get("cat") || params.get("type") || "all";
+            let lang = params.get("lang") || params.get("language") || "all";
+            let genre = params.get("genre") || "all";
+            let year = params.get("year") || "all";
+            const q = params.get("q") || "";
+            const mode = params.get("mode") || "";
+            const legacyUrl = params.get("url") || "";
+            let personRaw = params.get("person") || "";
+
+            if (!personRaw && legacyUrl) {
+                const pm = legacyUrl.match(/\/(cast|director|creator|actor)\/([^\/?#]+)/i);
+                if (pm) personRaw = `${pm[1].toLowerCase()}/${pm[2]}`;
+            }
+
+            if (personRaw) {
+                const parts = personRaw.replace(/^\/+|\/+$/g, "").split("/");
+                const pType = parts.length > 1 ? parts[0].toLowerCase() : (params.get("ptype") || "cast");
+                const pSlug = parts.length > 1 ? parts[1] : parts[0];
+                const fbPersons = window.CINESUBZ_FALLBACK_PERSONS || {};
+                const fbEntry = fbPersons[`${pType}/${pSlug}`] || fbPersons[pSlug] || null;
+                _catPerson = {
+                    type: pType,
+                    slug: pSlug,
+                    name: params.get("pname") || fbEntry?.name || formatPersonTitleCase(pSlug),
+                    img: params.get("pimg") || fbEntry?.image || ""
+                };
+            } else {
+                _catPerson = null;
+            }
+            renderPersonBanner();
+
+            if (mode === "sinhala") cat = "sinhala";
+
+            if (legacyUrl && !_catPerson) {
+                const clean = legacyUrl.toLowerCase();
+                if (clean.includes("complete") && !clean.includes("incomplete")) cat = "complete";
+                else if (clean.includes("incomplete")) cat = "incomplete";
+                else if (clean.includes("/tvshows")) cat = "tvshows";
+                else if (clean.includes("/movies")) cat = "movies";
+                else if (clean.includes("imdbtop250")) cat = "imdbtop250";
+                const yrM = clean.match(/\/release\/(\d{4})/);
+                if (yrM) year = yrM[1];
+                const gM = clean.match(/\/genre\/([^/]+)/);
+                if (gM) {
+                    const slug = gM[1];
+                    const langSlugs = (window.CINESUBZ_TAXONOMY?.languages || []).map(x => x.slug.toLowerCase());
+                    if (langSlugs.includes(slug)) lang = slug;
+                    else genre = slug;
+                }
+            }
+
+            const catEl = document.getElementById("cf_cat");
+            const langEl = document.getElementById("cf_lang");
+            const genreEl = document.getElementById("cf_genre");
+            const yearEl = document.getElementById("cf_year");
+            const qEl = document.getElementById("cf_q");
+
+            if (catEl && [...catEl.options].some(o => o.value === cat)) catEl.value = cat;
+            if (langEl && [...langEl.options].some(o => o.value.toLowerCase() === lang.toLowerCase())) {
+                const matched = [...langEl.options].find(o => o.value.toLowerCase() === lang.toLowerCase());
+                if (matched) langEl.value = matched.value;
+            }
+            if (genreEl && [...genreEl.options].some(o => o.value === genre)) genreEl.value = genre;
+            if (yearEl && [...yearEl.options].some(o => o.value === year)) yearEl.value = year;
+            if (qEl) qEl.value = q;
+
+            document.querySelectorAll("[data-nav-cat]").forEach(a => {
+                const v = a.getAttribute("data-nav-cat");
+                a.classList.toggle("active", !_catPerson && ((cat === "all" && v === "all") || v === cat));
+            });
+        }
+
+        function updateHeadingSummary(count, label) {
+            const head = document.getElementById("cat_heading");
+            const bc = document.getElementById("cat_breadcrumb_label");
+            const pill = document.getElementById("cat_count_pill");
+            if (head) head.textContent = label;
+            if (bc) bc.textContent = label;
+            if (pill) pill.textContent = `${count} Titles`;
+            document.title = `${label} | MovieStream.top (Sinhala Subtitles)`;
+        }
+
+        function buildReadableLabel(cat, lang, genre, year, q) {
+            const parts = [];
+            const catNames = {
+                trending: "Trending Movies",
+                movies: "All Movies",
+                tvshows: "TV Shows",
+                complete: "Complete TV Series",
+                incomplete: "Ongoing Series",
+                imdbtop250: "Top IMDB 250",
+                sinhala: "Sinhala Movies"
+            };
+            if (cat && cat !== "all") parts.push(catNames[cat] || cat);
+            if (lang && lang !== "all") {
+                const lObj = (window.CINESUBZ_TAXONOMY?.languages || []).find(x => x.slug === lang);
+                parts.push(lObj ? `${lObj.name} Cinema` : lang);
+            }
+            if (genre && genre !== "all") {
+                const gObj = (window.CINESUBZ_TAXONOMY?.genres || []).find(x => x.slug === genre);
+                parts.push(gObj ? gObj.name : genre);
+            }
+            if (year && year !== "all") parts.push(`Year ${year}`);
+            if (q) parts.push(`"${q}"`);
+            return parts.length ? parts.join(" • ") : "All Sinhala Subtitled Releases";
+        }
+
+        async function applyCatalogFilters(page = 1, syncUrl = false) {
+            const MS = window.MovieStream;
+            const cat = document.getElementById("cf_cat")?.value || "all";
+            const lang = document.getElementById("cf_lang")?.value || "all";
+            const genre = document.getElementById("cf_genre")?.value || "all";
+            const year = document.getElementById("cf_year")?.value || "all";
+            const q = (document.getElementById("cf_q")?.value || "").trim();
+
+            _catPage = page;
+            if (page === 1) _catAccumulated = [];
+
+            if (syncUrl) {
+                const nextQs = new URLSearchParams();
+                if (_catPerson && _catPerson.slug) {
+                    nextQs.set("person", `${_catPerson.type}/${_catPerson.slug}`);
+                    if (_catPerson.name) nextQs.set("pname", _catPerson.name);
+                } else {
+                    if (cat !== "all") nextQs.set("cat", cat);
+                    if (lang !== "all") nextQs.set("lang", lang);
+                    if (genre !== "all") nextQs.set("genre", genre);
+                    if (year !== "all") nextQs.set("year", year);
+                    if (q) nextQs.set("q", q);
+                }
+                const newUrl = nextQs.toString() ? `category.html?${nextQs.toString()}` : "category.html";
+                try { history.replaceState(null, "", newUrl); } catch (_) {}
+            }
+
+            const label = _catPerson && _catPerson.slug
+                ? `Filmography: ${_catPerson.name || formatPersonTitleCase(_catPerson.slug)}`
+                : buildReadableLabel(cat, lang, genre, year, q);
+            const grid = document.getElementById("cat_results_grid");
+            const loadMoreBtn = document.getElementById("cat_load_more_btn");
+
+            if (page === 1 && grid) {
+                grid.innerHTML = Array.from({ length: 10 }, () =>
+                    `<div class="ms-card"><div class="ms-card-thumb ms-skeleton"></div><div class="ms-card-body"><div class="ms-skeleton" style="height:14px;border-radius:6px;"></div></div></div>`
+                ).join("");
+            }
+
+            // Actor / Director Filmography branch
+            if (_catPerson && _catPerson.slug) {
+                _catIsTelegram = false;
+                try {
+                    let data = await MS.fetchCineSubzAPI(`/api/person?slug=${encodeURIComponent(_catPerson.slug)}&type=${encodeURIComponent(_catPerson.type)}&page=${page}`);
+                    let batch = data?.results || [];
+                    if (!batch.length && page === 1) {
+                        const pSlug = _catPerson.slug.toLowerCase();
+                        const fbPersons = window.CINESUBZ_FALLBACK_PERSONS || {};
+                        const fbHit = fbPersons[`${_catPerson.type}/${pSlug}`] || fbPersons[`cast/${pSlug}`] || fbPersons[`director/${pSlug}`] || null;
+                        if (fbHit && Array.isArray(fbHit.results) && fbHit.results.length) {
+                            batch = [...fbHit.results];
+                        } else {
+                            for (const det of (window.CINESUBZ_FALLBACK_DETAILS || [])) {
+                                if (!det) continue;
+                                const ppl = [...(det.cast || []), ...(det.directors || [])];
+                                if (ppl.some(p => (p.slug || "").toLowerCase() === pSlug || (p.name || "").toLowerCase() === (_catPerson.name || "").toLowerCase())) {
+                                    batch.push({
+                                        title: det.title,
+                                        url: det.url,
+                                        image: det.poster || det.image || "",
+                                        rating: det.imdb || det.rating || "",
+                                        quality: det.quality_badge || det.quality || "HD",
+                                        year: det.year || ""
+                                    });
+                                }
+                            }
+                        }
+                    }
+                    if (!batch.length) {
+                        const qFallback = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(_catPerson.name || _catPerson.slug)}`);
+                        if (qFallback?.results?.length) {
+                            data = qFallback;
+                            batch = qFallback.results;
+                        }
+                    }
+                    _catAccumulated = page === 1 ? batch : [..._catAccumulated, ...batch];
+                    updateHeadingSummary(_catAccumulated.length, label);
+                    if (grid) {
+                        grid.innerHTML = _catAccumulated.length
+                            ? _catAccumulated.map(m => MS.renderPosterCard(m)).join("")
+                            : `<div style="grid-column:1/-1;background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:16px;padding:24px;text-align:center;">
+                                <p style="margin:0 0 12px;font-weight:700;color:var(--ms-text);">No releases found for ${MS.escapeHtml(_catPerson.name || _catPerson.slug)} right now.</p>
+                                <button type="button" data-no-ad="1" onclick="clearPersonFilter()" class="ms-btn ms-btn-primary">Browse All Releases</button>
+                               </div>`;
+                    }
+                    if (loadMoreBtn) {
+                        const showMore = batch.length >= 12 && !data?.offline;
+                        loadMoreBtn.classList.toggle("hidden", !showMore);
+                        loadMoreBtn.innerHTML = `<span>Load More Releases (Page ${page + 1})</span>`;
+                    }
+                } catch (_) {
+                    if (grid) {
+                        grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;color:var(--ms-red-dark);font-weight:700;">Failed to load artist filmography. Please try again.</div>`;
+                    }
+                }
+                return;
+            }
+
+            // Sinhala Movies Vault branch (unless combined with another Collection or Genre filter)
+            const isSinhalaLang = (lang === "sinhala" || lang === "sinhala-sub");
+            if (cat === "sinhala" || (isSinhalaLang && cat === "all" && genre === "all")) {
+                _catIsTelegram = true;
+                if (loadMoreBtn) loadMoreBtn.classList.add("hidden");
+                const items = await MS.fetchSinhalaMovies(q, year === "all" ? "" : year);
+                const isFallback = MS.isSinhalaFallbackActive ? MS.isSinhalaFallbackActive() : false;
+                _catAccumulated = items;
+                updateHeadingSummary(items.length, isFallback ? "Sinhala Movies (Catalog)" : "Sinhala Movies (Live HD)");
+                if (grid) {
+                    grid.innerHTML = items.length
+                        ? items.map(m => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz" })).join("")
+                        : `<div style="grid-column:1/-1;background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:16px;padding:24px;text-align:center;">
+                            <p style="margin:0 0 12px;font-weight:700;color:var(--ms-text);">No matching Sinhala movies were found right now.</p>
+                            <a href="https://wa.me/94772115904?text=Hi%20MovieStream%2C%20send%20Sinhala%20movies" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-green">Request on WhatsApp Bot</a>
+                           </div>`;
+                }
+                return;
+            }
+
+            _catIsTelegram = false;
+            const qs = new URLSearchParams();
+            qs.set("page", String(page));
+
+            if (cat !== "all") {
+                if (cat === "movies" || cat === "tvshows") qs.set("media_type", cat);
+                else qs.set("category", cat);
+            }
+            if (lang !== "all") qs.set("language", lang);
+            if (genre !== "all") qs.set("genre", genre);
+            if (year !== "all") qs.set("year", year);
+            if (q) qs.set("q", q);
+
+            try {
+                let data;
+                if (q && cat === "all" && lang === "all" && genre === "all" && year === "all") {
+                    data = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(q)}`);
+                } else if (cat !== "all" && lang === "all" && genre === "all" && year === "all" && !q) {
+                    data = await MS.fetchCineSubzAPI(`/api/category?type=${encodeURIComponent(cat)}&page=${page}`);
+                } else {
+                    data = await MS.fetchCineSubzAPI(`/api/filter?${qs.toString()}`);
+                }
+
+                const batch = data?.results || [];
+                _catAccumulated = page === 1 ? batch : [..._catAccumulated, ...batch];
+                updateHeadingSummary(_catAccumulated.length, label);
+
+                if (grid) {
+                    if (_catAccumulated.length) {
+                        grid.innerHTML = _catAccumulated.map(m => MS.renderPosterCard(m)).join("");
+                    } else {
+                        grid.innerHTML = "";
+                        const box = document.createElement("div");
+                        box.className = "ms-empty-state";
+                        box.setAttribute("data-no-ad", "1");
+                        box.style.cssText = "grid-column:1/-1;background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:16px;padding:28px;text-align:center;";
+
+                        const msg = document.createElement("p");
+                        msg.style.cssText = "margin:0 0 8px;font-weight:700;";
+                        msg.textContent = "No releases matched all selected filters simultaneously.";
+                        box.appendChild(msg);
+
+                        const sub = document.createElement("p");
+                        sub.style.cssText = "margin:0 0 16px;font-size:0.9rem;color:var(--ms-muted);";
+                        sub.textContent = data?.offline
+                            ? "Offline catalog snapshot active — try relaxing one filter or reset below."
+                            : "Try dropping one filter below to broaden matching releases.";
+                        box.appendChild(sub);
+
+                        const btnRow = document.createElement("div");
+                        btnRow.style.cssText = "display:flex;flex-wrap:wrap;justify-content:center;gap:8px;";
+                        const addRelaxBtn = (text, fn, outline = true) => {
+                            const b = document.createElement("button");
+                            b.type = "button";
+                            b.className = outline ? "ms-btn ms-btn-outline" : "ms-btn ms-btn-primary";
+                            b.setAttribute("data-no-ad", "1");
+                            b.textContent = text;
+                            b.addEventListener("click", fn);
+                            btnRow.appendChild(b);
+                        };
+                        if (cat !== "all") {
+                            addRelaxBtn("Drop Collection", () => {
+                                document.getElementById("cf_cat").value = "all";
+                                applyCatalogFilters(1, true);
+                            });
+                        }
+                        if (genre !== "all") {
+                            addRelaxBtn("Any Genre", () => {
+                                document.getElementById("cf_genre").value = "all";
+                                applyCatalogFilters(1, true);
+                            });
+                        }
+                        if (year !== "all") {
+                            addRelaxBtn("All Years", () => {
+                                document.getElementById("cf_year").value = "all";
+                                applyCatalogFilters(1, true);
+                            });
+                        }
+                        if (lang !== "all" && (cat !== "all" || genre !== "all" || year !== "all" || q)) {
+                            const langSel = document.getElementById("cf_lang");
+                            const langLabel = langSel && langSel.selectedOptions[0] ? langSel.selectedOptions[0].text : lang;
+                            addRelaxBtn(`Explore ${langLabel} Only`, () => {
+                                document.getElementById("cf_cat").value = "all";
+                                document.getElementById("cf_genre").value = "all";
+                                document.getElementById("cf_year").value = "all";
+                                document.getElementById("cf_q").value = "";
+                                applyCatalogFilters(1, true);
+                            });
+                        }
+                        addRelaxBtn("Reset All Filters", () => resetCatalogFilters(), false);
+                        box.appendChild(btnRow);
+                        grid.appendChild(box);
+                    }
+                }
+
+                if (loadMoreBtn) {
+                    const showMore = batch.length >= 12 && !data?.offline;
+                    loadMoreBtn.classList.toggle("hidden", !showMore);
+                    loadMoreBtn.innerHTML = `<span>Load More Releases (Page ${page + 1})</span>`;
+                }
+            } catch (_) {
+                if (grid) {
+                    grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;color:var(--ms-red-dark);font-weight:700;">Failed to load catalog entries. Please try again.</div>`;
+                }
+            }
+        }
+
+        function loadMoreCatalogPage() {
+            if (_catIsTelegram) return;
+            applyCatalogFilters(_catPage + 1, false);
+        }
+
+        function resetCatalogFilters() {
+            _catPerson = null;
+            renderPersonBanner();
+            document.getElementById("cf_cat").value = "all";
+            document.getElementById("cf_lang").value = "all";
+            document.getElementById("cf_genre").value = "all";
+            document.getElementById("cf_year").value = "all";
+            document.getElementById("cf_q").value = "";
+            applyCatalogFilters(1, true);
+        }
+
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.__KV_BLOCKED) return;
+            populateTaxonomyControls();
+            syncControlsFromUrl();
+            applyCatalogFilters(1, false);
+
+            if (window.location.port !== "5500") {
+                setTimeout(() => {
+                    const s = document.createElement("script");
+                    s.async = true;
+                    s.setAttribute("data-cfasync", "false");
+                    s.src = "https://pl31408761.profitableratecpmnetwork.com/7571eb086837a548fa62ae1cc60dbfed/invoke.js";
+                    document.body.appendChild(s);
+                }, 1800);
+            }
+        });
+    </script>
+</body>
+</html>
