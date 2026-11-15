@@ -1,0 +1,1215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <script src="assets/sentinel.js"></script>
+
+    <!-- Primary SEO Meta Tags -->
+    <title>Watch &amp; Download Movie HD (Sinhala Subtitles) | MovieStream.top</title>
+    <meta name="description" content="Watch full HD movies and complete TV series online with Sinhala subtitles or pick an instant Download quality &amp; WhatsApp Bot delivery on MovieStream.top." />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+    <link rel="canonical" href="https://moviestream.top/movie.html" />
+
+    <!-- Open Graph / Social Link Preview -->
+    <meta property="og:type" content="video.movie" />
+    <meta property="og:site_name" content="MovieStream.top" />
+    <meta property="og:title" content="MovieStream — Watch &amp; Download Movies in HD" />
+    <meta property="og:description" content="Stream online or download Sinhala Subtitled Movies &amp; TV Series via Fast Cloud, 1DM/IDM, Sinhala Movies Vault, and WhatsApp Bot." />
+    <meta property="og:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
+
+    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="icon" href="/favicon.ico?v=10" sizes="any" />
+    <link rel="shortcut icon" href="/favicon.ico?v=10" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/images/favicon-48.png?v=10" />
+    <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96.png?v=10" />
+    <link rel="icon" type="image/png" sizes="192x192" href="/images/favicon-192.png?v=10" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png?v=10" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" /></noscript>
+
+    <link rel="stylesheet" href="assets/styles.css" />
+    <style>
+        @media (max-width: 767px) {
+            .ms-floating-wa { bottom: 126px; right: 12px; left: auto; }
+            .ms-footer { padding-bottom: 138px; }
+        }
+    </style>
+</head>
+<body data-page="movie">
+
+    <!-- Clean White Sticky App Header -->
+    <header class="ms-header">
+        <div class="ms-container ms-header-inner">
+            <div style="display:flex;align-items:center;gap:10px;min-width:0;">
+                <button type="button" onclick="if(history.length>1){history.back()}else{location.href='index.html'}"
+                    class="ms-btn ms-btn-outline" style="padding:7px 10px;border-radius:11px;" aria-label="Go Back">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+                </button>
+                <a href="index.html" class="ms-brand" aria-label="MovieStream Home">
+                    <img src="images/logo-sm.webp" alt="MovieStream Logo" width="34" height="34" class="ms-brand-logo" />
+                    <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
+                </a>
+            </div>
+
+            <nav class="ms-nav" aria-label="Primary Navigation">
+                <a href="index.html" class="ms-nav-link">Home</a>
+                <a href="category.html?cat=movies" class="ms-nav-link">Movies</a>
+                <a href="category.html?cat=tvshows" class="ms-nav-link">TV Series</a>
+                <a href="category.html?cat=complete" class="ms-nav-link">Complete Series</a>
+                <a href="category.html?cat=sinhala" class="ms-nav-link">Sinhala Movies</a>
+            </nav>
+
+            <div class="ms-header-actions">
+                <button type="button" onclick="shareCurrentMovie()" class="ms-btn ms-btn-outline ms-header-share-btn" style="padding:7px 12px;font-size:0.78rem;" aria-label="Share Movie">
+                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+                    <span class="ms-share-label">Share</span>
+                </button>
+                <button type="button" onclick="MovieStream.openSearch()" class="ms-search-pill" aria-label="Search Movies and TV Series">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+                    <span style="font-size:0.82rem;color:var(--ms-text-muted);font-weight:600;">Search...</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Ambient Movie Hero Banner -->
+    <section class="ms-movie-hero">
+        <div id="mv_backdrop" class="ms-movie-backdrop"></div>
+        <div class="ms-container">
+            <div class="ms-movie-topcard">
+                <div class="ms-movie-poster-box">
+                    <img id="mv_poster" src="images/seo-banner.jpg" alt="Movie Poster" referrerpolicy="no-referrer" />
+                </div>
+                <div class="ms-movie-info">
+                    <div id="mv_badges" class="ms-movie-badges" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;"></div>
+                    <h1 id="mv_title" class="ms-movie-title">Loading Movie...</h1>
+                    <div id="mv_submeta" style="font-size:0.82rem;font-weight:700;color:var(--ms-text-muted);margin-bottom:6px;"></div>
+                    <p id="mv_synopsis" class="ms-movie-synopsis">
+                        Loading overview, subtitles, video mirrors, and download options...
+                    </p>
+                    <div class="ms-movie-actions" style="display:flex;flex-wrap:wrap;gap:10px;">
+                        <button type="button" id="mv_watch_btn" data-no-ad="1" onclick="openWatchQualityPicker()" class="ms-btn ms-btn-primary">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+                            <span>Watch Online HD</span>
+                        </button>
+                        <button type="button" id="mv_dl_btn" data-no-ad="1" onclick="openDedicatedDownloadPage()" class="ms-btn ms-btn-blue">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+                            <span>Download</span>
+                        </button>
+                        <button type="button" id="mv_wa_btn" data-no-ad="1" onclick="openWhatsAppQualityPopup()" class="ms-btn ms-btn-green">
+                            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.453 3.484 1.328 5l-1.391 5.063 5.188-1.359c1.469.797 3.125 1.219 4.844 1.219 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2z"/></svg>
+                            <span>WhatsApp Bot</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="ms-container" style="margin-top:22px;display:flex;flex-direction:column;gap:22px;">
+
+        <!-- Cast, Crew & Movie Specifications Showcase -->
+        <section id="mv_cast_card" class="ms-dl-card">
+            <div class="ms-section-head" style="margin-bottom:14px;">
+                <div>
+                    <h2 class="ms-section-title" style="font-size:1.12rem;">
+                        <span class="ms-accent-bar"></span>
+                        <span>Cast, Crew &amp; Movie Details</span>
+                    </h2>
+                    <p style="margin:4px 0 0;font-size:0.8rem;color:var(--ms-text-muted);font-weight:600;">
+                        Tap any actor, actress, or director to explore all their movies &amp; series on MovieStream.
+                    </p>
+                </div>
+                <span id="mv_cast_count_badge" class="ms-chip" style="background:var(--ms-surface-alt);">Cast &amp; Crew</span>
+            </div>
+
+            <div id="mv_crew_pills" class="ms-crew-pills"></div>
+            <div id="mv_cast_grid" class="ms-cast-grid"></div>
+            <div id="mv_spec_bar" class="ms-spec-bar"></div>
+        </section>
+
+        <!-- Interactive Video Player & Stream Stage (Hidden until Watch is selected) -->
+        <section id="mv_player_card" class="ms-dl-card hidden">
+            <div class="ms-section-head" style="margin-bottom:14px;">
+                <div>
+                    <h2 class="ms-section-title" style="font-size:1.12rem;">
+                        <span class="ms-accent-bar"></span>
+                        <span>Stream Online Theater</span>
+                    </h2>
+                    <p id="mv_active_mirror_label" style="margin:4px 0 0;font-size:0.8rem;color:var(--ms-text-muted);font-weight:600;">
+                        Select a mirror below or press Play to start watching instantly.
+                    </p>
+                </div>
+                <div style="display:flex;align-items:center;gap:8px;">
+                    <span id="mv_stream_status" class="ms-chip active" style="background:var(--ms-green);border-color:var(--ms-green);">Ready</span>
+                    <button type="button" id="mv_close_player_btn" data-no-ad="1" onclick="closeMoviePlayer()" class="ms-chip" style="cursor:pointer;font-weight:800;">&times; Close Player</button>
+                </div>
+            </div>
+
+            <div id="mv_magic_wrap" class="ms-magic-wrapper aura-on" style="margin-bottom:16px;">
+                <div class="ms-magic-aura" aria-hidden="true"></div>
+                <div id="mv_player_stage" class="ms-magic-shell">
+                    <div id="mv_player_placeholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;background:radial-gradient(circle at 30% 25%, #1e293b 0%, #090d16 70%);color:#ffffff;z-index:2;">
+                        <button type="button" onclick="startMoviePlayback()" aria-label="Play Video"
+                            style="width:70px;height:70px;border-radius:50%;background:linear-gradient(135deg,#ef4444,#b91c1c);color:#ffffff;display:flex;align-items:center;justify-content:center;box-shadow:0 12px 35px rgba(239,68,68,0.55);margin-bottom:14px;border:2px solid rgba(255,255,255,0.28);cursor:pointer;">
+                            <svg width="30" height="30" viewBox="0 0 24 24" fill="currentColor" style="margin-left:3px;"><path d="M8 5v14l11-7z"/></svg>
+                        </button>
+                        <div id="mv_placeholder_title" style="font-size:1.02rem;font-weight:800;">Tap Play to Stream in HD</div>
+                        <p style="margin:6px 0 0;font-size:0.78rem;color:#cbd5e1;max-width:420px;">
+                            CineMagic HD Theater with ambient lighting, instant quality picker, and high-speed cloud delivery.
+                        </p>
+                    </div>
+                    <video id="mv_video" class="hidden" playsinline preload="metadata"></video>
+                    <iframe id="mv_iframe" class="hidden" allowfullscreen allow="autoplay; fullscreen; encrypted-media"></iframe>
+                    <div id="mv_magic_burst" class="ms-magic-burst" aria-hidden="true"></div>
+
+                    <div id="mv_magic_topbar" class="ms-magic-topbar hidden">
+                        <span id="mv_magic_title" style="font-size:0.79rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%;text-shadow:0 1px 6px rgba(0,0,0,0.85);">CineMagic HD</span>
+                        <div style="display:flex;gap:6px;">
+                            <button type="button" id="mv_aura_btn" class="ms-magic-pill active" onclick="toggleMagicAura()">&#10024; Aura</button>
+                            <button type="button" id="mv_theater_btn" class="ms-magic-pill" onclick="toggleTheaterMode()">Theater</button>
+                        </div>
+                    </div>
+
+                    <div id="mv_magic_controls" class="ms-magic-controls hidden">
+                        <div class="ms-magic-seek-wrap">
+                            <input type="range" id="mv_magic_seek" class="ms-magic-range" min="0" max="1000" value="0" aria-label="Seek video" />
+                        </div>
+                        <div class="ms-magic-ctrl-row">
+                            <div class="ms-magic-ctrl-group">
+                                <button type="button" id="mv_ctrl_play" class="ms-magic-icon-btn is-play" aria-label="Play or Pause" onclick="toggleMagicPlay()">&#9654;</button>
+                                <button type="button" id="mv_ctrl_rw" class="ms-magic-icon-btn" aria-label="Rewind 10 seconds" onclick="seekMagicBy(-10)">-10s</button>
+                                <button type="button" id="mv_ctrl_ff" class="ms-magic-icon-btn" aria-label="Forward 10 seconds" onclick="seekMagicBy(10)">+10s</button>
+                                <button type="button" id="mv_ctrl_mute" class="ms-magic-icon-btn" aria-label="Mute or Unmute" onclick="toggleMagicMute()">&#128266;</button>
+                                <input type="range" id="ms_vol_slider" min="0" max="1" step="0.05" value="1" aria-label="Volume" style="width:58px;accent-color:#ffffff;cursor:pointer;" oninput="setMagicVolume(this.value)" />
+                                <span id="mv_magic_time" class="ms-magic-time">00:00 / 00:00</span>
+                            </div>
+                            <div class="ms-magic-ctrl-group">
+                                <button type="button" id="mv_ctrl_speed" class="ms-magic-icon-btn" aria-label="Playback speed" onclick="cycleMagicSpeed()">1x</button>
+                                <button type="button" id="mv_ctrl_pip" class="ms-magic-icon-btn" aria-label="Picture in Picture" onclick="toggleMagicPiP()">PiP</button>
+                                <button type="button" id="mv_ctrl_fs" class="ms-magic-icon-btn" aria-label="Fullscreen" onclick="toggleMagicFullscreen()">&#x26F6;</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="mv_stream_error_banner" class="hidden" style="margin-bottom:14px;padding:12px 16px;border-radius:12px;background:#fffbeb;border:1px solid #fde68a;color:#92400e;font-size:0.8rem;font-weight:700;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px;">
+                <span id="mv_stream_error_text">This server could not stream inline. Try another mirror or click Download.</span>
+                <button type="button" onclick="openDedicatedDownloadPage()" class="ms-btn ms-btn-blue" style="padding:7px 14px;font-size:0.78rem;">Select Download Quality</button>
+            </div>
+
+            <div>
+                <div style="font-size:0.75rem;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--ms-text-muted);margin-bottom:10px;">
+                    Select Video Quality / Mirror
+                </div>
+                <div id="mv_mirrors_grid" class="ms-mirror-grid">
+                    <div class="ms-skeleton" style="height:56px;border-radius:12px;"></div>
+                    <div class="ms-skeleton" style="height:56px;border-radius:12px;"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- TV Series Season & Episode Selector -->
+        <section id="mv_tv_card" class="ms-dl-card hidden">
+            <div class="ms-section-head" style="margin-bottom:12px;">
+                <h2 class="ms-section-title" style="font-size:1.1rem;">
+                    <span class="ms-accent-bar" style="background:var(--ms-blue);"></span>
+                    <span>Seasons &amp; Episodes</span>
+                </h2>
+                <span id="mv_ep_count_badge" class="ms-chip" style="color:var(--ms-blue);border-color:#bfdbfe;background:var(--ms-blue-soft);">Series</span>
+            </div>
+            <div id="mv_seasons_bar" style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;"></div>
+            <div id="mv_episodes_grid" class="ms-ep-grid"></div>
+        </section>
+
+        <!-- Clean White Ad Slot -->
+        <div class="ms-ad-slot">
+            <span style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--ms-text-subtle);">SPONSORED</span>
+            <div id="container-7571eb086837a548fa62ae1cc60dbfed"></div>
+        </div>
+
+        <!-- Related Movies Row -->
+        <section class="ms-section" aria-label="Recommended Movies">
+            <div class="ms-section-head">
+                <h2 class="ms-section-title">
+                    <span class="ms-accent-bar"></span>
+                    <span>Recommended For You</span>
+                </h2>
+                <div class="ms-row-controls">
+                    <a href="category.html?cat=trending" class="ms-see-all">Browse All &rsaquo;</a>
+                    <button type="button" onclick="MovieStream.scrollRow('mv_related_row', -1)" class="ms-row-arrow" aria-label="Scroll Left">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M15 18l-6-6 6-6"/></svg>
+                    </button>
+                    <button type="button" onclick="MovieStream.scrollRow('mv_related_row', 1)" class="ms-row-arrow" aria-label="Scroll Right">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M9 18l6-6-6-6"/></svg>
+                    </button>
+                </div>
+            </div>
+            <div id="mv_related_row" class="ms-track no-scrollbar"></div>
+        </section>
+
+    </main>
+
+    <!-- Spotlight Global Search Modal -->
+    <div id="ms_search_overlay" class="ms-modal-backdrop hidden" role="dialog" aria-modal="true" aria-label="Search Movies" onclick="if(event.target===this)MovieStream.closeSearch()">
+        <div class="ms-modal-panel" style="max-width:860px;padding:22px;">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;">
+                <input id="ms_spotlight_input" type="search" oninput="MovieStream.liveSearch(this.value)"
+                    placeholder="Search any movie, TV series, Sinhala film, actor, or year..."
+                    class="ms-input" style="font-size:0.98rem;" />
+                <button type="button" onclick="MovieStream.closeSearch()" class="ms-btn ms-btn-outline" style="padding:10px 14px;">Close</button>
+            </div>
+            <div id="ms_search_status" style="font-size:0.8rem;color:var(--ms-text-muted);margin-bottom:14px;font-weight:600;">
+                Type at least 2 characters (English, Sinhala, Tamil, Hindi, Year)...
+            </div>
+            <div id="ms_search_results" class="ms-grid" style="max-height:60vh;overflow-y:auto;"></div>
+        </div>
+    </div>
+
+    <!-- Clean White Footer with 6 3D Tactile Social Badges -->
+    <footer class="ms-footer">
+        <div class="ms-container">
+            <div class="ms-footer-grid">
+                <div>
+                    <div class="ms-brand" style="margin-bottom:10px;">
+                        <img src="images/logo-sm.webp" alt="MovieStream Logo" width="32" height="32" class="ms-brand-logo" />
+                        <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
+                    </div>
+                    <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">
+                        Sri Lanka's fastest HD Movie &amp; Complete TV Series portal with Sinhala Subtitles, Direct Encrypted CDN Downloads, and instant WhatsApp Bot delivery.
+                    </p>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Browse</h3>
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:0.83rem;color:var(--ms-text-muted);">
+                        <a href="category.html?cat=movies">All Movies</a>
+                        <a href="category.html?cat=tvshows">TV Series</a>
+                        <a href="category.html?cat=complete">Complete Series</a>
+                        <a href="category.html?cat=sinhala">Sinhala Movies</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Languages</h3>
+                    <div style="display:flex;flex-direction:column;gap:6px;font-size:0.83rem;color:var(--ms-text-muted);">
+                        <a href="category.html?lang=english">English</a>
+                        <a href="category.html?lang=tamil">Tamil</a>
+                        <a href="category.html?lang=hindi">Hindi</a>
+                        <a href="category.html?lang=korea">Korean / K-Drama</a>
+                    </div>
+                </div>
+                <div>
+                    <h3 style="margin:0 0 12px;font-size:0.85rem;font-weight:800;">Connect With Kaveez &amp; MovieStream</h3>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;">
+                        <a data-social-key="facebook" href="https://www.facebook.com/share/1DxNnVeAsr/" target="_blank" rel="noopener noreferrer" aria-label="Facebook" class="social-3d-btn social-3d-fb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/></svg></a>
+                        <a data-social-key="whatsappChannel" href="https://whatsapp.com/channel/0029Vb8TOKv3LdQTui689i0W" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp Channel" class="social-3d-btn social-3d-wa"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.391c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969s-4.453-9.984-9.969-9.984zm5.422 14.125c-.234.656-1.359 1.25-1.875 1.328-.484.078-1.109.109-1.781-.109-.422-.141-.953-.312-1.641-.609-2.859-1.234-4.719-4.125-4.859-4.312-.141-.188-1.156-1.547-1.156-2.953s.734-2.094 1-2.375c.266-.281.578-.359.766-.359s.391.016.562.016c.188 0 .422-.062.656.516.25.594.844 2.062.922 2.219.078.156.125.328.016.547-.109.219-.156.344-.312.531-.156.188-.328.422-.469.562-.156.156-.312.328-.141.625.172.297.766 1.266 1.641 2.047 1.125 1 2.078 1.312 2.375 1.469.297.156.469.125.641-.078.172-.203.75-.875.953-1.172.203-.297.406-.25.672-.141.266.109 1.719.812 2.016.953.297.141.484.219.562.344.078.125.078.734-.156 1.391z"/></svg></a>
+                        <a data-social-key="linkedin" href="https://www.linkedin.com/in/kaveesha-theekshana-664290299?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" class="social-3d-btn social-3d-li"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg></a>
+                        <a data-social-key="instagram" href="https://www.instagram.com/kaveez.exe?exln=ZXhoaXhhaXR1Zzk2" target="_blank" rel="noopener noreferrer" aria-label="Instagram" class="social-3d-btn social-3d-ig"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg></a>
+                        <a data-social-key="threads" href="https://www.threads.com/@kaveez.exe" target="_blank" rel="noopener noreferrer" aria-label="Threads" class="social-3d-btn social-3d-th"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.472 12.01v-.017c.03-3.579.879-6.43 2.525-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.509 5.467l-2.04.569c-1.104-3.96-3.898-5.984-8.304-6.015-2.91.022-5.11.936-6.54 2.717C4.307 6.504 3.616 8.914 3.589 12c.027 3.086.718 5.496 2.057 7.164 1.43 1.783 3.631 2.698 6.54 2.717 2.623-.02 4.358-.631 5.8-2.045 1.647-1.613 1.618-3.593 1.09-4.798-.31-.71-.873-1.3-1.634-1.75-.192 1.352-.622 2.446-1.284 3.272-.886 1.102-2.14 1.704-3.73 1.79-1.202.065-2.361-.218-3.259-.801-1.063-.689-1.685-1.74-1.752-2.964-.065-1.19.408-2.285 1.33-3.082.88-.76 2.119-1.207 3.583-1.291a13.853 13.853 0 0 1 3.02.142c-.126-.742-.375-1.332-.75-1.757-.513-.586-1.308-.883-2.359-.89h-.029c-.844 0-1.992.232-2.721 1.32l-1.757-1.18c.98-1.454 2.568-2.256 4.478-2.256h.044c3.194.02 5.097 1.975 5.287 5.388.108.046.216.094.321.142 1.49.7 2.58 1.761 3.154 3.07.797 1.82.871 4.79-1.548 7.158-1.85 1.81-4.094 2.628-7.277 2.65Zm1.003-11.69c-.242 0-.487.007-.739.021-1.836.103-2.98.946-2.916 2.143.067 1.256 1.452 1.839 2.784 1.767 1.224-.065 2.818-.543 3.086-3.71a10.5 10.5 0 0 0-2.215-.221z"/></svg></a>
+                        <a data-social-key="tiktok" href="https://www.tiktok.com/@kaveez.exe" target="_blank" rel="noopener noreferrer" aria-label="TikTok" class="social-3d-btn social-3d-tt"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg></a>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:26px;padding-top:16px;border-top:1px solid var(--ms-border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:0.78rem;color:var(--ms-text-subtle);">
+                <span>&copy; 2026 MovieStream.top &mdash; Protected by KaveezCloud.</span>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Sticky Action CTA Bar -->
+    <div class="ms-mobile-sticky-cta">
+        <button type="button" data-no-ad="1" onclick="openWatchQualityPicker()" class="ms-btn ms-btn-primary" style="flex:1;padding:10px 10px;font-size:0.78rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+            <span>Watch HD</span>
+        </button>
+        <button type="button" data-no-ad="1" onclick="openDedicatedDownloadPage()" class="ms-btn ms-btn-blue" style="flex:1;padding:10px 10px;font-size:0.78rem;">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
+            <span>Download</span>
+        </button>
+        <button type="button" data-no-ad="1" onclick="openWhatsAppQualityPopup()" class="ms-btn ms-btn-green" style="flex:0.85;padding:10px 8px;font-size:0.78rem;">
+            <span>WA Bot</span>
+        </button>
+    </div>
+
+    <!-- Native Mobile App Bottom Tab Bar -->
+    <nav class="ms-mobile-tabbar" aria-label="Mobile Navigation">
+        <a href="index.html" class="ms-mob-tab" data-mob-tab="home">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+        <a href="category.html?cat=complete" class="ms-mob-tab" data-mob-tab="explore">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/></svg>
+            <span>Explore</span>
+        </a>
+        <button type="button" onclick="MovieStream.openSearch()" class="ms-mob-tab" data-mob-tab="search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+            <span>Search</span>
+        </button>
+        <a href="category.html?cat=sinhala" class="ms-mob-tab" data-mob-tab="sinhala">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
+            <span>Sinhala</span>
+        </a>
+        <a href="index.html#continue-watching-section" class="ms-mob-tab" data-mob-tab="recent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <span>Recent</span>
+        </a>
+    </nav>
+
+    <script defer src="assets/catalog-fallback.js"></script>
+    <script defer src="assets/app-core.js"></script>
+    <script>
+        let mvMovie = {};
+        let mvMirrors = [];
+        let mvSelectedMirrorIdx = 0;
+        let mvSeasons = [];
+        let mvActiveSeasonIdx = 0;
+        let mvActiveEpisodeIdx = 0;
+        let mvEpisodeUrl = "";
+        let mvEpisodeLabel = "";
+
+        function extractTgStreamUrl(raw) {
+            const m = String(raw || "").match(/t\.me\/c\/\d+\/(\d+)/);
+            if (!m) return "";
+            const base = MovieStream.getApiBase();
+            return `${base}/api/stream/${m[1]}`;
+        }
+
+        function resolvePlayableUrl(rawUrl) {
+            const raw = MovieStream.unwrapNestedDownloadUrl(rawUrl || "");
+            if (!raw) return { url: "", mode: "none" };
+            if (raw.includes("t.me/c/")) {
+                return { url: extractTgStreamUrl(raw), mode: "video", externalTelegram: raw };
+            }
+            if (raw.includes("t.me/") || raw.includes("telegram.me")) {
+                return { url: raw, mode: "telegram_external" };
+            }
+            if (raw.includes("pixeldrain.com/u/")) {
+                return { url: raw.replace("/u/", "/api/file/").replace("?download", ""), mode: "video" };
+            }
+            if (raw.includes("youtube.com") || raw.includes("youtu.be") || raw.includes("embed") || raw.includes("player")) {
+                return { url: raw, mode: "iframe" };
+            }
+            if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => raw.includes(d)) || raw.startsWith("/api/download")) {
+                const streamProxy = raw.startsWith("/api/download")
+                    ? `${MovieStream.getApiBase()}${raw.replace(/download=1/g, "download=0")}`
+                    : `${MovieStream.getApiBase()}/api/download?token=${MovieStream.encryptMovieUrl(raw)}&download=0`;
+                return { url: streamProxy, mode: "video" };
+            }
+            return { url: raw, mode: "video" };
+        }
+
+        function updateHeroMeta() {
+            const poster = document.getElementById("mv_poster");
+            const bg = document.getElementById("mv_backdrop");
+            const titleEl = document.getElementById("mv_title");
+            const badgesEl = document.getElementById("mv_badges");
+            const subEl = document.getElementById("mv_submeta");
+            const synEl = document.getElementById("mv_synopsis");
+            const phTitle = document.getElementById("mv_placeholder_title");
+
+            const cleanTitle = MovieStream.cleanDisplayTitle(mvMovie.title || "MovieStream Title");
+            const img = MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image);
+
+            document.title = `${cleanTitle} — Watch & Download | MovieStream.top`;
+            if (poster) {
+                poster.src = img;
+                poster.alt = `${cleanTitle} Poster`;
+                poster.onerror = function () { this.onerror = null; this.src = MovieStream.FALLBACK_POSTER; };
+            }
+            if (bg) bg.style.backgroundImage = `url('${img}')`;
+            if (titleEl) titleEl.textContent = cleanTitle;
+            if (phTitle) phTitle.textContent = `Tap Play to Watch ${cleanTitle}`;
+
+            if (badgesEl) {
+                const isTg = mvMovie.source === "sinhala" || mvMovie.source === "telegram" || String(mvMovie.url || "").includes("t.me/");
+                badgesEl.innerHTML = [
+                    mvMovie.rating && mvMovie.rating !== "N/A" ? `<span class="ms-star-pill">&#9733; ${MovieStream.escapeHtml(mvMovie.rating)} IMDb</span>` : "",
+                    mvMovie.year ? `<span class="ms-tag-pill">${MovieStream.escapeHtml(mvMovie.year)}</span>` : "",
+                    mvMovie.quality ? `<span class="ms-tag-pill" style="background:var(--ms-red-soft);color:var(--ms-red-dark);border-color:#fecaca;">${MovieStream.escapeHtml(String(mvMovie.quality).replace(/IMDb:.*$/i, ""))}</span>` : "",
+                    `<span class="ms-tag-pill" style="${isTg ? "background:var(--ms-blue-soft);color:var(--ms-blue);border-color:#bfdbfe;" : ""}">${isTg ? "Sinhala Movies" : "Sinhala Subtitles"}</span>`
+                ].join("");
+            }
+
+            if (subEl) {
+                const bits = [];
+                if (mvMovie.genre) bits.push(String(mvMovie.genre).replace(/,\s*,+/g, ", ").replace(/^,\s*|,\s*$/g, ""));
+                if (mvMovie.language) bits.push(`Language: ${mvMovie.language}`);
+                if (mvMovie.runtime) bits.push(mvMovie.runtime);
+                subEl.textContent = bits.filter(Boolean).join(" • ") || "HD MP4 • Ready for Online Stream & Direct Download";
+            }
+
+            if (synEl) {
+                const hasYear = mvMovie.year ? cleanTitle.includes(String(mvMovie.year)) : /\(\d{4}\)/.test(cleanTitle);
+                const yearNote = !hasYear ? ` (${mvMovie.year || "HD"})` : "";
+                synEl.textContent = mvMovie.synopsis || mvMovie.description || mvMovie.plot ||
+                    `${cleanTitle}${yearNote} is ready to stream online or download in 480p / 720p / 1080p MP4 with Sinhala Subtitles on MovieStream.`;
+            }
+
+            const magicTitle = document.getElementById("mv_magic_title");
+            if (magicTitle) magicTitle.textContent = `${cleanTitle} • CineMagic HD`;
+
+            renderCastAndCrew();
+
+            // Dynamic Movie / TVSeries JSON-LD Structured Data for Google SEO
+            try {
+                let ldEl = document.getElementById("mv_json_ld");
+                if (!ldEl) {
+                    ldEl = document.createElement("script");
+                    ldEl.type = "application/ld+json";
+                    ldEl.id = "mv_json_ld";
+                    document.head.appendChild(ldEl);
+                }
+                const ldObj = {
+                    "@context": "https://schema.org",
+                    "@type": mvSeasons.length ? "TVSeries" : "Movie",
+                    "name": cleanTitle,
+                    "image": img,
+                    "description": (synEl && synEl.textContent) || `${cleanTitle} Watch Online and Download on MovieStream.top`,
+                    "url": window.location.href
+                };
+                if (mvMovie.year) ldObj.datePublished = String(mvMovie.year);
+                if (Array.isArray(mvMovie.directors) && mvMovie.directors.length) {
+                    ldObj.director = mvMovie.directors.map(d => ({ "@type": "Person", "name": d.name || d }));
+                }
+                if (Array.isArray(mvMovie.cast) && mvMovie.cast.length) {
+                    ldObj.actor = mvMovie.cast.slice(0, 10).map(c => ({ "@type": "Person", "name": c.name || c }));
+                }
+                ldEl.textContent = JSON.stringify(ldObj);
+            } catch (_) {}
+        }
+
+        function slugifyPerson(name) {
+            return String(name || "")
+                .toLowerCase()
+                .replace(/[^a-z0-9]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        }
+
+        function extractPersonRoute(item, defaultType) {
+            const rawUrl = String(item?.url || "");
+            const m = rawUrl.match(/\/(cast|director|creator|actor)\/([^\/?#]+)/i);
+            const type = (m && m[1]) ? m[1].toLowerCase() : (defaultType || "cast");
+            const slug = item?.slug || (m && m[2]) || slugifyPerson(item?.name || item);
+            const name = item?.name || slug.replace(/-/g, " ");
+            return { type, slug, name };
+        }
+
+        function renderCastAndCrew() {
+            const crewEl = document.getElementById("mv_crew_pills");
+            const gridEl = document.getElementById("mv_cast_grid");
+            const specEl = document.getElementById("mv_spec_bar");
+            const badgeEl = document.getElementById("mv_cast_count_badge");
+            if (!crewEl || !gridEl || !specEl) return;
+
+            const castList = Array.isArray(mvMovie.cast) ? mvMovie.cast : [];
+            const dirList = Array.isArray(mvMovie.directors) ? mvMovie.directors : (mvMovie.director ? [{ name: mvMovie.director }] : []);
+            const genresList = Array.isArray(mvMovie.genres_list) && mvMovie.genres_list.length
+                ? mvMovie.genres_list
+                : String(mvMovie.genre || "").split(",").map(s => s.trim()).filter(Boolean).map(name => ({
+                    name,
+                    slug: name.toLowerCase().replace(/[^a-z0-9]+/g, "-")
+                }));
+
+            const pills = [];
+            dirList.forEach(d => {
+                const { type, slug, name } = extractPersonRoute(d, "director");
+                if (!slug || !name) return;
+                const href = `category.html?person=${encodeURIComponent(`${type}/${slug}`)}&pname=${encodeURIComponent(name)}`;
+                pills.push(`<a href="${href}" class="ms-crew-pill"><span>&#127916; Director:</span> <b>${MovieStream.escapeHtml(name)}</b></a>`);
+            });
+            genresList.slice(0, 6).forEach(g => {
+                const gName = g.name || g;
+                const gSlug = g.slug || String(gName).toLowerCase().replace(/[^a-z0-9]+/g, "-");
+                if (!gName || !gSlug) return;
+                pills.push(`<a href="category.html?genre=${encodeURIComponent(gSlug)}" class="ms-crew-pill">${MovieStream.escapeHtml(gName)}</a>`);
+            });
+            if (mvMovie.country) {
+                pills.push(`<span class="ms-crew-pill" style="cursor:default;"><span>&#127758;</span> ${MovieStream.escapeHtml(mvMovie.country)}</span>`);
+            }
+            if (mvMovie.subtitle_by) {
+                pills.push(`<span class="ms-crew-pill" style="cursor:default;"><span>&#128221; Subtitles:</span> ${MovieStream.escapeHtml(mvMovie.subtitle_by)}</span>`);
+            }
+            crewEl.innerHTML = pills.join("");
+            crewEl.classList.toggle("hidden", pills.length === 0);
+
+            if (badgeEl) {
+                badgeEl.textContent = castList.length ? `${castList.length} Cast Members` : (mvSeasons.length ? "TV Series Info" : "Movie Specs");
+            }
+
+            if (castList.length) {
+                gridEl.classList.remove("hidden");
+                gridEl.innerHTML = castList.slice(0, 18).map(c => {
+                    const { type, slug, name } = extractPersonRoute(c, "cast");
+                    const role = c.role || "Cast";
+                    const img = MovieStream.optimizePosterUrl(c.image || "");
+                    const safeImg = (c.image && String(c.image).startsWith("http")) ? c.image : "";
+                    const initials = name.split(/\s+/).filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join("") || "★";
+                    const href = `category.html?person=${encodeURIComponent(`${type}/${slug}`)}&pname=${encodeURIComponent(name)}${safeImg ? `&pimg=${encodeURIComponent(safeImg)}` : ""}`;
+                    return `
+                    <a href="${href}" class="ms-cast-card">
+                        <div class="ms-cast-avatar">
+                            ${safeImg ? `<img src="${MovieStream.escapeHtml(img)}" alt="${MovieStream.escapeHtml(name)}" loading="lazy" referrerpolicy="no-referrer" onerror="this.remove();const s=this.parentNode.querySelector('.ms-cast-initials');if(s)s.classList.remove('hidden');" />` : ""}
+                            <span class="ms-cast-initials ${safeImg ? "hidden" : ""}">${MovieStream.escapeHtml(initials)}</span>
+                        </div>
+                        <div class="ms-cast-name">${MovieStream.escapeHtml(name)}</div>
+                        <div class="ms-cast-role">${MovieStream.escapeHtml(role)}</div>
+                        <span class="ms-cast-cta">View Films &rarr;</span>
+                    </a>`;
+                }).join("");
+            } else {
+                gridEl.classList.add("hidden");
+                gridEl.innerHTML = "";
+            }
+
+            const mirrorCount = Array.isArray(mvMirrors) ? mvMirrors.length : 0;
+            const qSummary = mirrorCount
+                ? mvMirrors.slice(0, 3).map(m => String(m.quality_info || m.quality || "HD").split("•")[0].trim()).join(" • ")
+                : (mvMovie.quality || "480p • 720p • 1080p");
+            const isTg = mvMovie.source === "sinhala" || mvMovie.source === "telegram" || String(mvMovie.url || "").includes("t.me/");
+            specEl.innerHTML = `
+                <div class="ms-spec-tile" style="cursor:pointer;" data-no-ad="1" onclick="openWatchQualityPicker()">
+                    <div class="ms-spec-label">Watch Online HD</div>
+                    <div class="ms-spec-value" style="color:var(--ms-red);">&#9654; Choose Quality &amp; Play</div>
+                </div>
+                <div class="ms-spec-tile" style="cursor:pointer;" data-no-ad="1" onclick="openDedicatedDownloadPage()">
+                    <div class="ms-spec-label">Direct Download</div>
+                    <div class="ms-spec-value" style="color:var(--ms-blue);">&#8595; ${MovieStream.escapeHtml(qSummary)}</div>
+                </div>
+                <div class="ms-spec-tile" style="cursor:pointer;" data-no-ad="1" onclick="openWhatsAppQualityPopup()">
+                    <div class="ms-spec-label">WhatsApp Delivery</div>
+                    <div class="ms-spec-value" style="color:var(--ms-green);">&#9889; Instant Quality Bot</div>
+                </div>
+                <div class="ms-spec-tile">
+                    <div class="ms-spec-label">Release &amp; Audio</div>
+                    <div class="ms-spec-value">${MovieStream.escapeHtml([mvMovie.year || "2026", mvMovie.language || (isTg ? "Sinhala" : "Sinhala Sub")].filter(Boolean).join(" • "))}</div>
+                </div>`;
+        }
+
+        function renderMirrors() {
+            const grid = document.getElementById("mv_mirrors_grid");
+            const label = document.getElementById("mv_active_mirror_label");
+            if (!grid) return;
+
+            if (!mvMirrors || !mvMirrors.length) {
+                grid.innerHTML = `<div style="grid-column:1/-1;padding:14px;border-radius:12px;background:var(--ms-surface-alt);border:1px solid var(--ms-border);font-size:0.82rem;font-weight:600;color:var(--ms-text-muted);">No direct inline mirror loaded yet. Click Download or WhatsApp Bot above to select a quality.</div>`;
+                return;
+            }
+
+            grid.innerHTML = mvMirrors.map((lk, idx) => {
+                const rawLabel = lk.quality_info || lk.quality || lk.server || `Mirror ${idx + 1}`;
+                const size = MovieStream.parseQualitySize(rawLabel, lk.size);
+                const over = MovieStream.isSizeOver2GB(size);
+                return `
+                <button type="button" class="ms-mirror-btn ${idx === mvSelectedMirrorIdx ? "active" : ""}" onclick="selectMirror(${idx})">
+                    <div style="min-width:0;">
+                        <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${MovieStream.escapeHtml(rawLabel)}</div>
+                        <div style="font-size:0.72rem;font-weight:600;color:var(--ms-text-muted);margin-top:2px;">${MovieStream.escapeHtml(size)} ${over ? "• >2GB Direct" : "• Fast Stream"}</div>
+                    </div>
+                    <span class="ms-chip ${idx === mvSelectedMirrorIdx ? "active" : ""}" style="font-size:0.68rem;padding:3px 8px;">${idx === mvSelectedMirrorIdx ? "ACTIVE" : "PICK"}</span>
+                </button>`;
+            }).join("");
+
+            const active = mvMirrors[mvSelectedMirrorIdx];
+            if (label && active) {
+                label.textContent = `Selected Server: ${active.quality_info || active.quality || "HD Stream"} — Tap Play to watch.`;
+            }
+        }
+
+        function selectMirror(idx, autoPlay = false) {
+            mvSelectedMirrorIdx = idx;
+            renderMirrors();
+            const pCard = document.getElementById("mv_player_card");
+            const isPlayerActive = pCard && !pCard.classList.contains("hidden") &&
+                (!document.getElementById("mv_video").classList.contains("hidden") || !document.getElementById("mv_iframe").classList.contains("hidden"));
+            if (autoPlay || isPlayerActive) startMoviePlayback();
+        }
+
+        let _magicBound = false;
+        let _magicIdleTimer = null;
+        let _magicLastTapTs = 0;
+        const _magicSpeeds = [1, 1.25, 1.5, 2, 0.75];
+        let _magicSpeedIdx = 0;
+
+        function fmtMagicTime(sec) {
+            if (!isFinite(sec) || sec < 0) return "00:00";
+            const s = Math.floor(sec % 60);
+            const m = Math.floor((sec / 60) % 60);
+            const h = Math.floor(sec / 3600);
+            return h > 0
+                ? `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+                : `${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+        }
+
+        function flashMagicBurst(label) {
+            const b = document.getElementById("mv_magic_burst");
+            if (!b) return;
+            b.textContent = label;
+            b.classList.remove("is-anim");
+            void b.offsetWidth;
+            b.classList.add("is-anim");
+        }
+
+        function wakeMagicControls() {
+            const stage = document.getElementById("mv_player_stage");
+            const v = document.getElementById("mv_video");
+            if (!stage) return;
+            stage.classList.remove("is-idle");
+            clearTimeout(_magicIdleTimer);
+            if (v && !v.paused && !v.ended) {
+                _magicIdleTimer = setTimeout(() => {
+                    stage.classList.add("is-idle");
+                }, 3200);
+            }
+        }
+
+        function toggleMagicPlay() {
+            const v = document.getElementById("mv_video");
+            if (!v || v.classList.contains("hidden")) return;
+            if (v.paused) {
+                v.play().catch(() => {});
+                flashMagicBurst("▶");
+            } else {
+                v.pause();
+                flashMagicBurst("⏸");
+            }
+            wakeMagicControls();
+        }
+
+        function seekMagicBy(delta) {
+            const v = document.getElementById("mv_video");
+            if (!v || v.classList.contains("hidden")) return;
+            const target = Math.max(0, Math.min(v.duration || Infinity, (v.currentTime || 0) + delta));
+            v.currentTime = target;
+            flashMagicBurst(delta > 0 ? `+${delta}s` : `${delta}s`);
+            wakeMagicControls();
+        }
+
+        function toggleMagicMute() {
+            const v = document.getElementById("mv_video");
+            const btn = document.getElementById("mv_ctrl_mute");
+            const sl = document.getElementById("ms_vol_slider");
+            if (!v) return;
+            v.muted = !v.muted;
+            if (btn) btn.textContent = v.muted || v.volume === 0 ? "🔇" : "🔊";
+            if (sl) sl.value = v.muted ? 0 : v.volume;
+            wakeMagicControls();
+        }
+
+        function setMagicVolume(val) {
+            const v = document.getElementById("mv_video");
+            const btn = document.getElementById("mv_ctrl_mute");
+            if (!v) return;
+            const vol = Math.max(0, Math.min(1, parseFloat(val)));
+            v.volume = vol;
+            v.muted = vol === 0;
+            if (btn) btn.textContent = v.muted ? "🔇" : "🔊";
+            wakeMagicControls();
+        }
+
+        function cycleMagicSpeed() {
+            const v = document.getElementById("mv_video");
+            const btn = document.getElementById("mv_ctrl_speed");
+            _magicSpeedIdx = (_magicSpeedIdx + 1) % _magicSpeeds.length;
+            const rate = _magicSpeeds[_magicSpeedIdx];
+            if (v) v.playbackRate = rate;
+            if (btn) btn.textContent = `${rate}x`;
+            flashMagicBurst(`${rate}x`);
+            wakeMagicControls();
+        }
+
+        function toggleMagicAura() {
+            const wrap = document.getElementById("mv_magic_wrap");
+            const btn = document.getElementById("mv_aura_btn");
+            if (!wrap || !btn) return;
+            const on = wrap.classList.toggle("aura-on");
+            btn.classList.toggle("active", on);
+        }
+
+        function toggleTheaterMode() {
+            const stage = document.getElementById("mv_player_stage");
+            const btn = document.getElementById("mv_theater_btn");
+            if (!stage || !btn) return;
+            const on = stage.classList.toggle("is-theater");
+            btn.classList.toggle("active", on);
+        }
+
+        async function toggleMagicPiP() {
+            const v = document.getElementById("mv_video");
+            if (!v || !document.pictureInPictureEnabled) {
+                MovieStream.showToast("Picture-in-Picture is not supported on this browser.");
+                return;
+            }
+            try {
+                if (document.pictureInPictureElement) await document.exitPictureInPicture();
+                else await v.requestPictureInPicture();
+            } catch (_) {}
+        }
+
+        function toggleMagicFullscreen() {
+            const stage = document.getElementById("mv_player_stage");
+            if (!stage) return;
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            } else if (stage.requestFullscreen) {
+                stage.requestFullscreen().catch(() => {});
+            }
+        }
+
+        function initMagicPlayerBindings() {
+            if (_magicBound) return;
+            _magicBound = true;
+            const stage = document.getElementById("mv_player_stage");
+            const v = document.getElementById("mv_video");
+            const seek = document.getElementById("mv_magic_seek");
+            const timeEl = document.getElementById("mv_magic_time");
+            const playBtn = document.getElementById("mv_ctrl_play");
+            if (!stage || !v) return;
+
+            const syncPlayState = () => {
+                if (playBtn) playBtn.innerHTML = v.paused ? "&#9654;" : "&#10074;&#10074;";
+                wakeMagicControls();
+            };
+
+            v.addEventListener("play", syncPlayState);
+            v.addEventListener("pause", syncPlayState);
+            v.addEventListener("ended", () => {
+                if (playBtn) playBtn.innerHTML = "&#9654;";
+                stage.classList.remove("is-idle");
+            });
+            v.addEventListener("loadedmetadata", () => {
+                if (timeEl) timeEl.textContent = `${fmtMagicTime(0)} / ${fmtMagicTime(v.duration)}`;
+            });
+            v.addEventListener("timeupdate", () => {
+                const dur = v.duration || 0;
+                const cur = v.currentTime || 0;
+                if (seek && dur > 0) seek.value = Math.round((cur / dur) * 1000);
+                if (timeEl) timeEl.textContent = `${fmtMagicTime(cur)} / ${fmtMagicTime(dur)}`;
+            });
+
+            if (seek) {
+                seek.addEventListener("input", () => {
+                    const dur = v.duration || 0;
+                    if (dur > 0) v.currentTime = (Number(seek.value) / 1000) * dur;
+                    wakeMagicControls();
+                });
+            }
+
+            v.addEventListener("click", (e) => {
+                const rect = v.getBoundingClientRect();
+                const xPct = (e.clientX - rect.left) / Math.max(1, rect.width);
+                const now = Date.now();
+                if (now - _magicLastTapTs < 280) {
+                    if (xPct < 0.35) seekMagicBy(-10);
+                    else if (xPct > 0.65) seekMagicBy(10);
+                    else toggleMagicFullscreen();
+                    _magicLastTapTs = 0;
+                } else {
+                    _magicLastTapTs = now;
+                    toggleMagicPlay();
+                }
+            });
+
+            stage.addEventListener("mousemove", wakeMagicControls);
+            stage.addEventListener("touchstart", wakeMagicControls, { passive: true });
+        }
+
+        function closeMoviePlayer() {
+            const card = document.getElementById("mv_player_card");
+            const ph = document.getElementById("mv_player_placeholder");
+            const video = document.getElementById("mv_video");
+            const iframe = document.getElementById("mv_iframe");
+            const topbar = document.getElementById("mv_magic_topbar");
+            const controls = document.getElementById("mv_magic_controls");
+            const status = document.getElementById("mv_stream_status");
+            const errBanner = document.getElementById("mv_stream_error_banner");
+
+            try { if (video) { video.pause(); video.removeAttribute("src"); video.load(); video.classList.add("hidden"); } } catch (_) {}
+            try { if (iframe) { iframe.src = ""; iframe.classList.add("hidden"); } } catch (_) {}
+            if (ph) ph.style.display = "flex";
+            if (topbar) topbar.classList.add("hidden");
+            if (controls) controls.classList.add("hidden");
+            if (errBanner) errBanner.classList.add("hidden");
+            if (status) {
+                status.textContent = "Ready";
+                status.style.background = "var(--ms-green)";
+                status.style.borderColor = "var(--ms-green)";
+            }
+            if (card) {
+                card.classList.add("hidden");
+                card.classList.remove("ms-player-reveal");
+            }
+        }
+
+        function startMoviePlayback() {
+            const pCard = document.getElementById("mv_player_card");
+            if (pCard) {
+                pCard.classList.remove("hidden");
+                pCard.classList.remove("ms-player-reveal");
+                void pCard.offsetWidth;
+                pCard.classList.add("ms-player-reveal");
+            }
+
+            const active = mvMirrors[mvSelectedMirrorIdx];
+            const candidateUrl = active
+                ? (active.real_direct_download_url || active.url || active.link || active.cinesubz_link || mvMovie.url)
+                : (mvMovie.url || "");
+            const resolved = resolvePlayableUrl(candidateUrl);
+            const ph = document.getElementById("mv_player_placeholder");
+            const video = document.getElementById("mv_video");
+            const iframe = document.getElementById("mv_iframe");
+            const status = document.getElementById("mv_stream_status");
+            const errBanner = document.getElementById("mv_stream_error_banner");
+            const errText = document.getElementById("mv_stream_error_text");
+            const topbar = document.getElementById("mv_magic_topbar");
+            const controls = document.getElementById("mv_magic_controls");
+
+            if (errBanner) errBanner.classList.add("hidden");
+
+            if (resolved.mode === "telegram_external") {
+                window.open(resolved.url, "_blank", "noopener,noreferrer");
+                return;
+            }
+            if (!resolved.url) {
+                MovieStream.showToast("No direct stream link ready yet — click Download for mirrors.");
+                return;
+            }
+
+            initMagicPlayerBindings();
+            if (ph) ph.style.display = "none";
+            if (topbar) topbar.classList.remove("hidden");
+            if (status) {
+                status.textContent = "Playing";
+                status.style.background = "var(--ms-red)";
+                status.style.borderColor = "var(--ms-red)";
+            }
+
+            if (resolved.mode === "iframe") {
+                if (controls) controls.classList.add("hidden");
+                video.classList.add("hidden");
+                video.pause();
+                iframe.classList.remove("hidden");
+                iframe.src = resolved.url;
+            } else {
+                iframe.classList.add("hidden");
+                iframe.src = "";
+                if (controls) controls.classList.remove("hidden");
+                video.classList.remove("hidden");
+                video.onerror = function () {
+                    if (errBanner && errText) {
+                        errText.textContent = resolved.externalTelegram
+                            ? "Stream server node is restarting. Click Download or choose WhatsApp Bot quality."
+                            : "Unable to play this mirror inline. Pick another mirror or click Download.";
+                        errBanner.classList.remove("hidden");
+                    }
+                    if (status) {
+                        status.textContent = "Mirror Switch";
+                        status.style.background = "#d97706";
+                        status.style.borderColor = "#d97706";
+                    }
+                };
+                video.src = resolved.url;
+                video.play().catch(() => {});
+                flashMagicBurst("▶ HD");
+                wakeMagicControls();
+            }
+
+            document.getElementById("mv_player_card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function renderSeriesUI() {
+            const tvCard = document.getElementById("mv_tv_card");
+            const sBar = document.getElementById("mv_seasons_bar");
+            const eGrid = document.getElementById("mv_episodes_grid");
+            const badge = document.getElementById("mv_ep_count_badge");
+            if (!tvCard || !mvSeasons.length) return;
+
+            tvCard.classList.remove("hidden");
+            const currentSeason = mvSeasons[mvActiveSeasonIdx] || mvSeasons[0];
+            const episodes = currentSeason.episodes || [];
+            if (badge) badge.textContent = `${mvSeasons.length} Season(s) • ${episodes.length} Ep(s)`;
+
+            sBar.innerHTML = mvSeasons.map((s, idx) => `
+                <button type="button" onclick="selectSeason(${idx})"
+                    class="ms-chip ${idx === mvActiveSeasonIdx ? "active" : ""}" style="${idx === mvActiveSeasonIdx ? "background:var(--ms-blue);border-color:var(--ms-blue);" : ""}">
+                    ${MovieStream.escapeHtml(s.season_title || s.title || `Season ${idx + 1}`)}
+                </button>`).join("");
+
+            eGrid.innerHTML = episodes.map((ep, idx) => `
+                <button type="button" onclick="selectEpisode(${idx})" class="ms-ep-btn ${idx === mvActiveEpisodeIdx ? "active" : ""}">
+                    ${MovieStream.escapeHtml(ep.episode_title || ep.title || `Episode ${idx + 1}`)}
+                </button>`).join("");
+        }
+
+        async function selectSeason(idx, initialEpIdx = 0) {
+            mvActiveSeasonIdx = idx;
+            const eps = mvSeasons[idx]?.episodes || [];
+            const epTarget = Math.min(Math.max(0, Number(initialEpIdx) || 0), Math.max(0, eps.length - 1));
+            mvActiveEpisodeIdx = epTarget;
+            renderSeriesUI();
+            if (eps[epTarget]) await selectEpisode(epTarget);
+        }
+
+        async function selectEpisode(idx) {
+            mvActiveEpisodeIdx = idx;
+            renderSeriesUI();
+            const season = mvSeasons[mvActiveSeasonIdx];
+            const ep = season?.episodes?.[idx];
+            if (!ep) return;
+
+            mvEpisodeUrl = ep.url || ep.link || "";
+            mvEpisodeLabel = `${season.season_title || `S${mvActiveSeasonIdx + 1}`} ${ep.episode_title || ep.title || `E${idx + 1}`}`;
+            const labelEl = document.getElementById("mv_active_mirror_label");
+            if (labelEl) labelEl.textContent = `Loading mirrors for ${mvEpisodeLabel}...`;
+
+            let links = ep.download_links || ep.links || [];
+            if ((!links || !links.length) && mvEpisodeUrl) {
+                try {
+                    const res = await MovieStream.fetchCineSubzAPI(`/api/episode?url=${encodeURIComponent(mvEpisodeUrl)}`);
+                    const d = res?.details || res || {};
+                    links = d.download_links || d.links || [];
+                } catch (_) {}
+            }
+            mvMirrors = links;
+            mvSelectedMirrorIdx = 0;
+            renderMirrors();
+            renderCastAndCrew();
+        }
+
+        function buildQualityPopupPayload() {
+            const active = mvMirrors[mvSelectedMirrorIdx];
+            return {
+                title: mvMovie.title,
+                url: mvEpisodeUrl || mvMovie.url,
+                movieUrl: mvMovie.url,
+                imgUrl: MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image),
+                year: mvMovie.year,
+                quality: mvMovie.quality,
+                rating: mvMovie.rating,
+                source: mvMovie.source,
+                isTv: mvSeasons.length > 0,
+                seasons: mvSeasons && mvSeasons.length ? mvSeasons : null,
+                seasonIdx: mvActiveSeasonIdx,
+                episodeIdx: mvActiveEpisodeIdx,
+                season: mvEpisodeLabel ? String(mvActiveSeasonIdx + 1) : "",
+                episode: mvEpisodeLabel ? String(mvActiveEpisodeIdx + 1) : "",
+                download_links: mvMirrors,
+                directLink: active ? (active.real_direct_download_url || active.url || active.link || "") : "",
+                onWatchSelect: async (origIdx, _lnk, sIdx, eIdx) => {
+                    if (mvSeasons && mvSeasons.length) {
+                        if (sIdx !== mvActiveSeasonIdx) {
+                            await selectSeason(sIdx, eIdx);
+                        } else if (eIdx !== mvActiveEpisodeIdx) {
+                            await selectEpisode(eIdx);
+                        }
+                    }
+                    const nextIdx = (typeof origIdx === "number" && origIdx >= 0 && origIdx < mvMirrors.length) ? origIdx : 0;
+                    mvSelectedMirrorIdx = nextIdx;
+                    renderMirrors();
+                    startMoviePlayback();
+                }
+            };
+        }
+
+        function openWatchQualityPicker() {
+            MovieStream.openDownloadModal(buildQualityPopupPayload(), "watch");
+        }
+
+        function openDedicatedDownloadPage() {
+            MovieStream.openDownloadModal(buildQualityPopupPayload(), "download");
+        }
+
+        function openWhatsAppQualityPopup() {
+            MovieStream.openDownloadModal(buildQualityPopupPayload(), "whatsapp");
+        }
+
+        async function shareCurrentMovie() {
+            const cleanTitle = MovieStream.cleanDisplayTitle(mvMovie.title || "MovieStream");
+            const shareUrl = window.location.href;
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: `${cleanTitle} | MovieStream`, url: shareUrl });
+                    return;
+                } catch (_) {}
+            }
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                MovieStream.showToast("Movie link copied to clipboard!");
+            } catch (_) {
+                MovieStream.showToast("Copy address bar link to share.");
+            }
+        }
+
+        function renderRelatedMovies() {
+            const track = document.getElementById("mv_related_row");
+            if (!track) return;
+            const hp = window.CINESUBZ_FALLBACK_HOMEPAGE || {};
+            const pool = [
+                ...(hp["Trending Now"] || []),
+                ...(hp["All Movies"] || []),
+                ...(window.CINESUBZ_FALLBACK_SINHALA || [])
+            ].filter(m => (m.url || m.downloadLink) !== mvMovie.url);
+            track.innerHTML = pool.slice(0, 14).map(m =>
+                MovieStream.renderPosterCard(m, { isTelegram: m.source === "telegram" })
+            ).join("");
+        }
+
+        function findCachedCatalogMatch(targetUrl, targetTitle) {
+            const normUrl = (u) => String(u || "").trim().replace(/\/+$/, "").toLowerCase();
+            const normTitle = (t) => MovieStream.cleanDisplayTitle(t || "").toLowerCase().replace(/[^a-z0-9\u0D80-\u0DFF]+/g, "");
+            const wantedUrl = normUrl(targetUrl);
+            const wantedTitle = normTitle(targetTitle);
+
+            const pools = [
+                ...(window.CINESUBZ_FALLBACK_DETAILS || []),
+                ...(window.CINESUBZ_FALLBACK_SINHALA || []),
+                ...Object.values(window.CINESUBZ_FALLBACK_HOMEPAGE || {}).flat()
+            ];
+
+            let merged = null;
+            for (const item of pools) {
+                if (!item) continue;
+                const itemUrl = normUrl(item.url || item.downloadLink);
+                const itemTitle = normTitle(item.title);
+                const matched = (wantedUrl && itemUrl && itemUrl === wantedUrl)
+                    || (wantedTitle && itemTitle && itemTitle === wantedTitle);
+                if (matched) {
+                    merged = { ...(merged || {}), ...item };
+                    if (merged.poster || merged.imageUrl || merged.image) {
+                        merged.imgUrl = merged.imgUrl || merged.imageUrl || merged.poster || merged.image;
+                    }
+                    if (merged.download_links && merged.download_links.length) break;
+                }
+            }
+            return merged;
+        }
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (window.__KV_BLOCKED) return;
+            const qs = new URLSearchParams(window.location.search);
+            const rawUrl = qs.get("url") || "";
+            const rawTitle = qs.get("title") || "";
+            let stored = null;
+            try {
+                const candidate = JSON.parse(sessionStorage.getItem("ms_pending_movie") || "null");
+                const norm = (u) => String(u || "").trim().replace(/\/+$/, "").toLowerCase();
+                if (candidate && (
+                    (!rawUrl && !rawTitle) ||
+                    (rawUrl && (norm(candidate.url) === norm(rawUrl) || norm(candidate.downloadLink) === norm(rawUrl))) ||
+                    (!rawUrl && rawTitle && candidate.title === rawTitle)
+                )) {
+                    stored = candidate;
+                }
+            } catch (_) {}
+
+            const cachedMatch = findCachedCatalogMatch(rawUrl || stored?.url || stored?.downloadLink, rawTitle || stored?.title);
+
+            mvMovie = {
+                ...(cachedMatch || {}),
+                ...(stored || {}),
+                title: rawTitle || stored?.title || cachedMatch?.title || "MovieStream Title",
+                url: rawUrl || stored?.url || stored?.downloadLink || cachedMatch?.url || cachedMatch?.downloadLink || "",
+                source: qs.get("source") || stored?.source || cachedMatch?.source || "cs",
+                imgUrl: qs.get("img") || stored?.imgUrl || stored?.image || cachedMatch?.imgUrl || cachedMatch?.imageUrl || cachedMatch?.poster || cachedMatch?.image || MovieStream.FALLBACK_POSTER,
+                year: qs.get("year") || stored?.year || cachedMatch?.year || "",
+                quality: qs.get("quality") || stored?.quality || cachedMatch?.quality || "HD",
+                rating: qs.get("rating") || stored?.rating || cachedMatch?.rating || ""
+            };
+
+            updateHeroMeta();
+            renderRelatedMovies();
+
+            if (window.location.port !== "5500") {
+                setTimeout(() => {
+                    const s = document.createElement("script");
+                    s.async = true;
+                    s.setAttribute("data-cfasync", "false");
+                    s.src = "https://pl31408761.profitableratecpmnetwork.com/7571eb086837a548fa62ae1cc60dbfed/invoke.js";
+                    document.body.appendChild(s);
+                }, 1500);
+            }
+
+            const mirrorParam = parseInt(qs.get("mirror") || "", 10);
+            const applyAutoplayMirror = () => {
+                if (!Number.isNaN(mirrorParam) && mirrorParam >= 0 && mirrorParam < mvMirrors.length) {
+                    mvSelectedMirrorIdx = mirrorParam;
+                    renderMirrors();
+                }
+                if (qs.get("autoplay") === "1") startMoviePlayback();
+            };
+
+            const isTg = mvMovie.source === "sinhala" || mvMovie.source === "telegram" || String(mvMovie.url || "").includes("t.me/");
+            if (isTg) {
+                mvMirrors = [
+                    {
+                        quality_info: "480p SD • Data Saver",
+                        size: "~450 MB",
+                        url: mvMovie.url,
+                        real_direct_download_url: mvMovie.url
+                    },
+                    {
+                        quality_info: "720p HD • Recommended",
+                        size: "~950 MB",
+                        url: mvMovie.url,
+                        real_direct_download_url: mvMovie.url
+                    },
+                    {
+                        quality_info: "1080p Full HD • Master",
+                        size: "~1.8 GB",
+                        url: mvMovie.url,
+                        real_direct_download_url: mvMovie.url
+                    }
+                ];
+                mvSelectedMirrorIdx = 1;
+                renderMirrors();
+                renderCastAndCrew();
+                applyAutoplayMirror();
+                return;
+            }
+
+            if (mvMovie.url) {
+                try {
+                    const data = await MovieStream.fetchCineSubzAPI(`/api/details?url=${encodeURIComponent(mvMovie.url)}`);
+                    const d = data?.details || data || {};
+                    mvMovie = {
+                        ...mvMovie,
+                        ...d,
+                        title: d.title || mvMovie.title,
+                        imgUrl: d.poster || d.image || mvMovie.imgUrl,
+                        url: mvMovie.url
+                    };
+                    if (Array.isArray(d.seasons) && d.seasons.length > 0) {
+                        mvSeasons = d.seasons;
+                        renderSeriesUI();
+                        const firstEp = mvSeasons[0]?.episodes?.[0];
+                        if (firstEp) await selectEpisode(0);
+                    } else {
+                        mvMirrors = d.download_links || d.links || d.qualities || cachedMatch?.download_links || [];
+                        renderMirrors();
+                    }
+                    updateHeroMeta();
+                    applyAutoplayMirror();
+                } catch (_) {
+                    if (cachedMatch?.download_links?.length) {
+                        mvMirrors = cachedMatch.download_links;
+                    }
+                    renderMirrors();
+                    updateHeroMeta();
+                }
+            } else {
+                renderMirrors();
+                renderCastAndCrew();
+            }
+        });
+    </script>
+</body>
+</html>
