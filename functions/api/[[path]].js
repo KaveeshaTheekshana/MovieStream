@@ -108,13 +108,13 @@ export async function onRequest(context) {
                        url.pathname.startsWith('/api/stream') ||
                        url.pathname.startsWith('/api/admin');
 
-    const primaryTarget = isBotRoute ? BOT_PRIMARY : PRIMARY_BACKEND;
-    const fallbackTarget = isBotRoute ? BOT_FALLBACK : VPS_FALLBACK;
+    const upstreamCandidates = isBotRoute
+        ? [BOT_PRIMARY, BOT_FALLBACK]
+        : [PRIMARY_BACKEND, BOT_PRIMARY, VPS_FALLBACK];
 
     const upstreamPath = url.pathname.startsWith('/api/stream/')
         ? url.pathname.replace(/^\/api\/stream\//, '/stream/')
         : url.pathname;
-    const targetUrl = new URL(upstreamPath + url.search, primaryTarget);
 
     const forwardHeaders = new Headers();
     const headersToForward = [
@@ -144,31 +144,36 @@ export async function onRequest(context) {
     forwardHeaders.set("X-Forwarded-Host", url.host);
     forwardHeaders.set("X-Forwarded-Proto", url.protocol.replace(":", ""));
 
-    let upstreamRes = null;
-    try {
-        upstreamRes = await fetch(targetUrl.toString(), {
-            method: request.method,
-            headers: forwardHeaders,
-            body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
-            redirect: "follow",
-        });
-    } catch (_) {
-        upstreamRes = null;
+    const hasBody = request.method !== "GET" && request.method !== "HEAD";
+    let bodyBuffer = null;
+    if (hasBody && request.body) {
+        try {
+            bodyBuffer = await request.arrayBuffer();
+        } catch (_) {}
     }
 
-    // Retry fallback VPS directly whenever Primary returns HTTP >= 500 (including Cloudflare Tunnel 530/1033) or network failure
-    if (!upstreamRes || upstreamRes.status >= 500) {
+    let upstreamRes = null;
+    for (const base of upstreamCandidates) {
         try {
-            const fallbackUrl = new URL(upstreamPath + url.search, fallbackTarget);
-            const fallbackRes = await fetch(fallbackUrl.toString(), {
+            const candidateUrl = new URL(upstreamPath + url.search, base);
+            const candidateRes = await fetch(candidateUrl.toString(), {
                 method: request.method,
                 headers: forwardHeaders,
-                body: request.method !== "GET" && request.method !== "HEAD" ? request.body : undefined,
+                body: bodyBuffer !== null ? bodyBuffer : undefined,
                 redirect: "follow",
             });
-            if (fallbackRes && fallbackRes.status < 500) {
-                upstreamRes = fallbackRes;
+            if (!candidateRes) continue;
+            if (candidateRes.status >= 500) continue;
+            // Ignore Cloudflare Workers edge blocks (e.g. Error 1003 Direct IP access not allowed)
+            if (candidateRes.status === 403) {
+                const ct = (candidateRes.headers.get("content-type") || "").toLowerCase();
+                if (ct.includes("text/plain")) {
+                    const txt = (await candidateRes.clone().text().catch(() => "")).trim();
+                    if (/^error code:\s*\d+/i.test(txt)) continue;
+                }
             }
+            upstreamRes = candidateRes;
+            break;
         } catch (_) {}
     }
 
