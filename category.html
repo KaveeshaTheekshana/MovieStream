@@ -193,10 +193,10 @@
         <section aria-label="Catalog Results" style="margin-bottom:28px;">
             <div id="cat_results_grid" class="ms-grid"></div>
 
-            <div id="cat_pagination_wrap" style="margin-top:28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;">
-                <button type="button" id="cat_load_more_btn" onclick="loadMoreCatalogPage()" class="ms-btn ms-btn-primary hidden">
-                    <span>Load More Releases (Page 2)</span>
-                </button>
+            <div id="cat_pagination_wrap" style="margin-top:28px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;" aria-label="Pagination">
+                <button type="button" id="cat_prev_btn" onclick="goToCatalogPage(_catPage - 1)" class="ms-btn ms-btn-outline hidden" style="padding:9px 15px;font-size:0.84rem;" data-no-ad="1">&lsaquo; Prev</button>
+                <div id="cat_page_numbers" style="display:flex;flex-wrap:wrap;align-items:center;gap:6px;"></div>
+                <button type="button" id="cat_next_btn" onclick="goToCatalogPage(_catPage + 1)" class="ms-btn ms-btn-primary hidden" style="padding:9px 16px;font-size:0.84rem;" data-no-ad="1">Next &rsaquo;</button>
             </div>
         </section>
 
@@ -506,7 +506,15 @@
             const yearEl = document.getElementById("cf_year");
             const qEl = document.getElementById("cf_q");
 
-            if (catEl && [...catEl.options].some(o => o.value === cat)) catEl.value = cat;
+            if (catEl && [...catEl.options].some(o => o.value === cat)) {
+                catEl.value = cat;
+            } else if (cat !== "all") {
+                if (genre === "all" && genreEl && [...genreEl.options].some(o => o.value.toLowerCase() === cat.toLowerCase())) {
+                    genre = [...genreEl.options].find(o => o.value.toLowerCase() === cat.toLowerCase()).value;
+                } else if (lang === "all" && langEl && [...langEl.options].some(o => o.value.toLowerCase() === cat.toLowerCase())) {
+                    lang = [...langEl.options].find(o => o.value.toLowerCase() === cat.toLowerCase()).value;
+                }
+            }
             if (langEl && [...langEl.options].some(o => o.value.toLowerCase() === lang.toLowerCase())) {
                 const matched = [...langEl.options].find(o => o.value.toLowerCase() === lang.toLowerCase());
                 if (matched) langEl.value = matched.value;
@@ -515,20 +523,89 @@
             if (yearEl && [...yearEl.options].some(o => o.value === year)) yearEl.value = year;
             if (qEl) qEl.value = q;
 
+            const parsedPage = parseInt(params.get("page") || "1", 10);
+            _catPage = Number.isFinite(parsedPage) && parsedPage >= 1 ? parsedPage : 1;
+
             document.querySelectorAll("[data-nav-cat]").forEach(a => {
                 const v = a.getAttribute("data-nav-cat");
                 a.classList.toggle("active", !_catPerson && ((cat === "all" && v === "all") || v === cat));
             });
         }
 
-        function updateHeadingSummary(count, label) {
+        function updateHeadingSummary(count, label, pageNum = _catPage) {
             const head = document.getElementById("cat_heading");
             const bc = document.getElementById("cat_breadcrumb_label");
             const pill = document.getElementById("cat_count_pill");
             if (head) head.textContent = label;
             if (bc) bc.textContent = label;
-            if (pill) pill.textContent = `${count} Titles`;
-            document.title = `${label} | MovieStream.top (Sinhala Subtitles)`;
+            if (pill) pill.textContent = pageNum > 1 ? `Page ${pageNum} • ${count} Titles` : `${count} Titles`;
+            document.title = pageNum > 1
+                ? `${label} — Page ${pageNum} | MovieStream.top (Sinhala Subtitles)`
+                : `${label} | MovieStream.top (Sinhala Subtitles)`;
+        }
+
+        function renderCategoryPagination(currentPage, hasNext, isOffline = false, totalFixedPages = null) {
+            const prevBtn = document.getElementById("cat_prev_btn");
+            const nextBtn = document.getElementById("cat_next_btn");
+            const numsBox = document.getElementById("cat_page_numbers");
+            if (!numsBox) return;
+
+            if (isOffline && (!totalFixedPages || totalFixedPages <= 1)) {
+                if (prevBtn) prevBtn.classList.add("hidden");
+                if (nextBtn) nextBtn.classList.add("hidden");
+                numsBox.innerHTML = "";
+                return;
+            }
+
+            if (prevBtn) {
+                prevBtn.classList.toggle("hidden", currentPage <= 1 && !hasNext);
+                prevBtn.disabled = currentPage <= 1;
+                prevBtn.style.opacity = currentPage <= 1 ? "0.45" : "1";
+                prevBtn.style.pointerEvents = currentPage <= 1 ? "none" : "auto";
+            }
+
+            if (nextBtn) {
+                const showNav = currentPage > 1 || hasNext;
+                nextBtn.classList.toggle("hidden", !showNav);
+                nextBtn.disabled = !hasNext;
+                nextBtn.style.opacity = !hasNext ? "0.45" : "1";
+                nextBtn.style.pointerEvents = !hasNext ? "none" : "auto";
+            }
+
+            if (currentPage === 1 && !hasNext) {
+                numsBox.innerHTML = "";
+                return;
+            }
+
+            const maxKnown = totalFixedPages
+                ? totalFixedPages
+                : (hasNext ? Math.max(currentPage + 2, 3) : currentPage);
+            const startPage = Math.max(1, currentPage - 2);
+            const endPage = Math.min(maxKnown, Math.max(startPage + 4, currentPage + (hasNext ? 2 : 0)));
+            const pageSet = [];
+            if (startPage > 1) pageSet.push(1);
+            if (startPage > 2) pageSet.push("...");
+            for (let p = startPage; p <= endPage; p++) pageSet.push(p);
+            if (totalFixedPages && endPage < totalFixedPages - 1) pageSet.push("...");
+            if (totalFixedPages && endPage < totalFixedPages) pageSet.push(totalFixedPages);
+
+            numsBox.innerHTML = pageSet.map(item => {
+                if (item === "...") {
+                    return `<span style="padding:0 4px;font-weight:700;color:var(--ms-text-muted);">...</span>`;
+                }
+                const active = item === currentPage;
+                const cls = active ? "ms-btn ms-btn-primary" : "ms-btn ms-btn-outline";
+                return `<button type="button" onclick="goToCatalogPage(${item})" class="${cls}" style="min-width:38px;padding:9px 12px;font-size:0.84rem;" data-no-ad="1"${active ? ' aria-current="page"' : ''}>${item}</button>`;
+            }).join("");
+        }
+
+        function goToCatalogPage(targetPage) {
+            const p = Math.max(1, parseInt(targetPage, 10) || 1);
+            const grid = document.getElementById("cat_results_grid");
+            if (grid) {
+                try { grid.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (_) { window.scrollTo(0, 0); }
+            }
+            applyCatalogFilters(p, true);
         }
 
         function buildReadableLabel(cat, lang, genre, year, q) {
@@ -564,8 +641,9 @@
             const year = document.getElementById("cf_year")?.value || "all";
             const q = (document.getElementById("cf_q")?.value || "").trim();
 
+            page = Math.max(1, parseInt(page, 10) || 1);
             _catPage = page;
-            if (page === 1) _catAccumulated = [];
+            _catAccumulated = [];
 
             if (syncUrl) {
                 const nextQs = new URLSearchParams();
@@ -579,6 +657,7 @@
                     if (year !== "all") nextQs.set("year", year);
                     if (q) nextQs.set("q", q);
                 }
+                if (page > 1) nextQs.set("page", String(page));
                 const newUrl = nextQs.toString() ? `category.html?${nextQs.toString()}` : "category.html";
                 try { history.replaceState(null, "", newUrl); } catch (_) {}
             }
@@ -587,9 +666,8 @@
                 ? `Filmography: ${_catPerson.name || formatPersonTitleCase(_catPerson.slug)}`
                 : buildReadableLabel(cat, lang, genre, year, q);
             const grid = document.getElementById("cat_results_grid");
-            const loadMoreBtn = document.getElementById("cat_load_more_btn");
 
-            if (page === 1 && grid) {
+            if (grid) {
                 grid.innerHTML = Array.from({ length: 10 }, () =>
                     `<div class="ms-card"><div class="ms-card-thumb ms-skeleton"></div><div class="ms-card-body"><div class="ms-skeleton" style="height:14px;border-radius:6px;"></div></div></div>`
                 ).join("");
@@ -625,52 +703,55 @@
                         }
                     }
                     if (!batch.length) {
-                        const qFallback = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(_catPerson.name || _catPerson.slug)}`);
+                        const qFallback = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(_catPerson.name || _catPerson.slug)}&page=${page}`);
                         if (qFallback?.results?.length) {
                             data = qFallback;
                             batch = qFallback.results;
                         }
                     }
-                    _catAccumulated = page === 1 ? batch : [..._catAccumulated, ...batch];
-                    updateHeadingSummary(_catAccumulated.length, label);
+                    _catAccumulated = batch;
+                    updateHeadingSummary(batch.length, label, page);
                     if (grid) {
-                        grid.innerHTML = _catAccumulated.length
-                            ? _catAccumulated.map(m => MS.renderPosterCard(m)).join("")
+                        grid.innerHTML = batch.length
+                            ? batch.map(m => MS.renderPosterCard(m)).join("")
                             : `<div style="grid-column:1/-1;background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:16px;padding:24px;text-align:center;">
-                                <p style="margin:0 0 12px;font-weight:700;color:var(--ms-text);">No releases found for ${MS.escapeHtml(_catPerson.name || _catPerson.slug)} right now.</p>
+                                <p style="margin:0 0 12px;font-weight:700;color:var(--ms-text);">No ${page > 1 ? "more " : ""}releases found for ${MS.escapeHtml(_catPerson.name || _catPerson.slug)}.</p>
+                                ${page > 1 ? `<button type="button" data-no-ad="1" onclick="goToCatalogPage(${page - 1})" class="ms-btn ms-btn-outline" style="margin-right:8px;">&lsaquo; Back to Page ${page - 1}</button>` : ""}
                                 <button type="button" data-no-ad="1" onclick="clearPersonFilter()" class="ms-btn ms-btn-primary">Browse All Releases</button>
                                </div>`;
                     }
-                    if (loadMoreBtn) {
-                        const showMore = batch.length >= 12 && !data?.offline;
-                        loadMoreBtn.classList.toggle("hidden", !showMore);
-                        loadMoreBtn.innerHTML = `<span>Load More Releases (Page ${page + 1})</span>`;
-                    }
+                    renderCategoryPagination(page, batch.length >= 12 && !data?.offline, Boolean(data?.offline));
                 } catch (_) {
                     if (grid) {
                         grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;color:var(--ms-red-dark);font-weight:700;">Failed to load artist filmography. Please try again.</div>`;
                     }
+                    renderCategoryPagination(page, false, true);
                 }
                 return;
             }
 
-            // Sinhala Movies Vault branch (unless combined with another Collection or Genre filter)
+            // Sinhala Movies Vault branch (client-side page slicing at 24/page if large)
             const isSinhalaLang = (lang === "sinhala" || lang === "sinhala-sub");
             if (cat === "sinhala" || (isSinhalaLang && cat === "all" && genre === "all")) {
                 _catIsTelegram = true;
-                if (loadMoreBtn) loadMoreBtn.classList.add("hidden");
-                const items = await MS.fetchSinhalaMovies(q, year === "all" ? "" : year);
+                const allItems = await MS.fetchSinhalaMovies(q, year === "all" ? "" : year);
                 const isFallback = MS.isSinhalaFallbackActive ? MS.isSinhalaFallbackActive() : false;
-                _catAccumulated = items;
-                updateHeadingSummary(items.length, isFallback ? "Sinhala Movies (Catalog)" : "Sinhala Movies (Live HD)");
+                const perPage = 24;
+                const totalPages = Math.max(1, Math.ceil(allItems.length / perPage));
+                const safePage = Math.min(page, totalPages);
+                _catPage = safePage;
+                const pageItems = allItems.slice((safePage - 1) * perPage, safePage * perPage);
+                _catAccumulated = pageItems;
+                updateHeadingSummary(allItems.length, isFallback ? "Sinhala Movies (Catalog)" : "Sinhala Movies (Live HD)", safePage);
                 if (grid) {
-                    grid.innerHTML = items.length
-                        ? items.map(m => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz" })).join("")
+                    grid.innerHTML = pageItems.length
+                        ? pageItems.map(m => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz" })).join("")
                         : `<div style="grid-column:1/-1;background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:16px;padding:24px;text-align:center;">
                             <p style="margin:0 0 12px;font-weight:700;color:var(--ms-text);">No matching Sinhala movies were found right now.</p>
                             <a href="https://wa.me/94772115904?text=Hi%20MovieStream%2C%20send%20Sinhala%20movies" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-green">Request on WhatsApp Bot</a>
                            </div>`;
                 }
+                renderCategoryPagination(safePage, safePage < totalPages, false, totalPages);
                 return;
             }
 
@@ -690,7 +771,7 @@
             try {
                 let data;
                 if (q && cat === "all" && lang === "all" && genre === "all" && year === "all") {
-                    data = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(q)}`);
+                    data = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(q)}&page=${page}`);
                 } else if (cat !== "all" && lang === "all" && genre === "all" && year === "all" && !q) {
                     data = await MS.fetchCineSubzAPI(`/api/category?type=${encodeURIComponent(cat)}&page=${page}`);
                 } else {
@@ -698,12 +779,12 @@
                 }
 
                 const batch = data?.results || [];
-                _catAccumulated = page === 1 ? batch : [..._catAccumulated, ...batch];
-                updateHeadingSummary(_catAccumulated.length, label);
+                _catAccumulated = batch;
+                updateHeadingSummary(batch.length, label, page);
 
                 if (grid) {
-                    if (_catAccumulated.length) {
-                        grid.innerHTML = _catAccumulated.map(m => MS.renderPosterCard(m)).join("");
+                    if (batch.length) {
+                        grid.innerHTML = batch.map(m => MS.renderPosterCard(m)).join("");
                     } else {
                         grid.innerHTML = "";
                         const box = document.createElement("div");
@@ -713,14 +794,18 @@
 
                         const msg = document.createElement("p");
                         msg.style.cssText = "margin:0 0 8px;font-weight:700;";
-                        msg.textContent = "No releases matched all selected filters simultaneously.";
+                        msg.textContent = page > 1
+                            ? `No more releases available on Page ${page}.`
+                            : "No releases matched all selected filters simultaneously.";
                         box.appendChild(msg);
 
                         const sub = document.createElement("p");
                         sub.style.cssText = "margin:0 0 16px;font-size:0.9rem;color:var(--ms-muted);";
-                        sub.textContent = data?.offline
-                            ? "Offline catalog snapshot active — try relaxing one filter or reset below."
-                            : "Try dropping one filter below to broaden matching releases.";
+                        sub.textContent = page > 1
+                            ? "You have reached the end of this category's pages."
+                            : (data?.offline
+                                ? "Offline catalog snapshot active — try relaxing one filter or reset below."
+                                : "Try dropping one filter below to broaden matching releases.");
                         box.appendChild(sub);
 
                         const btnRow = document.createElement("div");
@@ -734,6 +819,10 @@
                             b.addEventListener("click", fn);
                             btnRow.appendChild(b);
                         };
+                        if (page > 1) {
+                            addRelaxBtn(`‹ Previous (Page ${page - 1})`, () => goToCatalogPage(page - 1), false);
+                            addRelaxBtn("Page 1", () => goToCatalogPage(1), true);
+                        }
                         if (cat !== "all") {
                             addRelaxBtn("Drop Collection", () => {
                                 document.getElementById("cf_cat").value = "all";
@@ -763,27 +852,26 @@
                                 applyCatalogFilters(1, true);
                             });
                         }
-                        addRelaxBtn("Reset All Filters", () => resetCatalogFilters(), false);
+                        addRelaxBtn("Reset All Filters", () => resetCatalogFilters(), page <= 1);
                         box.appendChild(btnRow);
                         grid.appendChild(box);
                     }
                 }
 
-                if (loadMoreBtn) {
-                    const showMore = batch.length >= 12 && !data?.offline;
-                    loadMoreBtn.classList.toggle("hidden", !showMore);
-                    loadMoreBtn.innerHTML = `<span>Load More Releases (Page ${page + 1})</span>`;
-                }
+                const isCombined = [cat !== "all", lang !== "all", genre !== "all", year !== "all", Boolean(q)].filter(Boolean).length > 1;
+                const hasMorePages = !data?.offline && cat !== "trending" && (isCombined ? batch.length > 0 : batch.length >= 12);
+                renderCategoryPagination(page, hasMorePages, Boolean(data?.offline));
             } catch (_) {
                 if (grid) {
                     grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;color:var(--ms-red-dark);font-weight:700;">Failed to load catalog entries. Please try again.</div>`;
                 }
+                renderCategoryPagination(page, false, true);
             }
         }
 
         function loadMoreCatalogPage() {
             if (_catIsTelegram) return;
-            applyCatalogFilters(_catPage + 1, false);
+            goToCatalogPage(_catPage + 1);
         }
 
         function resetCatalogFilters() {
@@ -801,7 +889,7 @@
             if (window.__KV_BLOCKED) return;
             populateTaxonomyControls();
             syncControlsFromUrl();
-            applyCatalogFilters(1, false);
+            applyCatalogFilters(_catPage, false);
 
             if (window.location.port !== "5500") {
                 setTimeout(() => {
