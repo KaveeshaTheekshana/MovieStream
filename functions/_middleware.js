@@ -113,6 +113,38 @@ export async function onRequest(context) {
 
     // 4. Proceed to origin asset and apply enterprise security headers
     const response = await context.next();
+
+    // Ensure /manifest.webmanifest never fails with HTML fallback SyntaxError
+    if (url.pathname === '/manifest.webmanifest') {
+      const mCt = (response.headers.get('content-type') || '').toLowerCase();
+      if (!response.ok || mCt.includes('text/html')) {
+        const manifestFallback = JSON.stringify({
+          name: "MovieStream",
+          short_name: "MovieStream",
+          description: "Sri Lanka's Clean HD Sinhala Subtitles & Direct Cinema Streaming App.",
+          start_url: "/index.html",
+          display: "standalone",
+          orientation: "portrait-primary",
+          background_color: "#f8fafc",
+          theme_color: "#ffffff",
+          icons: [
+            { src: "/images/favicon-48.png?v=10", sizes: "48x48", type: "image/png" },
+            { src: "/images/favicon-96.png?v=10", sizes: "96x96", type: "image/png" },
+            { src: "/images/android-chrome-192x192.png?v=10", sizes: "192x192", type: "image/png", purpose: "any maskable" },
+            { src: "/images/android-chrome-512x512.png?v=10", sizes: "512x512", type: "image/png", purpose: "any maskable" }
+          ]
+        }, null, 2);
+        return new Response(manifestFallback, {
+          status: 200,
+          headers: {
+            'Content-Type': 'application/manifest+json; charset=utf-8',
+            'Cache-Control': 'public, max-age=604800, stale-while-revalidate=86400',
+            'X-Content-Type-Options': 'nosniff'
+          }
+        });
+      }
+    }
+
     const newHeaders = new Headers(response.headers);
 
     // Anti-Clickjacking, Static Cache Optimization & Enterprise Security Headers
