@@ -508,7 +508,18 @@
                         const isTv = m.media_type === "tvshows" || uStr.includes("/tvshows/");
                         if (wantTv !== isTv) return false;
                     }
-                    if (quality && quality !== "all" && !ql.includes(quality) && !t.includes(quality)) return false;
+                    if (quality && quality !== "all") {
+                        const combinedQ = `${ql} ${t}`;
+                        if (quality === "web") {
+                            if (!["web", "web-dl", "webrip", "hdrip"].some(k => combinedQ.includes(k))) return false;
+                        } else if (quality === "bluray") {
+                            if (!["bluray", "blu-ray", "bdrip", "brrip"].some(k => combinedQ.includes(k))) return false;
+                        } else if (quality === "cam") {
+                            if (!["cam", "hdcam", "ts", "theatre", "theater", "tc"].some(k => combinedQ.includes(k))) return false;
+                        } else if (!ql.includes(quality) && !t.includes(quality)) {
+                            return false;
+                        }
+                    }
                     if (q && !t.includes(q) && !ql.includes(q)) return false;
                     return true;
                 });
@@ -585,10 +596,27 @@
         return `${base} MovieStream.${ext}`;
     }
 
+    function stripDirectLabel(str, fallback = "HD") {
+        let s = String(str || "").trim();
+        s = s.replace(/\bDirect\s*Stream\b/gi, "");
+        s = s.replace(/\bDirect\s*Download\b/gi, "");
+        s = s.replace(/\bDirect\s*Cloud\b/gi, "");
+        s = s.replace(/\bDirect\s*HD\b/gi, "HD");
+        s = s.replace(/\b1DM\s*\/?\s*IDM\b/gi, "");
+        s = s.replace(/\bDirect\b/gi, "");
+        s = s.replace(/^[\s•|\-–—]+|[\s•|\-–—]+$/g, "");
+        s = s.replace(/\s*[•|]+\s*[•|]+\s*/g, " • ");
+        s = s.replace(/\s{2,}/g, " ").trim();
+        return s || fallback;
+    }
+
     function parseQualitySize(qStr, explicitSize) {
-        if (explicitSize && explicitSize !== "N/A") return String(explicitSize).trim();
+        if (explicitSize && explicitSize !== "N/A") {
+            const cleaned = stripDirectLabel(explicitSize, "");
+            if (cleaned) return cleaned;
+        }
         const m = String(qStr || "").match(/(\d+(?:\.\d+)?\s*(?:GB|MB))/i);
-        return m ? m[1].toUpperCase() : "Direct HD";
+        return m ? m[1].toUpperCase() : "HD MP4";
     }
 
     function isSizeOver2GB(sizeStr) {
@@ -715,22 +743,107 @@
 
     function saveWatchHistory(movieObj, progress = 35) {
         try {
+            if (!movieObj || (!movieObj.url && !movieObj.title)) return;
             let list = JSON.parse(localStorage.getItem("ms_watch_history") || "[]");
             if (!Array.isArray(list)) list = [];
-            list = list.filter(x => (x.url || x.title) !== (movieObj.url || movieObj.title));
+            const matchKey = String(movieObj.url || movieObj.title).trim().toLowerCase().replace(/\/+$/, "");
+            list = list.filter(x => String((x && (x.url || x.title)) || "").trim().toLowerCase().replace(/\/+$/, "") !== matchKey);
             list.unshift({
                 id: movieObj.id || "",
                 source: movieObj.source || "cs",
                 title: movieObj.title || "Movie",
-                imgUrl: movieObj.imgUrl || movieObj.image || FALLBACK_POSTER,
+                imgUrl: optimizePosterUrl(movieObj.imgUrl || movieObj.poster || movieObj.image || FALLBACK_POSTER),
                 url: movieObj.url || "",
                 year: movieObj.year || "",
                 quality: movieObj.quality || "HD",
+                rating: movieObj.rating || "",
                 episodeLabel: movieObj.episodeLabel || "",
-                progress
+                progress,
+                updatedAt: Date.now()
             });
-            localStorage.setItem("ms_watch_history", JSON.stringify(list.slice(0, 14)));
+            localStorage.setItem("ms_watch_history", JSON.stringify(list.slice(0, 18)));
         } catch (_) {}
+    }
+
+    function clearWatchHistory() {
+        try { localStorage.removeItem("ms_watch_history"); } catch (_) {}
+        const track = document.getElementById("continue_watching_track");
+        const sec = document.getElementById("continue-watching-section");
+        if (track) track.innerHTML = "";
+        if (sec) sec.classList.add("hidden");
+        renderRecentModalList();
+        showToast("Watch history cleared.");
+    }
+
+    function renderRecentModalList() {
+        const listEl = document.getElementById("ms_recent_list");
+        if (!listEl) return;
+        let items = [];
+        try {
+            items = JSON.parse(localStorage.getItem("ms_watch_history") || "[]");
+        } catch (_) { items = []; }
+        if (!Array.isArray(items) || !items.length) {
+            listEl.innerHTML = `<div style="padding:26px 14px;text-align:center;color:var(--ms-text-muted);font-size:0.86rem;font-weight:600;">No watched movies yet. Open or play any movie and it will save here automatically!</div>`;
+            return;
+        }
+        listEl.innerHTML = items.map((m) => {
+            const payloadAttr = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
+            const subBits = [
+                m.year || "",
+                m.episodeLabel || "",
+                m.source === "sinhala" || m.source === "telegram" ? "Sinhala Movies" : "Sinhala Subtitles"
+            ].filter(Boolean).join(" • ");
+            return `
+            <button type="button" class="ms-recent-item" data-movie-payload="${payloadAttr}" onclick="MovieStream.closeRecentModal(); MovieStream.handleCardActivate(this);">
+                <img src="${escapeHtml(optimizePosterUrl(m.imgUrl))}" alt="${escapeHtml(cleanDisplayTitle(m.title))}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_POSTER}';" />
+                <div class="ms-recent-item-info">
+                    <div class="ms-recent-item-title">${escapeHtml(cleanDisplayTitle(m.title))}</div>
+                    <div class="ms-recent-item-meta">${escapeHtml(subBits || "Recently Viewed")}</div>
+                </div>
+                <span class="ms-chip active" style="font-size:0.72rem;padding:4px 10px;">Open &rsaquo;</span>
+            </button>`;
+        }).join("");
+    }
+
+    function closeRecentModal() {
+        const el = document.getElementById("ms_recent_popup");
+        if (el) el.classList.add("hidden");
+        const other = document.getElementById("ms_download_popup");
+        if (!other || other.classList.contains("hidden")) {
+            document.body.style.overflow = "";
+        }
+    }
+
+    function openRecentModal(ev) {
+        if (ev && typeof ev.preventDefault === "function") ev.preventDefault();
+        let modal = document.getElementById("ms_recent_popup");
+        if (!modal) {
+            modal = document.createElement("div");
+            modal.id = "ms_recent_popup";
+            modal.className = "ms-modal-backdrop hidden";
+            modal.setAttribute("role", "dialog");
+            modal.setAttribute("aria-modal", "true");
+            modal.setAttribute("aria-label", "Recently Watched Movies");
+            modal.innerHTML = `
+                <div class="ms-modal ms-recent-dialog" onclick="event.stopPropagation()">
+                    <button type="button" class="ms-modal-close" data-no-ad="1" aria-label="Close recent history" onclick="MovieStream.closeRecentModal()">&times;</button>
+                    <div class="ms-recent-head">
+                        <div>
+                            <h2 style="margin:0;font-size:1.05rem;font-weight:800;color:var(--ms-text);">Recently Watched</h2>
+                            <p style="margin:2px 0 0;font-size:0.76rem;color:var(--ms-text-muted);font-weight:600;">Your saved watch &amp; view history</p>
+                        </div>
+                        <button type="button" data-no-ad="1" onclick="MovieStream.clearWatchHistory()" class="ms-btn ms-btn-outline" style="padding:6px 10px;font-size:0.72rem;">Clear</button>
+                    </div>
+                    <div id="ms_recent_list" class="ms-recent-body"></div>
+                </div>`;
+            modal.addEventListener("click", (e) => {
+                if (e.target === modal) closeRecentModal();
+            });
+            document.body.appendChild(modal);
+        }
+        renderRecentModalList();
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
     }
 
     // 7. Page Routing (New Tab Movie Detail & Instant Quality Download Popup) & Toast
@@ -760,9 +873,16 @@
         if (mirrorIdx !== null && mirrorIdx !== undefined) params.set("mirror", String(mirrorIdx));
 
         const targetUrl = `movie.html?${params.toString()}`;
+        const adOpenedRecently = Boolean(global.__KV_AD_OPENED_AT && (Date.now() - global.__KV_AD_OPENED_AT) < 400);
+        if (adOpenedRecently) {
+            window.location.href = targetUrl;
+            return;
+        }
         try {
             const win = window.open(targetUrl, "_blank");
-            if (!win) window.location.href = targetUrl;
+            if (!win || win.closed || typeof win.closed === "undefined") {
+                window.location.href = targetUrl;
+            }
         } catch (_) {
             window.location.href = targetUrl;
         }
@@ -804,9 +924,13 @@
 
         if (u.includes("pixeldrain.com/u/")) {
             u = `${u.replace("/u/", "/api/file/").split("?")[0]}${isDownload ? "?download" : ""}`;
-        } else if (u.includes("t.me/c/")) {
-            const m = u.match(/t\.me\/c\/\d+\/(\d+)/);
-            if (m) u = `https://moviestream.top/api/stream/${m[1]}`;
+        } else if (u.includes("t.me/c/") || u.startsWith("tg-msg-id:")) {
+            const m = u.match(/(?:t\.me\/c\/\d+\/|tg-msg-id:)(\d+)/);
+            if (isDownload) {
+                u = `${getApiBase()}/api/download?token=${encryptMovieUrl(u)}&tg=1&download=1&filename=${encodeURIComponent(fileName)}`;
+            } else if (m) {
+                u = `${getApiBase()}/api/stream/${m[1]}`;
+            }
         } else if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => u.includes(d))) {
             u = `${getApiBase()}/api/download?token=${encryptMovieUrl(u)}&download=${isDownload ? 1 : 0}&filename=${encodeURIComponent(fileName)}`;
         }
@@ -815,31 +939,31 @@
 
     function normalizePopupLinks(rawLinks, movieObj) {
         const isSinhala = movieObj.source === "sinhala" || movieObj.source === "telegram" || String(movieObj.url || "").includes("t.me/");
+        if (isSinhala) {
+            const tgBase = unwrapNestedDownloadUrl(movieObj.directLink || movieObj.url || "");
+            if (tgBase) {
+                return [
+                    { quality_info: "Full Movie HD", size: "MP4 File", url: tgBase, over2gb: false, origIdx: 0, isSingleTelegram: true }
+                ];
+            }
+        }
         let list = Array.isArray(rawLinks) ? rawLinks.map((lnk, i) => {
             const rawTarget = unwrapNestedDownloadUrl(lnk.real_direct_download_url || lnk.url || lnk.link || lnk.cinesubz_link || "");
-            const qInfo = lnk.quality_info || lnk.quality || lnk.label || "HD";
+            const qInfo = stripDirectLabel(lnk.quality_info || lnk.quality || lnk.label || "HD", "HD");
             const size = parseQualitySize(qInfo, lnk.size);
             return { quality_info: qInfo, size, url: rawTarget, over2gb: isSizeOver2GB(size), origIdx: i };
         }).filter(x => Boolean(x.url)) : [];
 
         if (!list.length && movieObj.directLink) {
-            const q = movieObj.quality || "720p HD";
-            list.push({ quality_info: q, size: "Direct HD", url: unwrapNestedDownloadUrl(movieObj.directLink), over2gb: false, origIdx: 0 });
+            const q = stripDirectLabel(movieObj.quality || "720p HD", "720p HD");
+            list.push({ quality_info: q, size: "HD MP4", url: unwrapNestedDownloadUrl(movieObj.directLink), over2gb: false, origIdx: 0 });
         }
 
         if (!list.length && movieObj.url) {
             const resolvedBase = unwrapNestedDownloadUrl(movieObj.url);
-            if (isSinhala) {
-                list = [
-                    { quality_info: "480p SD • Data Saver", size: "~450 MB", url: resolvedBase, over2gb: false, origIdx: 0 },
-                    { quality_info: "720p HD • Recommended", size: "~950 MB", url: resolvedBase, over2gb: false, origIdx: 1 },
-                    { quality_info: "1080p Full HD • Master", size: "~1.8 GB", url: resolvedBase, over2gb: false, origIdx: 2 }
-                ];
-            } else {
-                list = [
-                    { quality_info: `${movieObj.quality || "720p HD"} Direct Cloud`, size: "Auto Mirror", url: resolvedBase, over2gb: false, origIdx: 0 }
-                ];
-            }
+            list = [
+                { quality_info: stripDirectLabel(movieObj.quality || "720p HD", "720p HD"), size: "HD MP4", url: resolvedBase, over2gb: false, origIdx: 0 }
+            ];
         }
         return list;
     }
@@ -882,25 +1006,24 @@
         }
 
         listEl.innerHTML = links.map((lnk, idx) => {
-            const qLabel = cleanDisplayTitle(lnk.quality_info || "HD");
-            const sizeLabel = lnk.size || "Direct HD";
+            const qLabel = stripDirectLabel(cleanDisplayTitle(lnk.quality_info || "HD"), "HD");
+            const sizeLabel = stripDirectLabel(lnk.size || "HD MP4", "HD MP4");
             const sizeWarn = isWa && lnk.over2gb ? `<span class="ms-dlq-warn">&gt;2GB WhatsApp Limit</span>` : "";
             const cardCls = isWatch ? "is-watch" : (isWa ? "is-wa" : "");
             const ctaHtml = isWatch
                 ? `<svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span>Watch Now</span>`
                 : isWa
                     ? `<svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.453 3.484 1.328 5l-1.391 5.063 5.188-1.359c1.469.797 3.125 1.219 4.844 1.219 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2z"/></svg><span>Send to WhatsApp</span>`
-                    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg><span>Download Now</span>`;
+                    : `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg><span>Download</span>`;
             return `
             <div class="ms-dlq-row">
-                <button type="button" class="ms-dlq-card ${cardCls}" data-no-ad="1" onclick="MovieStream.triggerPopupQualityAction(${idx})">
+                <button type="button" class="ms-dlq-card ${cardCls}" onclick="MovieStream.triggerPopupQualityAction(${idx})">
                     <div class="ms-dlq-left">
                         <span class="ms-dlq-badge">${escapeHtml(qLabel)}</span>
                         <div class="ms-dlq-meta">${escapeHtml(sizeLabel)} ${sizeWarn}</div>
                     </div>
                     <div class="ms-dlq-cta">${ctaHtml}</div>
                 </button>
-                ${(!isWa && !isWatch) ? `<button type="button" class="ms-dlq-copy" data-no-ad="1" title="Copy 1DM / IDM Direct Link" onclick="MovieStream.copyPopupQualityLink(${idx}, this)">1DM Link</button>` : ""}
             </div>`;
         }).join("");
     }
@@ -1028,7 +1151,7 @@
                         <a href="${escapeHtml(waUrl)}" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-green" style="padding:7px 14px;font-size:0.78rem;">Open WhatsApp &rarr;</a>
                     </div>`;
             }
-            showToast(pin ? `WhatsApp Bot PIN: ${pin}` : "Opening WhatsApp Bot...");
+            showToast(pin ? `WhatsApp PIN: ${pin}` : "Opening WhatsApp...");
             return;
         }
 
@@ -1073,9 +1196,9 @@
         if (navigator.clipboard && navigator.clipboard.writeText) {
             navigator.clipboard.writeText(absHref).then(() => {
                 if (btnEl) btnEl.textContent = "Copied!";
-                showToast("1DM / IDM direct link copied!");
-                setTimeout(() => { if (btnEl) btnEl.textContent = "1DM Link"; }, 2200);
-            }).catch(() => showToast("Copy failed — click Download Now instead."));
+                showToast("Download link copied!");
+                setTimeout(() => { if (btnEl) btnEl.textContent = "Copy Link"; }, 2200);
+            }).catch(() => showToast("Copy failed — click Download instead."));
         }
     }
 
@@ -1097,17 +1220,17 @@
                         <div id="ms_dlp_meta" class="ms-dlp-meta-row"></div>
                         <h2 id="ms_dlp_title" class="ms-dlp-title">Select Quality</h2>
                         <div class="ms-dlp-tabs" role="tablist">
-                            <button type="button" id="ms_dlp_tab_watch" role="tab" class="ms-dlp-tab" data-no-ad="1" onclick="MovieStream.switchDownloadModalMode('watch')">
+                            <button type="button" id="ms_dlp_tab_watch" role="tab" class="ms-dlp-tab" onclick="MovieStream.switchDownloadModalMode('watch')">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                                 <span>Watch Online</span>
                             </button>
-                            <button type="button" id="ms_dlp_tab_dl" role="tab" class="ms-dlp-tab active" data-no-ad="1" onclick="MovieStream.switchDownloadModalMode('download')">
+                            <button type="button" id="ms_dlp_tab_dl" role="tab" class="ms-dlp-tab active" onclick="MovieStream.switchDownloadModalMode('download')">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
-                                <span>Direct Download</span>
+                                <span>Download</span>
                             </button>
-                            <button type="button" id="ms_dlp_tab_wa" role="tab" class="ms-dlp-tab" data-no-ad="1" onclick="MovieStream.switchDownloadModalMode('whatsapp')">
+                            <button type="button" id="ms_dlp_tab_wa" role="tab" class="ms-dlp-tab" onclick="MovieStream.switchDownloadModalMode('whatsapp')">
                                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.453 3.484 1.328 5l-1.391 5.063 5.188-1.359c1.469.797 3.125 1.219 4.844 1.219 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2z"/></svg>
-                                <span>WhatsApp Bot</span>
+                                <span>WhatsApp</span>
                             </button>
                         </div>
                     </div>
@@ -1165,10 +1288,11 @@
         if (statusEl) delete statusEl.dataset.sticky;
         if (titleEl) titleEl.textContent = cleanDisplayTitle(normalized.title || "Select Quality");
         if (posterEl) posterEl.src = normalized.imgUrl || FALLBACK_POSTER;
+        const cleanMetaQuality = stripDirectLabel(String(normalized.quality || "").replace(/IMDb:.*$/i, "").trim());
         if (metaEl) {
             metaEl.innerHTML = [
                 normalized.year ? `<span class="ms-tag-pill">${escapeHtml(normalized.year)}</span>` : "",
-                normalized.quality ? `<span class="ms-tag-pill">${escapeHtml(normalized.quality)}</span>` : "",
+                cleanMetaQuality ? `<span class="ms-tag-pill">${escapeHtml(cleanMetaQuality)}</span>` : "",
                 `<span class="ms-tag-pill">${normalized.source === "sinhala" ? "Sinhala Movies" : "Sinhala Subtitles"}</span>`
             ].join("");
         }
@@ -1194,11 +1318,16 @@
             }
         }
 
+        const isSinhala = normalized.source === "sinhala" || String(normalized.url || "").includes("t.me/");
+        if (isSinhala && (modeVal === "download" || modeVal === "whatsapp")) {
+            saveWatchHistory(normalized, 25);
+            return await triggerPopupQualityAction(0);
+        }
+
         renderDownloadPopupBody();
         modal.classList.remove("hidden");
         document.body.style.overflow = "hidden";
 
-        const isSinhala = normalized.source === "sinhala" || String(normalized.url || "").includes("t.me/");
         const hasMultiplePassed = rawLinks.length > 0 || Boolean(preSeasons);
         if (!isSinhala && !hasMultiplePassed && normalized.url) {
             try {
@@ -1254,9 +1383,9 @@
         const qs = new URLSearchParams(window.location.search || "");
         const cat = (qs.get("cat") || "").toLowerCase();
         let activeKey = "home";
-        if (path.endsWith("category.html")) {
+        if (path.endsWith("category.html") || path === "/category") {
             activeKey = cat === "sinhala" ? "sinhala" : "explore";
-        } else if (path.endsWith("movie.html") || path.endsWith("download.html")) {
+        } else if (path.endsWith("movie.html") || path === "/movie" || path.endsWith("download.html") || path === "/download") {
             activeKey = "explore";
         }
         bar.querySelectorAll("[data-mob-tab]").forEach((el) => {
@@ -1378,7 +1507,7 @@
         if (hasLinks) {
             qualityTags = `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;">` +
                 links.slice(0, 6).map((l, idx) => {
-                    const qLabel = l.quality_info || l.quality || `Option ${idx + 1}`;
+                    const qLabel = stripDirectLabel(l.quality_info || l.quality || `Option ${idx + 1}`, `Option ${idx + 1}`);
                     const rawU = l.real_direct_download_url || l.url || l.link || l.cinesubz_link || "";
                     return `<button type="button" onclick="MovieStream.selectModalQuality(this, '${encodeURIComponent(rawU)}')"
                         class="ms-chip ${idx === 0 ? "active" : ""}">${escapeHtml(qLabel)}</button>`;
@@ -1495,9 +1624,9 @@
         let streamUrl = raw;
 
         if (streamUrl.includes("pixeldrain.com/u/")) streamUrl = streamUrl.replace("/u/", "/api/file/").replace("?download", "");
-        else if (streamUrl.includes("t.me/c/")) {
-            const m = streamUrl.match(/t\.me\/c\/\d+\/(\d+)/);
-            if (m) streamUrl = `https://moviestream.top/api/stream/${m[1]}`;
+        else if (streamUrl.includes("t.me/c/") || streamUrl.startsWith("tg-msg-id:")) {
+            const m = streamUrl.match(/(?:t\.me\/c\/\d+\/|tg-msg-id:)(\d+)/);
+            if (m) streamUrl = `${getApiBase()}/api/stream/${m[1]}`;
         } else if (streamUrl.includes("t.me/") || streamUrl.includes("telegram.me")) {
             window.open(streamUrl, "_blank", "noopener,noreferrer");
             return;
@@ -1610,7 +1739,7 @@
         });
     }
 
-    // 11. Alternating Adsterra SmartLink Handler (Strictly 1 Ad Click -> 1 Real Click)
+    // 11. Alternating Adsterra SmartLink Handler (Strictly 1st Click -> Ad Only, 2nd Click -> Real Action)
     function initAlternatingSmartLink() {
         if (global.__KV_BLOCKED) return;
         let lastEventTs = 0;
@@ -1622,34 +1751,37 @@
             sessionStorage.setItem("ms_ad_turn", val ? "1" : "0");
         }
         if (sessionStorage.getItem("ms_ad_turn") === null) {
-            setAdTurn(true); // Alternating cadence: Ad click -> Real action -> Ad click -> Real action
+            setAdTurn(true);
         }
 
         function isExcludedElement(el) {
             if (!el) return true;
-            if (el.closest("[data-no-ad], header, nav, footer, #ms_search_overlay, #ms_download_popup, .ms-magic-controls, .ms-filter-bar, .ms-empty-state, .ms-hero-arrow, .ms-hero-dot, .ms-row-arrow, .social-3d-btn, .ms-floating-wa, .ms-modal-close")) {
+            if (el.closest("[data-no-ad], .ms-modal-close, .ms-magic-icon-btn, #mv_magic_seek, #ms_vol_slider, .ms-search-pill, .ms-mobile-toggle")) {
                 return true;
             }
             const tag = (el.tagName || "").toLowerCase();
             if (tag === "input" || tag === "select" || tag === "textarea" || tag === "option" || tag === "label") return true;
-            if (el.closest("a[target='_blank']")) return true;
             return false;
         }
 
         document.addEventListener("click", function (e) {
             const target = e.target;
-            const interactive = target.closest(".ms-card, .ms-cw-card, .ms-btn, .ms-quality-card, .ms-ep-btn");
+            if (!target || typeof target.closest !== "function") return;
+            const interactive = target.closest(
+                "button, .ms-card, .ms-cw-card, .ms-btn, .ms-dlq-card, .ms-quality-card, .ms-ep-btn, .ms-mirror-btn, .ms-dlp-tab, .ms-chip, .ms-genre-card, .ms-bento-card, .ms-year-chip, .ms-see-all, .ms-hero-channel-link, .ms-mob-tab, .ms-nav-link, .ms-cast-card, .ms-crew-pill, .ms-recent-item, .ms-hero-arrow, .ms-row-arrow"
+            );
             if (!interactive || isExcludedElement(interactive)) return;
 
             const now = Date.now();
-            if (now - lastEventTs < 80) return;
+            if (now - lastEventTs < 60) return;
             lastEventTs = now;
 
             if (isAdTurn()) {
-                setAdTurn(false);
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
+                setAdTurn(false);
+                global.__KV_AD_OPENED_AT = Date.now();
                 try {
                     window.open(global.SMART_LINK_URL, "_blank", "noopener,noreferrer");
                 } catch (_) {}
@@ -1674,6 +1806,10 @@
         renderPosterCard,
         renderContinueWatchingRow,
         saveWatchHistory,
+        clearWatchHistory,
+        openRecentModal,
+        closeRecentModal,
+        stripDirectLabel,
         openMoviePage,
         openDownloadPage,
         openDownloadModal,
@@ -1716,6 +1852,7 @@
                 closeSearch();
                 closeMovieModal();
                 closeDownloadModal();
+                closeRecentModal();
             }
             if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
                 e.preventDefault();
