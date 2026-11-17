@@ -587,7 +587,7 @@
                     if (m) streamUrl = `${MS.getApiBase()}/api/stream/${m[1]}`;
                 } else if (streamUrl.includes("/api/download")) {
                     streamUrl = streamUrl.replace(/([?&]download=)1\b/, "$10");
-                } else if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => streamUrl.includes(d))) {
+                } else if (!streamUrl.includes("youtube.com") && !streamUrl.includes("youtu.be") && !streamUrl.includes("/embed/")) {
                     streamUrl = `${MS.getApiBase()}/api/download?token=${MS.encryptMovieUrl(rawTarget)}&download=0`;
                 }
                 iframe.classList.add("hidden");
@@ -609,33 +609,51 @@
                 const origHtml = btn.innerHTML;
                 btn.textContent = "Generating WhatsApp PIN...";
 
-                let pin = Math.floor(100000 + Math.random() * 900000).toString();
-                let botNum = localStorage.getItem("moviestream_bot_number") || "94722926276";
+                const clientPin = Math.floor(100000 + Math.random() * 900000).toString();
+                let waWin = null;
+                try { waWin = window.open("", "_blank"); } catch (_) { waWin = null; }
+
+                let pin = "";
+                let botNum = String(localStorage.getItem("moviestream_bot_number") || "94722926276").replace(/[^0-9]/g, "") || "94722926276";
                 const headers = await MS.genApiHeaders();
                 headers["Content-Type"] = "application/json";
 
                 const pinBase = MS.isLocalLiveServer() ? "https://moviestream.top" : "";
+                const rawCleanLink = MS.unwrapNestedDownloadUrl(stateData.selectedUrl || stateData.url || "");
                 try {
                     const res = await fetch(`${pinBase}/api/movie-pin`, {
                         method: "POST",
                         headers,
                         body: JSON.stringify({
+                            pin: clientPin,
                             movieName: stateData.title,
-                            directLink: stateData.selectedUrl || stateData.url,
+                            directLink: rawCleanLink || stateData.selectedUrl || stateData.url,
                             quality: stateData.selectedQuality || "720p",
-                            source: stateData.source === "sinhala" ? "telegram" : "cinesubz"
+                            source: (stateData.source === "sinhala" || String(rawCleanLink).includes("t.me/")) ? "telegram" : "cinesubz"
                         }),
                         signal: AbortSignal.timeout ? AbortSignal.timeout(4000) : undefined
                     });
                     if (res.ok) {
                         const data = await res.json();
-                        if (data.pin) pin = data.pin;
-                        if (data.botNumber) botNum = String(data.botNumber).replace(/[^0-9]/g, "");
+                        if (data.pin) pin = String(data.pin);
+                        if (data.botNumber) botNum = String(data.botNumber).replace(/[^0-9]/g, "") || botNum;
                     }
                 } catch (_) {}
 
-                const msg = `${MS.cleanDisplayTitle(stateData.title)} - ${pin}`;
-                window.open(`https://wa.me/${botNum}?text=${encodeURIComponent(msg)}`, "_blank", "noopener,noreferrer");
+                const finalPin = pin || clientPin;
+                const qTag = stateData.selectedQuality ? ` (${MS.stripDirectLabel(stateData.selectedQuality)})` : "";
+                const msg = `${MS.cleanDisplayTitle(stateData.title)}${qTag} - ${finalPin}`;
+                const waUrl = `https://wa.me/${botNum}?text=${encodeURIComponent(msg)}`;
+                if (waWin && !waWin.closed && waWin.location) {
+                    try {
+                        waWin.opener = null;
+                        waWin.location.href = waUrl;
+                    } catch (_) {
+                        window.open(waUrl, "_blank", "noopener,noreferrer");
+                    }
+                } else {
+                    window.open(waUrl, "_blank", "noopener,noreferrer");
+                }
                 btn.disabled = false;
                 btn.innerHTML = origHtml;
             };
