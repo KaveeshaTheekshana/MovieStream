@@ -41,8 +41,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" /></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
     <link rel="stylesheet" href="assets/styles.css" />
 
@@ -258,11 +257,6 @@
         </div>
     </div>
 
-    <a href="https://wa.me/94772115904?text=Hi%20MovieStream%20Bot%2C%20I%20need%20a%20movie%20link!" target="_blank" rel="noopener noreferrer" class="ms-floating-wa" aria-label="Chat with MovieStream WhatsApp Bot">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.469 3.484 1.344 5l-1.406 5.156 5.281-1.391c1.469.797 3.109 1.219 4.75 1.219 5.516 0 9.969-4.453 9.969-9.969s-4.453-9.984-9.969-9.984zm5.422 14.125c-.234.656-1.359 1.25-1.875 1.328-.484.078-1.109.109-1.781-.109-.422-.141-.953-.312-1.641-.609-2.859-1.234-4.719-4.125-4.859-4.312-.141-.188-1.156-1.547-1.156-2.953s.734-2.094 1-2.375c.266-.281.578-.359.766-.359s.391.016.562.016c.188 0 .422-.062.656.516.25.594.844 2.062.922 2.219.078.156.125.328.016.547-.109.219-.156.344-.312.531-.156.188-.328.422-.469.562-.156.156-.312.328-.141.625.172.297.766 1.266 1.641 2.047 1.125 1 2.078 1.312 2.375 1.469.297.156.469.125.641-.078.172-.203.75-.875.953-1.172.203-.297.406-.25.672-.141.266.109 1.719.812 2.016.953.297.141.484.219.562.344.078.125.078.734-.156 1.391z"/></svg>
-        <span>WhatsApp Movie Bot</span>
-    </a>
-
     <!-- Clean White Footer with 6 3D Tactile Social Media Badges -->
     <footer class="ms-footer">
         <div class="ms-container">
@@ -272,7 +266,7 @@
                         <img src="images/logo-sm.webp" alt="MovieStream Logo" width="32" height="32" class="ms-brand-logo" />
                         <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
                     </div>
-                    <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">Sri Lanka's fastest HD Movie &amp; TV Series portal with Sinhala Subtitles, Direct encrypted CDN downloads, and instant WhatsApp delivery.</p>
+                    <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">Sri Lanka's fastest HD Movie &amp; TV Series portal with Sinhala Subtitles, Fast Cloud Downloads, and instant WhatsApp delivery.</p>
                 </div>
                 <div>
                     <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Browse</h3>
@@ -328,10 +322,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
             <span>Sinhala</span>
         </a>
-        <a href="index.html#continue-watching-section" class="ms-mob-tab" data-mob-tab="recent">
+        <button type="button" data-no-ad="1" onclick="MovieStream.openRecentModal(event)" class="ms-mob-tab" data-mob-tab="recent">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span>Recent</span>
-        </a>
+        </button>
     </nav>
 
     <script defer src="assets/catalog-fallback.js"></script>
@@ -748,7 +742,7 @@
                         ? pageItems.map(m => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz" })).join("")
                         : `<div style="grid-column:1/-1;background:var(--ms-surface);border:1px solid var(--ms-border);border-radius:16px;padding:24px;text-align:center;">
                             <p style="margin:0 0 12px;font-weight:700;color:var(--ms-text);">No matching Sinhala movies were found right now.</p>
-                            <a href="https://wa.me/94772115904?text=Hi%20MovieStream%2C%20send%20Sinhala%20movies" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-green">Request on WhatsApp Bot</a>
+                            <a href="https://wa.me/94772115904?text=Hi%20MovieStream%2C%20send%20Sinhala%20movies" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-green">Request on WhatsApp</a>
                            </div>`;
                 }
                 renderCategoryPagination(safePage, safePage < totalPages, false, totalPages);
