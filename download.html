@@ -17,8 +17,8 @@
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="MovieStream" />
     <meta property="og:url" content="https://moviestream.top/download.html" />
-    <meta property="og:title" content="Direct &amp; WhatsApp Download Center | MovieStream" />
-    <meta property="og:description" content="Fast encrypted Direct Download (1080p/720p/480p), 1DM/IDM support &amp; WhatsApp Bot delivery with Sinhala Subtitles." />
+    <meta property="og:title" content="Download &amp; WhatsApp Center | MovieStream" />
+    <meta property="og:description" content="Fast encrypted downloads (1080p/720p/480p) &amp; WhatsApp delivery with Sinhala Subtitles." />
     <meta property="og:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
     <meta property="twitter:card" content="summary_large_image" />
     <meta property="twitter:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
@@ -32,8 +32,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" /></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
     <link rel="stylesheet" href="assets/styles.css" />
 </head>
@@ -87,7 +86,7 @@
                         <span id="dl_source_badge" class="ms-chip" style="font-size:11px;padding:4px 10px;">Sinhala Subtitles</span>
                     </div>
                     <h1 id="dl_movie_title" style="margin:0 0 8px;font-size:clamp(1.3rem,2.5vw,1.85rem);font-weight:900;line-height:1.2;">Loading Movie Details...</h1>
-                    <p id="dl_movie_desc" style="margin:0 0 14px;font-size:0.9rem;color:var(--ms-text-muted);">Prepare direct high-speed download mirrors, configure preferred quality, or request via WhatsApp Data-Saver Bot.</p>
+                    <p id="dl_movie_desc" style="margin:0 0 14px;font-size:0.9rem;color:var(--ms-text-muted);">Choose your video quality to download in HD MP4 or request instant delivery via WhatsApp.</p>
 
                     <div id="dl_series_picker" class="hidden" style="background:var(--ms-surface-alt);border:1px solid var(--ms-border);border-radius:12px;padding:12px;margin-bottom:14px;">
                         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;">
@@ -118,7 +117,7 @@
             <div id="dl_player_wrap" class="hidden" style="margin-top:20px;">
                 <div class="ms-player-box">
                     <video id="dl_video_player" controls playsinline class="hidden"></video>
-                    <iframe id="dl_iframe_player" allowfullscreen class="hidden" title="Stream Player"></iframe>
+                    <iframe id="dl_iframe_player" allow="autoplay; fullscreen; encrypted-media" class="hidden" title="Stream Player"></iframe>
                 </div>
             </div>
         </section>
@@ -126,13 +125,13 @@
         <!-- Download Settings & Quality Selection Grid -->
         <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:20px;align-items:start;">
 
-            <!-- Column 1: Quality Mirrors + Direct Download Controls -->
+            <!-- Column 1: Quality Mirrors + Download Controls -->
             <section class="ms-dl-card">
-                <h2 style="margin:0 0 6px;font-size:1.15rem;font-weight:800;">1. Select Video Quality &amp; Mirror</h2>
-                <p style="margin:0 0 14px;font-size:0.83rem;color:var(--ms-text-muted);">Choose resolution, configure filename/IDM settings, and start encrypted direct download.</p>
+                <h2 style="margin:0 0 6px;font-size:1.15rem;font-weight:800;">1. Select Video Quality</h2>
+                <p id="dl_quality_sub" style="margin:0 0 14px;font-size:0.83rem;color:var(--ms-text-muted);">Choose a quality option below and click Download.</p>
 
                 <!-- Saved Preferences Settings Box -->
-                <div style="background:var(--ms-surface-alt);border:1px solid var(--ms-border);border-radius:14px;padding:12px;margin-bottom:16px;">
+                <div id="dl_pref_wrap" style="background:var(--ms-surface-alt);border:1px solid var(--ms-border);border-radius:14px;padding:12px;margin-bottom:16px;">
                     <div style="font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:0.06em;color:var(--ms-text-muted);margin-bottom:8px;">Download Preferences (Saved)</div>
                     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                         <div class="ms-field">
@@ -145,11 +144,10 @@
                             </select>
                         </div>
                         <div class="ms-field">
-                            <label for="pref_dl_engine">Download Engine</label>
+                            <label for="pref_dl_engine">Download Mode</label>
                             <select id="pref_dl_engine" class="ms-select">
-                                <option value="proxy">Stealth Proxy (IDM / Browser)</option>
-                                <option value="1dm">1DM Android / Multi-Thread</option>
-                                <option value="direct">Direct Mirror Fallback</option>
+                                <option value="proxy">Cloud Tunnel (Recommended)</option>
+                                <option value="direct">Fast Cloud Fallback</option>
                             </select>
                         </div>
                     </div>
@@ -175,29 +173,22 @@
                     </div>
                     <div class="ms-progress-track"><div id="dl_progress_fill" class="ms-progress-fill"></div></div>
                     <div id="dl_manual_fallback" style="margin-top:10px;font-size:0.78rem;color:var(--ms-text-muted);">
-                        Not starting? <a id="dl_manual_link" href="#" style="color:var(--ms-blue);font-weight:800;text-decoration:underline;">Click manual mirror link</a>
+                        Not starting? <a id="dl_manual_link" href="#" style="color:var(--ms-blue);font-weight:800;text-decoration:underline;">Click mirror link</a>
                     </div>
                 </div>
 
                 <div style="display:flex;flex-wrap:wrap;gap:10px;">
                     <button type="button" id="dl_start_btn" class="ms-btn ms-btn-blue" style="flex:1;padding:14px 18px;font-size:0.95rem;">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
-                        <span>Start Direct Download</span>
-                    </button>
-                    <button type="button" id="dl_copy_btn" class="ms-btn ms-btn-outline" title="Copy Download Link for IDM / 1DM">
-                        <span>Copy Link</span>
+                        <span>Download Now</span>
                     </button>
                 </div>
-
-                <p style="margin:12px 0 0;font-size:0.76rem;color:var(--ms-text-subtle);">
-                    💡 Tip: For maximum speed on mobile use <strong>1DM / ADM</strong>; on PC use <strong>IDM</strong> with our encrypted cloud tunnel.
-                </p>
             </section>
 
-            <!-- Column 2: WhatsApp Bot & 2GB+ Settings -->
+            <!-- Column 2: WhatsApp & 2GB+ Settings -->
             <section class="ms-dl-card">
-                <h2 style="margin:0 0 6px;font-size:1.15rem;font-weight:800;">2. WhatsApp Bot Delivery</h2>
-                <p style="margin:0 0 14px;font-size:0.83rem;color:var(--ms-text-muted);">Data-saver delivery directly to your WhatsApp chat using a secure one-time 6-digit PIN.</p>
+                <h2 style="margin:0 0 6px;font-size:1.15rem;font-weight:800;">2. WhatsApp Delivery</h2>
+                <p style="margin:0 0 14px;font-size:0.83rem;color:var(--ms-text-muted);">Data-saver delivery straight to your WhatsApp chat using a secure one-time 6-digit PIN.</p>
 
                 <div id="dl_2gb_warning" class="hidden" style="background:#fefce8;border:1px solid #fde047;color:#854d0e;border-radius:12px;padding:12px;font-size:0.82rem;margin-bottom:14px;font-weight:600;">
                     ⚠️ <strong>2GB+ Large File Notice:</strong> Files larger than 2GB may take extra processing time over WhatsApp. Choosing 720p HD is recommended for fast WhatsApp delivery.
@@ -205,23 +196,22 @@
 
                 <div style="background:var(--ms-green-soft);border:1px solid #bbf7d0;border-radius:14px;padding:14px;margin-bottom:16px;">
                     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-                        <span style="font-size:0.82rem;font-weight:800;color:var(--ms-green);">Selected Quality for Bot</span>
+                        <span style="font-size:0.82rem;font-weight:800;color:var(--ms-green);">Selected Quality for WhatsApp</span>
                         <span id="wa_selected_badge" class="ms-chip" style="background:#ffffff;color:var(--ms-green);border-color:#86efac;font-size:11px;">720p HD</span>
                     </div>
                     <div style="font-size:0.8rem;color:#166534;">
-                        WhatsApp Bot will verify your PIN &amp; deliver the file directly to your chat with Sinhala subtitles.
+                        WhatsApp will verify your PIN &amp; deliver the file cleanly to your chat with Sinhala subtitles.
                     </div>
                 </div>
 
                 <div id="dl_telegram_box" class="hidden" style="background:#eff6ff;border:1px solid #93c5fd;border-radius:14px;padding:14px;margin-bottom:14px;">
-                    <div style="font-weight:800;font-size:0.85rem;color:#1e40af;margin-bottom:6px;">Sinhala Direct Source Ready</div>
-                    <p style="margin:0 0 10px;font-size:0.8rem;color:#1e3a8a;">Open this movie directly or send via WhatsApp Bot below.</p>
-                    <a id="dl_tg_open_link" href="#" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-blue" style="width:100%;">Open Direct Stream</a>
+                    <div style="font-weight:800;font-size:0.85rem;color:#1e40af;margin-bottom:6px;">Sinhala Movie Ready</div>
+                    <p style="margin:0 0 10px;font-size:0.8rem;color:#1e3a8a;">Click Download Now on the left or request via WhatsApp below.</p>
                 </div>
 
                 <button type="button" id="dl_wa_send_btn" class="ms-btn ms-btn-green" style="width:100%;padding:14px 18px;font-size:0.95rem;margin-bottom:12px;">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-                    <span>Send via WhatsApp Bot</span>
+                    <span>Send via WhatsApp</span>
                 </button>
 
                 <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:space-between;align-items:center;padding-top:10px;border-top:1px solid var(--ms-border);font-size:0.78rem;color:var(--ms-text-muted);">
@@ -261,7 +251,7 @@
                         <img src="images/logo-sm.webp" alt="MovieStream Logo" width="32" height="32" class="ms-brand-logo" />
                         <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
                     </div>
-                    <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">Sri Lanka's fastest HD Movie &amp; TV Series portal with Sinhala Subtitles, Direct encrypted CDN downloads, and instant WhatsApp delivery.</p>
+                    <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">Sri Lanka's fastest HD Movie &amp; TV Series portal with Sinhala Subtitles, Fast Cloud Downloads, and instant WhatsApp delivery.</p>
                 </div>
                 <div>
                     <h3 style="margin:0 0 10px;font-size:0.85rem;font-weight:800;">Browse</h3>
@@ -317,10 +307,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
             <span>Sinhala</span>
         </a>
-        <a href="index.html#continue-watching-section" class="ms-mob-tab" data-mob-tab="recent">
+        <button type="button" data-no-ad="1" onclick="MovieStream.openRecentModal(event)" class="ms-mob-tab" data-mob-tab="recent">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span>Recent</span>
-        </a>
+        </button>
     </nav>
 
     <script defer src="assets/catalog-fallback.js"></script>
@@ -385,23 +375,40 @@
 
             function renderQualityOptions(links) {
                 const listEl = document.getElementById("dl_quality_list");
-                const filtered = (links || []).map((l) => {
-                    const raw = MS.unwrapNestedDownloadUrl(l.real_direct_download_url || l.url || l.link || l.cinesubz_link || "");
-                    const label = l.quality_info || l.quality || l.name || "Direct HD";
-                    return { label, raw, size: l.size || MS.parseQualitySize(label) };
-                }).filter(x => x.raw && !x.raw.includes("CineSubzAdmin"));
+                const prefWrap = document.getElementById("dl_pref_wrap");
+                const subNote = document.getElementById("dl_quality_sub");
+                const isTgMovie = stateData.source === "sinhala" || stateData.source === "telegram" || String(stateData.url || "").includes("t.me/");
 
-                if (!filtered.length && stateData.source === "sinhala" && stateData.url) {
+                if (isTgMovie && stateData.url) {
                     const tgRaw = MS.unwrapNestedDownloadUrl(stateData.url);
-                    filtered.push(
-                        { label: "480p SD • Data Saver", raw: tgRaw, size: "~450 MB" },
-                        { label: "720p HD • Recommended", raw: tgRaw, size: "~950 MB" },
-                        { label: "1080p Full HD • Master", raw: tgRaw, size: "~1.8 GB" }
-                    );
+                    if (prefWrap) prefWrap.classList.add("hidden");
+                    if (subNote) subNote.textContent = "Single Full HD file ready — click Download Now below.";
+                    listEl.innerHTML = `
+                        <div class="ms-quality-card selected" style="cursor:default;">
+                            <div>
+                                <div style="font-weight:800;font-size:0.9rem;color:var(--ms-text);">Full Movie HD</div>
+                                <div style="font-size:0.75rem;color:var(--ms-text-muted);">Telegram Vault &bull; MP4 File</div>
+                            </div>
+                            <span class="ms-chip active">Full HD</span>
+                        </div>`;
+                    stateData.selectedUrl = tgRaw;
+                    stateData.selectedQuality = "Full Movie HD";
+                    document.getElementById("wa_selected_badge").textContent = "Full Movie HD";
+                    const warnEl = document.getElementById("dl_2gb_warning");
+                    if (warnEl) warnEl.classList.add("hidden");
+                    updateFilenamePreview();
+                    return;
                 }
 
+                const filtered = (links || []).map((l) => {
+                    const raw = MS.unwrapNestedDownloadUrl(l.real_direct_download_url || l.url || l.link || l.cinesubz_link || "");
+                    const label = MS.stripDirectLabel(l.quality_info || l.quality || l.name || "HD MP4", "HD MP4");
+                    const cleanSize = MS.parseQualitySize(label, l.size);
+                    return { label, raw, size: cleanSize };
+                }).filter(x => x.raw && !x.raw.includes("CineSubzAdmin"));
+
                 if (!filtered.length) {
-                    listEl.innerHTML = `<div style="padding:14px;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;color:#b91c1c;font-size:0.84rem;font-weight:600;">No direct mirror links resolved automatically. Use WhatsApp Bot delivery on the right or try Watch Online.</div>`;
+                    listEl.innerHTML = `<div style="padding:14px;background:#fef2f2;border:1px solid #fecaca;border-radius:12px;color:#b91c1c;font-size:0.84rem;font-weight:600;">No mirror links resolved automatically. Use WhatsApp delivery on the right or try Watch Online.</div>`;
                     updateFilenamePreview();
                     return;
                 }
@@ -417,7 +424,7 @@
                     <button type="button" class="ms-quality-card ${idx === defaultIdx ? "selected" : ""}" data-dl-idx="${idx}">
                         <div>
                             <div style="font-weight:800;font-size:0.9rem;color:var(--ms-text);">${MS.escapeHtml(item.label)}</div>
-                            <div style="font-size:0.75rem;color:var(--ms-text-muted);">Encrypted CDN Tunnel &bull; Resumable</div>
+                            <div style="font-size:0.75rem;color:var(--ms-text-muted);">Cloud Server &bull; Resumable</div>
                         </div>
                         <span class="ms-chip ${idx === defaultIdx ? "active" : ""}">${MS.escapeHtml(item.size)}</span>
                     </button>
@@ -451,7 +458,11 @@
                         titleEl.textContent = MS.cleanDisplayTitle(details.title);
                     }
                     if (details.description) descEl.textContent = details.description;
-                    if (details.poster || details.image) posterEl.src = MS.optimizePosterUrl(details.poster || details.image);
+                    const apiPoster = (details.poster && details.poster !== "N/A") ? details.poster : ((details.image && details.image !== "N/A") ? details.image : "");
+                    const apiBackdrop = (details.backdrop && details.backdrop !== "N/A") ? details.backdrop : "";
+                    if (apiPoster && (!apiBackdrop || apiPoster !== apiBackdrop)) {
+                        posterEl.src = MS.optimizePosterUrl(apiPoster);
+                    }
 
                     if (Array.isArray(details.seasons) && details.seasons.length) {
                         stateData.seasons = details.seasons;
@@ -497,6 +508,11 @@
             function buildFinalDownloadUrl() {
                 let rawTarget = MS.unwrapNestedDownloadUrl(stateData.selectedUrl || stateData.url);
                 if (!rawTarget) return "";
+                if (rawTarget.includes("t.me/c/") || rawTarget.startsWith("tg-msg-id:")) {
+                    const fn = document.getElementById("dl_filename_preview").textContent;
+                    const token = MS.encryptMovieUrl(rawTarget);
+                    return `${MS.getApiBase()}/api/download?token=${token}&tg=1&download=1&filename=${encodeURIComponent(fn)}`;
+                }
                 if (rawTarget.includes("pixeldrain.com/u/")) rawTarget = rawTarget.replace("/u/", "/api/file/") + "?download";
                 else if ((rawTarget.includes("skylines") || rawTarget.includes("terracloud") || rawTarget.includes("drive")) && !rawTarget.includes("dl=1") && !rawTarget.includes("wodocloud")) {
                     rawTarget += (rawTarget.includes("?") ? "&" : "?") + "dl=1";
@@ -509,22 +525,19 @@
                 return `${MS.getApiBase()}/api/download?token=${token}&download=1&filename=${encodeURIComponent(fn)}`;
             }
 
-            // Direct Download Trigger + Live Progress Animation
+            // Instant Download Trigger + Live Progress Animation
             document.getElementById("dl_start_btn").onclick = function () {
                 const rawTarget = stateData.selectedUrl || stateData.url;
                 if (!rawTarget) {
                     MS.showToast("No download mirror available. Try WhatsApp delivery.");
                     return;
                 }
-                if (rawTarget.includes("t.me/") && !rawTarget.includes("t.me/c/")) {
-                    window.open(rawTarget, "_blank", "noopener,noreferrer");
-                    return;
-                }
-                if (rawTarget.includes("t.me/c/")) {
+                if (rawTarget.includes("t.me/") && !rawTarget.includes("t.me/c/") && !rawTarget.startsWith("tg-msg-id:")) {
                     window.open(rawTarget, "_blank", "noopener,noreferrer");
                     return;
                 }
 
+                MS.saveWatchHistory({ ...stateData, imgUrl: posterEl.src || stateData.imgUrl }, 35);
                 const finalUrl = buildFinalDownloadUrl();
                 const fn = document.getElementById("dl_filename_preview").textContent;
 
@@ -537,7 +550,7 @@
                 let pct = 15;
                 fillEl.style.width = "15%";
                 pctEl.textContent = "15%";
-                stEl.textContent = "Generating Encrypted Cloud Tunnel...";
+                stEl.textContent = "Preparing MovieStream File...";
 
                 const a = document.createElement("a");
                 a.href = finalUrl;
@@ -553,35 +566,25 @@
                     pctEl.textContent = `${pct}%`;
                     if (pct >= 100) {
                         clearInterval(timer);
-                        stEl.textContent = "Download started cleanly! Check your browser or IDM/1DM.";
+                        stEl.textContent = "Download started cleanly! Check your browser downloads.";
                     } else if (pct > 60) {
-                        stEl.textContent = "Streaming via High-Speed CDN...";
+                        stEl.textContent = "Streaming via Cloud Server...";
                     }
                 }, 140);
-            };
-
-            document.getElementById("dl_copy_btn").onclick = async function () {
-                const url = buildFinalDownloadUrl();
-                if (!url) return MS.showToast("No link ready to copy.");
-                try {
-                    await navigator.clipboard.writeText(url);
-                    MS.showToast("Encrypted link copied for IDM / 1DM!");
-                } catch (_) {
-                    MS.showToast("Link ready: click Manual Link.");
-                }
             };
 
             document.getElementById("dl_watch_btn").onclick = function () {
                 const rawTarget = MS.unwrapNestedDownloadUrl(stateData.selectedUrl || stateData.url);
                 if (!rawTarget) return MS.showToast("No stream URL available.");
+                MS.saveWatchHistory({ ...stateData, imgUrl: posterEl.src || stateData.imgUrl }, 45);
                 const wrap = document.getElementById("dl_player_wrap");
                 const video = document.getElementById("dl_video_player");
                 const iframe = document.getElementById("dl_iframe_player");
                 wrap.classList.remove("hidden");
                 let streamUrl = rawTarget;
-                if (streamUrl.includes("t.me/c/")) {
-                    const m = streamUrl.match(/t\.me\/c\/\d+\/(\d+)/);
-                    if (m) streamUrl = `https://moviestream.top/api/stream/${m[1]}`;
+                if (streamUrl.includes("t.me/c/") || streamUrl.startsWith("tg-msg-id:")) {
+                    const m = streamUrl.match(/(?:t\.me\/c\/\d+\/|tg-msg-id:)(\d+)/);
+                    if (m) streamUrl = `${MS.getApiBase()}/api/stream/${m[1]}`;
                 } else if (streamUrl.includes("/api/download")) {
                     streamUrl = streamUrl.replace(/([?&]download=)1\b/, "$10");
                 } else if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => streamUrl.includes(d))) {
@@ -599,12 +602,12 @@
                 window.open(`https://wa.me/94760246304?text=${msg}`, "_blank", "noopener,noreferrer");
             };
 
-            // WhatsApp Bot PIN Delivery
+            // WhatsApp PIN Delivery
             document.getElementById("dl_wa_send_btn").onclick = async function () {
                 const btn = this;
                 btn.disabled = true;
                 const origHtml = btn.innerHTML;
-                btn.textContent = "Generating Bot PIN...";
+                btn.textContent = "Generating WhatsApp PIN...";
 
                 let pin = Math.floor(100000 + Math.random() * 900000).toString();
                 let botNum = localStorage.getItem("moviestream_bot_number") || "94722926276";
