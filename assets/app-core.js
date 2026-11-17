@@ -923,7 +923,12 @@
         if (!u) return { href: "", fileName };
 
         if (u.includes("pixeldrain.com/u/")) {
-            u = `${u.replace("/u/", "/api/file/").split("?")[0]}${isDownload ? "?download" : ""}`;
+            const pdApi = u.replace("/u/", "/api/file/").split("?")[0];
+            if (isDownload) {
+                u = `${getApiBase()}/api/download?token=${encryptMovieUrl(pdApi + "?download")}&download=1&filename=${encodeURIComponent(fileName)}`;
+            } else {
+                u = pdApi;
+            }
         } else if (u.includes("t.me/c/") || u.startsWith("tg-msg-id:")) {
             const m = u.match(/(?:t\.me\/c\/\d+\/|tg-msg-id:)(\d+)/);
             if (isDownload) {
@@ -931,7 +936,11 @@
             } else if (m) {
                 u = `${getApiBase()}/api/stream/${m[1]}`;
             }
-        } else if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => u.includes(d))) {
+        } else if (u.includes("youtube.com") || u.includes("youtu.be") || u.includes("/embed/") || u.includes("player")) {
+            if (isDownload) {
+                u = `${getApiBase()}/api/download?token=${encryptMovieUrl(u)}&download=1&filename=${encodeURIComponent(fileName)}`;
+            }
+        } else if (u.startsWith("http://") || u.startsWith("https://") || u.startsWith("/")) {
             u = `${getApiBase()}/api/download?token=${encryptMovieUrl(u)}&download=${isDownload ? 1 : 0}&filename=${encodeURIComponent(fileName)}`;
         }
         return { href: u, fileName };
@@ -1104,7 +1113,14 @@
             const epTag = (movieObj.season && movieObj.episode)
                 ? ` S${String(movieObj.season).padStart(2, "0")}E${String(movieObj.episode).padStart(2, "0")}`
                 : "";
+            const rawCleanTarget = unwrapNestedDownloadUrl(lnk.url || "");
             const { href: directHref } = resolvePopupDirectHref(lnk.url, qLabel, false);
+            const waDirectTarget = isSinhala ? (rawCleanTarget || lnk.url) : (rawCleanTarget || directHref || lnk.url);
+
+            const clientPin = String(Math.floor(100000 + Math.random() * 900000));
+            let waWin = null;
+            try { waWin = window.open("", "_blank"); } catch (_) { waWin = null; }
+
             if (statusEl) {
                 statusEl.dataset.sticky = "1";
                 statusEl.className = "ms-dlp-status is-loading";
@@ -1112,46 +1128,63 @@
             }
 
             let botNum = "94722926276";
-            try { botNum = localStorage.getItem("moviestream_bot_number") || botNum; } catch (_) {}
-            const pinBase = (getBotOriginCandidates()[0] || getApiBase() || "");
+            try { botNum = String(localStorage.getItem("moviestream_bot_number") || botNum).replace(/[^0-9]/g, "") || "94722926276"; } catch (_) {}
             let pin = "";
-            try {
-                const headers = await genApiHeaders();
-                headers["Content-Type"] = "application/json";
-                const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
-                const tid = controller ? setTimeout(() => controller.abort(), 4500) : null;
-                const res = await fetch(`${pinBase}/api/movie-pin`, {
-                    method: "POST",
-                    headers,
-                    signal: controller ? controller.signal : undefined,
-                    body: JSON.stringify({
-                        movieName: `${cleanTitle}${epTag}`,
-                        directLink: directHref || lnk.url,
-                        quality: qLabel,
-                        source: isSinhala ? "telegram" : "cinesubz"
-                    })
-                });
-                if (tid) clearTimeout(tid);
-                const data = await res.json().catch(() => ({}));
-                if (res.ok && data && data.pin) pin = data.pin;
-            } catch (_) {}
+            for (const pinBase of getBotOriginCandidates()) {
+                try {
+                    const headers = await genApiHeaders();
+                    headers["Content-Type"] = "application/json";
+                    const controller = typeof AbortController !== "undefined" ? new AbortController() : null;
+                    const tid = controller ? setTimeout(() => controller.abort(), 3500) : null;
+                    const res = await fetch(`${pinBase}/api/movie-pin`, {
+                        method: "POST",
+                        headers,
+                        signal: controller ? controller.signal : undefined,
+                        body: JSON.stringify({
+                            pin: clientPin,
+                            movieName: `${cleanTitle}${epTag}`,
+                            directLink: waDirectTarget,
+                            quality: qLabel,
+                            source: isSinhala ? "telegram" : "cinesubz"
+                        })
+                    });
+                    if (tid) clearTimeout(tid);
+                    const data = await res.json().catch(() => ({}));
+                    if (res.ok && data && data.pin) {
+                        pin = String(data.pin);
+                        if (data.botNumber) {
+                            const srvNum = String(data.botNumber).replace(/[^0-9]/g, "");
+                            if (srvNum) botNum = srvNum;
+                        }
+                        break;
+                    }
+                } catch (_) {}
+            }
 
-            const waText = pin
-                ? `${cleanTitle}${epTag} (${qLabel}) - ${pin}`
-                : `${cleanTitle}${epTag} (${qLabel})`;
+            const finalPin = pin || clientPin;
+            const waText = `${cleanTitle}${epTag} (${qLabel}) - ${finalPin}`;
             const waUrl = `https://wa.me/${botNum}?text=${encodeURIComponent(waText)}`;
-            try { window.open(waUrl, "_blank", "noopener,noreferrer"); } catch (_) {}
+            if (waWin && !waWin.closed && waWin.location) {
+                try {
+                    waWin.opener = null;
+                    waWin.location.href = waUrl;
+                } catch (_) {
+                    try { window.open(waUrl, "_blank", "noopener,noreferrer"); } catch (_) {}
+                }
+            } else {
+                try { window.open(waUrl, "_blank", "noopener,noreferrer"); } catch (_) {}
+            }
 
             if (statusEl) {
                 statusEl.dataset.sticky = "1";
                 statusEl.className = "ms-dlp-status is-success";
                 statusEl.innerHTML = `
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;width:100%;">
-                        <span>${pin ? `WhatsApp PIN Ready: <b>${escapeHtml(pin)}</b> (${escapeHtml(qLabel)})` : `WhatsApp Request Ready (${escapeHtml(qLabel)})`}</span>
+                        <span>WhatsApp PIN Ready: <b>${escapeHtml(finalPin)}</b> (${escapeHtml(qLabel)})</span>
                         <a href="${escapeHtml(waUrl)}" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-green" style="padding:7px 14px;font-size:0.78rem;">Open WhatsApp &rarr;</a>
                     </div>`;
             }
-            showToast(pin ? `WhatsApp PIN: ${pin}` : "Opening WhatsApp...");
+            showToast(`WhatsApp PIN: ${finalPin}`);
             return;
         }
 
@@ -1318,15 +1351,15 @@
             }
         }
 
+        renderDownloadPopupBody();
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+
         const isSinhala = normalized.source === "sinhala" || String(normalized.url || "").includes("t.me/");
         if (isSinhala && (modeVal === "download" || modeVal === "whatsapp")) {
             saveWatchHistory(normalized, 25);
             return await triggerPopupQualityAction(0);
         }
-
-        renderDownloadPopupBody();
-        modal.classList.remove("hidden");
-        document.body.style.overflow = "hidden";
 
         const hasMultiplePassed = rawLinks.length > 0 || Boolean(preSeasons);
         if (!isSinhala && !hasMultiplePassed && normalized.url) {
@@ -1630,7 +1663,7 @@
         } else if (streamUrl.includes("t.me/") || streamUrl.includes("telegram.me")) {
             window.open(streamUrl, "_blank", "noopener,noreferrer");
             return;
-        } else if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => streamUrl.includes(d))) {
+        } else if (!streamUrl.includes("youtube.com") && !streamUrl.includes("youtu.be") && !streamUrl.includes("/embed/")) {
             streamUrl = `${getApiBase()}/api/download?token=${encryptMovieUrl(raw)}&download=0`;
         }
 
