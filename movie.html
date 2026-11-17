@@ -392,10 +392,10 @@
             if (raw.includes("pixeldrain.com/u/")) {
                 return { url: raw.replace("/u/", "/api/file/").replace("?download", ""), mode: "video" };
             }
-            if (raw.includes("youtube.com") || raw.includes("youtu.be") || raw.includes("embed") || raw.includes("player")) {
+            if (raw.includes("youtube.com") || raw.includes("youtu.be") || raw.includes("/embed/") || raw.includes("player")) {
                 return { url: raw, mode: "iframe" };
             }
-            if (["wodocloud", "supercloud", "skylines", "terracloud", "drive0", "kdrive", "cinesubz", "csplayer", "google.com/server", "zt-links"].some(d => raw.includes(d)) || raw.startsWith("/api/download")) {
+            if (raw.startsWith("http://") || raw.startsWith("https://") || raw.startsWith("/")) {
                 const streamProxy = raw.startsWith("/api/download")
                     ? `${MovieStream.getApiBase()}${raw.replace(/download=1/g, "download=0")}`
                     : `${MovieStream.getApiBase()}/api/download?token=${MovieStream.encryptMovieUrl(raw)}&download=0`;
