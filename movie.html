@@ -659,4 +659,557 @@
             b.classList.add("is-anim");
         }
 
-        function wakeMagicControl
+        function wakeMagicControls() {
+            const stage = document.getElementById("mv_player_stage");
+            const v = document.getElementById("mv_video");
+            if (!stage) return;
+            stage.classList.remove("is-idle");
+            clearTimeout(_magicIdleTimer);
+            if (v && !v.paused && !v.ended) {
+                _magicIdleTimer = setTimeout(() => {
+                    stage.classList.add("is-idle");
+                }, 3200);
+            }
+        }
+
+        function toggleMagicPlay() {
+            const v = document.getElementById("mv_video");
+            if (!v || v.classList.contains("hidden")) return;
+            if (v.paused) {
+                v.play().catch(() => {});
+                flashMagicBurst("▶");
+            } else {
+                v.pause();
+                flashMagicBurst("⏸");
+            }
+            wakeMagicControls();
+        }
+
+        function seekMagicBy(delta) {
+            const v = document.getElementById("mv_video");
+            if (!v || v.classList.contains("hidden")) return;
+            const target = Math.max(0, Math.min(v.duration || Infinity, (v.currentTime || 0) + delta));
+            v.currentTime = target;
+            flashMagicBurst(delta > 0 ? `+${delta}s` : `${delta}s`);
+            wakeMagicControls();
+        }
+
+        function toggleMagicMute() {
+            const v = document.getElementById("mv_video");
+            const btn = document.getElementById("mv_ctrl_mute");
+            const sl = document.getElementById("ms_vol_slider");
+            if (!v) return;
+            v.muted = !v.muted;
+            if (btn) btn.textContent = v.muted || v.volume === 0 ? "🔇" : "🔊";
+            if (sl) sl.value = v.muted ? 0 : v.volume;
+            wakeMagicControls();
+        }
+
+        function setMagicVolume(val) {
+            const v = document.getElementById("mv_video");
+            const btn = document.getElementById("mv_ctrl_mute");
+            if (!v) return;
+            const vol = Math.max(0, Math.min(1, parseFloat(val)));
+            v.volume = vol;
+            v.muted = vol === 0;
+            if (btn) btn.textContent = v.muted ? "🔇" : "🔊";
+            wakeMagicControls();
+        }
+
+        function cycleMagicSpeed() {
+            const v = document.getElementById("mv_video");
+            const btn = document.getElementById("mv_ctrl_speed");
+            _magicSpeedIdx = (_magicSpeedIdx + 1) % _magicSpeeds.length;
+            const rate = _magicSpeeds[_magicSpeedIdx];
+            if (v) v.playbackRate = rate;
+            if (btn) btn.textContent = `${rate}x`;
+            flashMagicBurst(`${rate}x`);
+            wakeMagicControls();
+        }
+
+        function toggleMagicAura() {
+            const wrap = document.getElementById("mv_magic_wrap");
+            const btn = document.getElementById("mv_aura_btn");
+            if (!wrap || !btn) return;
+            const on = wrap.classList.toggle("aura-on");
+            btn.classList.toggle("active", on);
+        }
+
+        function toggleTheaterMode() {
+            const stage = document.getElementById("mv_player_stage");
+            const btn = document.getElementById("mv_theater_btn");
+            if (!stage || !btn) return;
+            const on = stage.classList.toggle("is-theater");
+            btn.classList.toggle("active", on);
+        }
+
+        async function toggleMagicPiP() {
+            const v = document.getElementById("mv_video");
+            if (!v || !document.pictureInPictureEnabled) {
+                MovieStream.showToast("Picture-in-Picture is not supported on this browser.");
+                return;
+            }
+            try {
+                if (document.pictureInPictureElement) await document.exitPictureInPicture();
+                else await v.requestPictureInPicture();
+            } catch (_) {}
+        }
+
+        function toggleMagicFullscreen() {
+            const stage = document.getElementById("mv_player_stage");
+            if (!stage) return;
+            if (document.fullscreenElement) {
+                document.exitFullscreen().catch(() => {});
+            } else if (stage.requestFullscreen) {
+                stage.requestFullscreen().catch(() => {});
+            }
+        }
+
+        function initMagicPlayerBindings() {
+            if (_magicBound) return;
+            _magicBound = true;
+            const stage = document.getElementById("mv_player_stage");
+            const v = document.getElementById("mv_video");
+            const seek = document.getElementById("mv_magic_seek");
+            const timeEl = document.getElementById("mv_magic_time");
+            const playBtn = document.getElementById("mv_ctrl_play");
+            if (!stage || !v) return;
+
+            const syncPlayState = () => {
+                if (playBtn) playBtn.innerHTML = v.paused ? "&#9654;" : "&#10074;&#10074;";
+                wakeMagicControls();
+            };
+
+            v.addEventListener("play", syncPlayState);
+            v.addEventListener("pause", syncPlayState);
+            v.addEventListener("ended", () => {
+                if (playBtn) playBtn.innerHTML = "&#9654;";
+                stage.classList.remove("is-idle");
+            });
+            v.addEventListener("loadedmetadata", () => {
+                if (timeEl) timeEl.textContent = `${fmtMagicTime(0)} / ${fmtMagicTime(v.duration)}`;
+            });
+            v.addEventListener("timeupdate", () => {
+                const dur = v.duration || 0;
+                const cur = v.currentTime || 0;
+                if (seek && dur > 0) seek.value = Math.round((cur / dur) * 1000);
+                if (timeEl) timeEl.textContent = `${fmtMagicTime(cur)} / ${fmtMagicTime(dur)}`;
+            });
+
+            if (seek) {
+                seek.addEventListener("input", () => {
+                    const dur = v.duration || 0;
+                    if (dur > 0) v.currentTime = (Number(seek.value) / 1000) * dur;
+                    wakeMagicControls();
+                });
+            }
+
+            v.addEventListener("click", (e) => {
+                const rect = v.getBoundingClientRect();
+                const xPct = (e.clientX - rect.left) / Math.max(1, rect.width);
+                const now = Date.now();
+                if (now - _magicLastTapTs < 280) {
+                    if (xPct < 0.35) seekMagicBy(-10);
+                    else if (xPct > 0.65) seekMagicBy(10);
+                    else toggleMagicFullscreen();
+                    _magicLastTapTs = 0;
+                } else {
+                    _magicLastTapTs = now;
+                    toggleMagicPlay();
+                }
+            });
+
+            stage.addEventListener("mousemove", wakeMagicControls);
+            stage.addEventListener("touchstart", wakeMagicControls, { passive: true });
+        }
+
+        function closeMoviePlayer() {
+            const card = document.getElementById("mv_player_card");
+            const ph = document.getElementById("mv_player_placeholder");
+            const video = document.getElementById("mv_video");
+            const iframe = document.getElementById("mv_iframe");
+            const topbar = document.getElementById("mv_magic_topbar");
+            const controls = document.getElementById("mv_magic_controls");
+            const status = document.getElementById("mv_stream_status");
+            const errBanner = document.getElementById("mv_stream_error_banner");
+
+            try { if (video) { video.pause(); video.removeAttribute("src"); video.load(); video.classList.add("hidden"); } } catch (_) {}
+            try { if (iframe) { iframe.src = ""; iframe.classList.add("hidden"); } } catch (_) {}
+            if (ph) ph.style.display = "flex";
+            if (topbar) topbar.classList.add("hidden");
+            if (controls) controls.classList.add("hidden");
+            if (errBanner) errBanner.classList.add("hidden");
+            if (status) {
+                status.textContent = "Ready";
+                status.style.background = "var(--ms-green)";
+                status.style.borderColor = "var(--ms-green)";
+            }
+            if (card) {
+                card.classList.add("hidden");
+                card.classList.remove("ms-player-reveal");
+            }
+        }
+
+        function startMoviePlayback() {
+            const pCard = document.getElementById("mv_player_card");
+            if (pCard) {
+                pCard.classList.remove("hidden");
+                pCard.classList.remove("ms-player-reveal");
+                void pCard.offsetWidth;
+                pCard.classList.add("ms-player-reveal");
+            }
+
+            const active = mvMirrors[mvSelectedMirrorIdx];
+            const candidateUrl = active
+                ? (active.real_direct_download_url || active.url || active.link || active.cinesubz_link || mvMovie.url)
+                : (mvMovie.url || "");
+            const resolved = resolvePlayableUrl(candidateUrl);
+            const ph = document.getElementById("mv_player_placeholder");
+            const video = document.getElementById("mv_video");
+            const iframe = document.getElementById("mv_iframe");
+            const status = document.getElementById("mv_stream_status");
+            const errBanner = document.getElementById("mv_stream_error_banner");
+            const errText = document.getElementById("mv_stream_error_text");
+            const topbar = document.getElementById("mv_magic_topbar");
+            const controls = document.getElementById("mv_magic_controls");
+
+            if (errBanner) errBanner.classList.add("hidden");
+
+            if (resolved.mode === "telegram_external") {
+                window.open(resolved.url, "_blank", "noopener,noreferrer");
+                return;
+            }
+            if (!resolved.url) {
+                MovieStream.showToast("No direct stream link ready yet — click Download for mirrors.");
+                return;
+            }
+
+            initMagicPlayerBindings();
+            if (ph) ph.style.display = "none";
+            if (topbar) topbar.classList.remove("hidden");
+            if (status) {
+                status.textContent = "Playing";
+                status.style.background = "var(--ms-red)";
+                status.style.borderColor = "var(--ms-red)";
+            }
+
+            if (resolved.mode === "iframe") {
+                if (controls) controls.classList.add("hidden");
+                video.classList.add("hidden");
+                video.pause();
+                iframe.classList.remove("hidden");
+                iframe.src = resolved.url;
+            } else {
+                iframe.classList.add("hidden");
+                iframe.src = "";
+                if (controls) controls.classList.remove("hidden");
+                video.classList.remove("hidden");
+                video.onerror = function () {
+                    if (errBanner && errText) {
+                        errText.textContent = resolved.externalTelegram
+                            ? "Stream server node is restarting. Click Download or choose WhatsApp Bot quality."
+                            : "Unable to play this mirror inline. Pick another mirror or click Download.";
+                        errBanner.classList.remove("hidden");
+                    }
+                    if (status) {
+                        status.textContent = "Mirror Switch";
+                        status.style.background = "#d97706";
+                        status.style.borderColor = "#d97706";
+                    }
+                };
+                video.src = resolved.url;
+                video.play().catch(() => {});
+                flashMagicBurst("▶ HD");
+                wakeMagicControls();
+            }
+
+            document.getElementById("mv_player_card")?.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+
+        function renderSeriesUI() {
+            const tvCard = document.getElementById("mv_tv_card");
+            const sBar = document.getElementById("mv_seasons_bar");
+            const eGrid = document.getElementById("mv_episodes_grid");
+            const badge = document.getElementById("mv_ep_count_badge");
+            if (!tvCard || !mvSeasons.length) return;
+
+            tvCard.classList.remove("hidden");
+            const currentSeason = mvSeasons[mvActiveSeasonIdx] || mvSeasons[0];
+            const episodes = currentSeason.episodes || [];
+            if (badge) badge.textContent = `${mvSeasons.length} Season(s) • ${episodes.length} Ep(s)`;
+
+            sBar.innerHTML = mvSeasons.map((s, idx) => `
+                <button type="button" onclick="selectSeason(${idx})"
+                    class="ms-chip ${idx === mvActiveSeasonIdx ? "active" : ""}" style="${idx === mvActiveSeasonIdx ? "background:var(--ms-blue);border-color:var(--ms-blue);" : ""}">
+                    ${MovieStream.escapeHtml(s.season_title || s.title || `Season ${idx + 1}`)}
+                </button>`).join("");
+
+            eGrid.innerHTML = episodes.map((ep, idx) => `
+                <button type="button" onclick="selectEpisode(${idx})" class="ms-ep-btn ${idx === mvActiveEpisodeIdx ? "active" : ""}">
+                    ${MovieStream.escapeHtml(ep.episode_title || ep.title || `Episode ${idx + 1}`)}
+                </button>`).join("");
+        }
+
+        async function selectSeason(idx, initialEpIdx = 0) {
+            mvActiveSeasonIdx = idx;
+            const eps = mvSeasons[idx]?.episodes || [];
+            const epTarget = Math.min(Math.max(0, Number(initialEpIdx) || 0), Math.max(0, eps.length - 1));
+            mvActiveEpisodeIdx = epTarget;
+            renderSeriesUI();
+            if (eps[epTarget]) await selectEpisode(epTarget);
+        }
+
+        async function selectEpisode(idx) {
+            mvActiveEpisodeIdx = idx;
+            renderSeriesUI();
+            const season = mvSeasons[mvActiveSeasonIdx];
+            const ep = season?.episodes?.[idx];
+            if (!ep) return;
+
+            mvEpisodeUrl = ep.url || ep.link || "";
+            mvEpisodeLabel = `${season.season_title || `S${mvActiveSeasonIdx + 1}`} ${ep.episode_title || ep.title || `E${idx + 1}`}`;
+            const labelEl = document.getElementById("mv_active_mirror_label");
+            if (labelEl) labelEl.textContent = `Loading mirrors for ${mvEpisodeLabel}...`;
+
+            let links = ep.download_links || ep.links || [];
+            if ((!links || !links.length) && mvEpisodeUrl) {
+                try {
+                    const res = await MovieStream.fetchCineSubzAPI(`/api/episode?url=${encodeURIComponent(mvEpisodeUrl)}`);
+                    const d = res?.details || res || {};
+                    links = d.download_links || d.links || [];
+                } catch (_) {}
+            }
+            mvMirrors = links;
+            mvSelectedMirrorIdx = 0;
+            renderMirrors();
+            renderCastAndCrew();
+        }
+
+        function buildQualityPopupPayload() {
+            const active = mvMirrors[mvSelectedMirrorIdx];
+            return {
+                title: mvMovie.title,
+                url: mvEpisodeUrl || mvMovie.url,
+                movieUrl: mvMovie.url,
+                imgUrl: MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image),
+                year: mvMovie.year,
+                quality: mvMovie.quality,
+                rating: mvMovie.rating,
+                source: mvMovie.source,
+                isTv: mvSeasons.length > 0,
+                seasons: mvSeasons && mvSeasons.length ? mvSeasons : null,
+                seasonIdx: mvActiveSeasonIdx,
+                episodeIdx: mvActiveEpisodeIdx,
+                season: mvEpisodeLabel ? String(mvActiveSeasonIdx + 1) : "",
+                episode: mvEpisodeLabel ? String(mvActiveEpisodeIdx + 1) : "",
+                download_links: mvMirrors,
+                directLink: active ? (active.real_direct_download_url || active.url || active.link || "") : "",
+                onWatchSelect: async (origIdx, _lnk, sIdx, eIdx) => {
+                    if (mvSeasons && mvSeasons.length) {
+                        if (sIdx !== mvActiveSeasonIdx) {
+                            await selectSeason(sIdx, eIdx);
+                        } else if (eIdx !== mvActiveEpisodeIdx) {
+                            await selectEpisode(eIdx);
+                        }
+                    }
+                    const nextIdx = (typeof origIdx === "number" && origIdx >= 0 && origIdx < mvMirrors.length) ? origIdx : 0;
+                    mvSelectedMirrorIdx = nextIdx;
+                    renderMirrors();
+                    startMoviePlayback();
+                }
+            };
+        }
+
+        function openWatchQualityPicker() {
+            MovieStream.openDownloadModal(buildQualityPopupPayload(), "watch");
+        }
+
+        function openDedicatedDownloadPage() {
+            MovieStream.openDownloadModal(buildQualityPopupPayload(), "download");
+        }
+
+        function openWhatsAppQualityPopup() {
+            MovieStream.openDownloadModal(buildQualityPopupPayload(), "whatsapp");
+        }
+
+        async function shareCurrentMovie() {
+            const cleanTitle = MovieStream.cleanDisplayTitle(mvMovie.title || "MovieStream");
+            const shareUrl = window.location.href;
+            if (navigator.share) {
+                try {
+                    await navigator.share({ title: `${cleanTitle} | MovieStream`, url: shareUrl });
+                    return;
+                } catch (_) {}
+            }
+            try {
+                await navigator.clipboard.writeText(shareUrl);
+                MovieStream.showToast("Movie link copied to clipboard!");
+            } catch (_) {
+                MovieStream.showToast("Copy address bar link to share.");
+            }
+        }
+
+        function renderRelatedMovies() {
+            const track = document.getElementById("mv_related_row");
+            if (!track) return;
+            const hp = window.CINESUBZ_FALLBACK_HOMEPAGE || {};
+            const pool = [
+                ...(hp["Trending Now"] || []),
+                ...(hp["All Movies"] || []),
+                ...(window.CINESUBZ_FALLBACK_SINHALA || [])
+            ].filter(m => (m.url || m.downloadLink) !== mvMovie.url);
+            track.innerHTML = pool.slice(0, 14).map(m =>
+                MovieStream.renderPosterCard(m, { isTelegram: m.source === "telegram" })
+            ).join("");
+        }
+
+        function findCachedCatalogMatch(targetUrl, targetTitle) {
+            const normUrl = (u) => String(u || "").trim().replace(/\/+$/, "").toLowerCase();
+            const normTitle = (t) => MovieStream.cleanDisplayTitle(t || "").toLowerCase().replace(/[^a-z0-9\u0D80-\u0DFF]+/g, "");
+            const wantedUrl = normUrl(targetUrl);
+            const wantedTitle = normTitle(targetTitle);
+
+            const pools = [
+                ...(window.CINESUBZ_FALLBACK_DETAILS || []),
+                ...(window.CINESUBZ_FALLBACK_SINHALA || []),
+                ...Object.values(window.CINESUBZ_FALLBACK_HOMEPAGE || {}).flat()
+            ];
+
+            let merged = null;
+            for (const item of pools) {
+                if (!item) continue;
+                const itemUrl = normUrl(item.url || item.downloadLink);
+                const itemTitle = normTitle(item.title);
+                const matched = (wantedUrl && itemUrl && itemUrl === wantedUrl)
+                    || (wantedTitle && itemTitle && itemTitle === wantedTitle);
+                if (matched) {
+                    merged = { ...(merged || {}), ...item };
+                    if (merged.poster || merged.imageUrl || merged.image) {
+                        merged.imgUrl = merged.imgUrl || merged.imageUrl || merged.poster || merged.image;
+                    }
+                    if (merged.download_links && merged.download_links.length) break;
+                }
+            }
+            return merged;
+        }
+
+        document.addEventListener("DOMContentLoaded", async function () {
+            if (window.__KV_BLOCKED) return;
+            const qs = new URLSearchParams(window.location.search);
+            const rawUrl = qs.get("url") || "";
+            const rawTitle = qs.get("title") || "";
+            let stored = null;
+            try {
+                const candidate = JSON.parse(sessionStorage.getItem("ms_pending_movie") || "null");
+                const norm = (u) => String(u || "").trim().replace(/\/+$/, "").toLowerCase();
+                if (candidate && (
+                    (!rawUrl && !rawTitle) ||
+                    (rawUrl && (norm(candidate.url) === norm(rawUrl) || norm(candidate.downloadLink) === norm(rawUrl))) ||
+                    (!rawUrl && rawTitle && candidate.title === rawTitle)
+                )) {
+                    stored = candidate;
+                }
+            } catch (_) {}
+
+            const cachedMatch = findCachedCatalogMatch(rawUrl || stored?.url || stored?.downloadLink, rawTitle || stored?.title);
+
+            mvMovie = {
+                ...(cachedMatch || {}),
+                ...(stored || {}),
+                title: rawTitle || stored?.title || cachedMatch?.title || "MovieStream Title",
+                url: rawUrl || stored?.url || stored?.downloadLink || cachedMatch?.url || cachedMatch?.downloadLink || "",
+                source: qs.get("source") || stored?.source || cachedMatch?.source || "cs",
+                imgUrl: qs.get("img") || stored?.imgUrl || stored?.image || cachedMatch?.imgUrl || cachedMatch?.imageUrl || cachedMatch?.poster || cachedMatch?.image || MovieStream.FALLBACK_POSTER,
+                year: qs.get("year") || stored?.year || cachedMatch?.year || "",
+                quality: qs.get("quality") || stored?.quality || cachedMatch?.quality || "HD",
+                rating: qs.get("rating") || stored?.rating || cachedMatch?.rating || ""
+            };
+
+            updateHeroMeta();
+            renderRelatedMovies();
+
+            if (window.location.port !== "5500") {
+                setTimeout(() => {
+                    const s = document.createElement("script");
+                    s.async = true;
+                    s.setAttribute("data-cfasync", "false");
+                    s.src = "https://pl31408761.profitableratecpmnetwork.com/7571eb086837a548fa62ae1cc60dbfed/invoke.js";
+                    document.body.appendChild(s);
+                }, 1500);
+            }
+
+            const mirrorParam = parseInt(qs.get("mirror") || "", 10);
+            const applyAutoplayMirror = () => {
+                if (!Number.isNaN(mirrorParam) && mirrorParam >= 0 && mirrorParam < mvMirrors.length) {
+                    mvSelectedMirrorIdx = mirrorParam;
+                    renderMirrors();
+                }
+                if (qs.get("autoplay") === "1") startMoviePlayback();
+            };
+
+            const isTg = mvMovie.source === "sinhala" || mvMovie.source === "telegram" || String(mvMovie.url || "").includes("t.me/");
+            if (isTg) {
+                mvMirrors = [
+                    {
+                        quality_info: "480p SD • Data Saver",
+                        size: "~450 MB",
+                        url: mvMovie.url,
+                        real_direct_download_url: mvMovie.url
+                    },
+                    {
+                        quality_info: "720p HD • Recommended",
+                        size: "~950 MB",
+                        url: mvMovie.url,
+                        real_direct_download_url: mvMovie.url
+                    },
+                    {
+                        quality_info: "1080p Full HD • Master",
+                        size: "~1.8 GB",
+                        url: mvMovie.url,
+                        real_direct_download_url: mvMovie.url
+                    }
+                ];
+                mvSelectedMirrorIdx = 1;
+                renderMirrors();
+                renderCastAndCrew();
+                applyAutoplayMirror();
+                return;
+            }
+
+            if (mvMovie.url) {
+                try {
+                    const data = await MovieStream.fetchCineSubzAPI(`/api/details?url=${encodeURIComponent(mvMovie.url)}`);
+                    const d = data?.details || data || {};
+                    mvMovie = {
+                        ...mvMovie,
+                        ...d,
+                        title: d.title || mvMovie.title,
+                        imgUrl: d.poster || d.image || mvMovie.imgUrl,
+                        url: mvMovie.url
+                    };
+                    if (Array.isArray(d.seasons) && d.seasons.length > 0) {
+                        mvSeasons = d.seasons;
+                        renderSeriesUI();
+                        const firstEp = mvSeasons[0]?.episodes?.[0];
+                        if (firstEp) await selectEpisode(0);
+                    } else {
+                        mvMirrors = d.download_links || d.links || d.qualities || cachedMatch?.download_links || [];
+                        renderMirrors();
+                    }
+                    updateHeroMeta();
+                    applyAutoplayMirror();
+                } catch (_) {
+                    if (cachedMatch?.download_links?.length) {
+                        mvMirrors = cachedMatch.download_links;
+                    }
+                    renderMirrors();
+                    updateHeroMeta();
+                }
+            } else {
+                renderMirrors();
+                renderCastAndCrew();
+            }
+        });
+    </script>
+</body>
+</html>
