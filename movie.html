@@ -7,7 +7,7 @@
 
     <!-- Primary SEO Meta Tags -->
     <title>Watch &amp; Download Movie HD (Sinhala Subtitles) | MovieStream.top</title>
-    <meta name="description" content="Watch full HD movies and complete TV series online with Sinhala subtitles or pick an instant Download quality &amp; WhatsApp Bot delivery on MovieStream.top." />
+    <meta name="description" content="Watch full HD movies and complete TV series online with Sinhala subtitles or download &amp; receive on WhatsApp at MovieStream.top." />
     <meta name="robots" content="index, follow, max-image-preview:large" />
     <meta name="theme-color" content="#ffffff" />
     <meta name="mobile-web-app-capable" content="yes" />
@@ -19,7 +19,7 @@
     <meta property="og:type" content="video.movie" />
     <meta property="og:site_name" content="MovieStream.top" />
     <meta property="og:title" content="MovieStream — Watch &amp; Download Movies in HD" />
-    <meta property="og:description" content="Stream online or download Sinhala Subtitled Movies &amp; TV Series via Fast Cloud, 1DM/IDM, Sinhala Movies Vault, and WhatsApp Bot." />
+    <meta property="og:description" content="Stream online or download Sinhala Subtitled Movies &amp; TV Series via Fast Cloud, Sinhala Movies Vault, and WhatsApp on MovieStream.top." />
     <meta property="og:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:image" content="https://moviestream.top/images/seo-banner.jpg?v=8" />
@@ -34,13 +34,11 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" onload="this.onload=null;this.rel='stylesheet'" />
-    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&family=Noto+Sans+Sinhala:wght@400;600;700;800&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" /></noscript>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
     <link rel="stylesheet" href="assets/styles.css" />
     <style>
         @media (max-width: 767px) {
-            .ms-floating-wa { bottom: 126px; right: 12px; left: auto; }
             .ms-footer { padding-bottom: 138px; }
         }
     </style>
@@ -98,17 +96,17 @@
                         Loading overview, subtitles, video mirrors, and download options...
                     </p>
                     <div class="ms-movie-actions" style="display:flex;flex-wrap:wrap;gap:10px;">
-                        <button type="button" id="mv_watch_btn" data-no-ad="1" onclick="openWatchQualityPicker()" class="ms-btn ms-btn-primary">
+                        <button type="button" id="mv_watch_btn" onclick="openWatchQualityPicker()" class="ms-btn ms-btn-primary">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
                             <span>Watch Online HD</span>
                         </button>
-                        <button type="button" id="mv_dl_btn" data-no-ad="1" onclick="openDedicatedDownloadPage()" class="ms-btn ms-btn-blue">
+                        <button type="button" id="mv_dl_btn" onclick="openDedicatedDownloadPage()" class="ms-btn ms-btn-blue">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
                             <span>Download</span>
                         </button>
-                        <button type="button" id="mv_wa_btn" data-no-ad="1" onclick="openWhatsAppQualityPopup()" class="ms-btn ms-btn-green">
+                        <button type="button" id="mv_wa_btn" onclick="openWhatsAppQualityPopup()" class="ms-btn ms-btn-green">
                             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M12.031 2c-5.516 0-9.969 4.453-9.969 9.969 0 1.766.453 3.484 1.328 5l-1.391 5.063 5.188-1.359c1.469.797 3.125 1.219 4.844 1.219 5.516 0 9.969-4.453 9.969-9.969S17.547 2 12.031 2z"/></svg>
-                            <span>WhatsApp Bot</span>
+                            <span>WhatsApp</span>
                         </button>
                     </div>
                 </div>
@@ -144,7 +142,7 @@
                 <div>
                     <h2 class="ms-section-title" style="font-size:1.12rem;">
                         <span class="ms-accent-bar"></span>
-                        <span>Stream Online Theater</span>
+                        <span>Stream Online HD</span>
                     </h2>
                     <p id="mv_active_mirror_label" style="margin:4px 0 0;font-size:0.8rem;color:var(--ms-text-muted);font-weight:600;">
                         Select a mirror below or press Play to start watching instantly.
@@ -156,8 +154,7 @@
                 </div>
             </div>
 
-            <div id="mv_magic_wrap" class="ms-magic-wrapper aura-on" style="margin-bottom:16px;">
-                <div class="ms-magic-aura" aria-hidden="true"></div>
+            <div id="mv_magic_wrap" class="ms-magic-wrapper" style="margin-bottom:16px;">
                 <div id="mv_player_stage" class="ms-magic-shell">
                     <div id="mv_player_placeholder" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center;background:radial-gradient(circle at 30% 25%, #1e293b 0%, #090d16 70%);color:#ffffff;z-index:2;">
                         <button type="button" onclick="startMoviePlayback()" aria-label="Play Video"
@@ -166,19 +163,17 @@
                         </button>
                         <div id="mv_placeholder_title" style="font-size:1.02rem;font-weight:800;">Tap Play to Stream in HD</div>
                         <p style="margin:6px 0 0;font-size:0.78rem;color:#cbd5e1;max-width:420px;">
-                            CineMagic HD Theater with ambient lighting, instant quality picker, and high-speed cloud delivery.
+                            HD video player with instant quality selection and landscape fullscreen.
                         </p>
                     </div>
                     <video id="mv_video" class="hidden" playsinline preload="metadata"></video>
                     <iframe id="mv_iframe" class="hidden" allow="autoplay; fullscreen; encrypted-media"></iframe>
                     <div id="mv_magic_burst" class="ms-magic-burst" aria-hidden="true"></div>
+                    <div id="mv_magic_skip_left" class="ms-magic-skip-fx is-left" aria-hidden="true"><span>&laquo; 10s</span></div>
+                    <div id="mv_magic_skip_right" class="ms-magic-skip-fx is-right" aria-hidden="true"><span>10s &raquo;</span></div>
 
                     <div id="mv_magic_topbar" class="ms-magic-topbar hidden">
-                        <span id="mv_magic_title" style="font-size:0.79rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:60%;text-shadow:0 1px 6px rgba(0,0,0,0.85);">CineMagic HD</span>
-                        <div style="display:flex;gap:6px;">
-                            <button type="button" id="mv_aura_btn" class="ms-magic-pill active" onclick="toggleMagicAura()">&#10024; Aura</button>
-                            <button type="button" id="mv_theater_btn" class="ms-magic-pill" onclick="toggleTheaterMode()">Theater</button>
-                        </div>
+                        <span id="mv_magic_title" style="font-size:0.79rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:75%;text-shadow:0 1px 6px rgba(0,0,0,0.85);">HD Player</span>
                     </div>
 
                     <div id="mv_magic_controls" class="ms-magic-controls hidden">
@@ -196,8 +191,9 @@
                             </div>
                             <div class="ms-magic-ctrl-group">
                                 <button type="button" id="mv_ctrl_speed" class="ms-magic-icon-btn" aria-label="Playback speed" onclick="cycleMagicSpeed()">1x</button>
-                                <button type="button" id="mv_ctrl_pip" class="ms-magic-icon-btn" aria-label="Picture in Picture" onclick="toggleMagicPiP()">PiP</button>
-                                <button type="button" id="mv_ctrl_fs" class="ms-magic-icon-btn" aria-label="Fullscreen" onclick="toggleMagicFullscreen()">&#x26F6;</button>
+                                <button type="button" id="mv_ctrl_fs" class="ms-magic-icon-btn" aria-label="Fullscreen Landscape" onclick="toggleMagicFullscreen()">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -287,7 +283,7 @@
                         <span class="ms-brand-name">MOVIE<span>STREAM</span></span>
                     </div>
                     <p style="margin:0;font-size:0.84rem;color:var(--ms-text-muted);max-width:340px;">
-                        Sri Lanka's fastest HD Movie &amp; Complete TV Series portal with Sinhala Subtitles, Direct Encrypted CDN Downloads, and instant WhatsApp Bot delivery.
+                        Sri Lanka's fastest HD Movie &amp; Complete TV Series portal with Sinhala Subtitles, Fast Cloud Downloads, and instant WhatsApp delivery.
                     </p>
                 </div>
                 <div>
@@ -328,16 +324,16 @@
 
     <!-- Mobile Sticky Action CTA Bar -->
     <div class="ms-mobile-sticky-cta">
-        <button type="button" data-no-ad="1" onclick="openWatchQualityPicker()" class="ms-btn ms-btn-primary" style="flex:1;padding:10px 10px;font-size:0.78rem;">
+        <button type="button" onclick="openWatchQualityPicker()" class="ms-btn ms-btn-primary" style="flex:1;padding:10px 8px;font-size:0.78rem;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
             <span>Watch HD</span>
         </button>
-        <button type="button" data-no-ad="1" onclick="openDedicatedDownloadPage()" class="ms-btn ms-btn-blue" style="flex:1;padding:10px 10px;font-size:0.78rem;">
+        <button type="button" onclick="openDedicatedDownloadPage()" class="ms-btn ms-btn-blue" style="flex:1;padding:10px 8px;font-size:0.78rem;">
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 3v12m0 0l-4-4m4 4l4-4M4 19h16"/></svg>
             <span>Download</span>
         </button>
-        <button type="button" data-no-ad="1" onclick="openWhatsAppQualityPopup()" class="ms-btn ms-btn-green" style="flex:0.85;padding:10px 8px;font-size:0.78rem;">
-            <span>WA Bot</span>
+        <button type="button" onclick="openWhatsAppQualityPopup()" class="ms-btn ms-btn-green" style="flex:0.85;padding:10px 8px;font-size:0.78rem;">
+            <span>WhatsApp</span>
         </button>
     </div>
 
@@ -359,10 +355,10 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>
             <span>Sinhala</span>
         </a>
-        <a href="index.html#continue-watching-section" class="ms-mob-tab" data-mob-tab="recent">
+        <button type="button" data-no-ad="1" onclick="MovieStream.openRecentModal(event)" class="ms-mob-tab" data-mob-tab="recent">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
             <span>Recent</span>
-        </a>
+        </button>
     </nav>
 
     <script defer src="assets/catalog-fallback.js"></script>
@@ -419,6 +415,7 @@
 
             const cleanTitle = MovieStream.cleanDisplayTitle(mvMovie.title || "MovieStream Title");
             const img = MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image);
+            const backdropImg = MovieStream.optimizePosterUrl(mvMovie.backdrop || mvMovie.backdropImg || img);
 
             document.title = `${cleanTitle} — Watch & Download | MovieStream.top`;
             if (poster) {
@@ -426,7 +423,7 @@
                 poster.alt = `${cleanTitle} Poster`;
                 poster.onerror = function () { this.onerror = null; this.src = MovieStream.FALLBACK_POSTER; };
             }
-            if (bg) bg.style.backgroundImage = `url('${img}')`;
+            if (bg) bg.style.backgroundImage = `url('${backdropImg}')`;
             if (titleEl) titleEl.textContent = cleanTitle;
             if (phTitle) phTitle.textContent = `Tap Play to Watch ${cleanTitle}`;
 
@@ -445,18 +442,18 @@
                 if (mvMovie.genre) bits.push(String(mvMovie.genre).replace(/,\s*,+/g, ", ").replace(/^,\s*|,\s*$/g, ""));
                 if (mvMovie.language) bits.push(`Language: ${mvMovie.language}`);
                 if (mvMovie.runtime) bits.push(mvMovie.runtime);
-                subEl.textContent = bits.filter(Boolean).join(" • ") || "HD MP4 • Ready for Online Stream & Direct Download";
+                subEl.textContent = bits.filter(Boolean).join(" • ") || "HD MP4 • Ready for Online Stream & Download";
             }
 
             if (synEl) {
                 const hasYear = mvMovie.year ? cleanTitle.includes(String(mvMovie.year)) : /\(\d{4}\)/.test(cleanTitle);
                 const yearNote = !hasYear ? ` (${mvMovie.year || "HD"})` : "";
                 synEl.textContent = mvMovie.synopsis || mvMovie.description || mvMovie.plot ||
-                    `${cleanTitle}${yearNote} is ready to stream online or download in 480p / 720p / 1080p MP4 with Sinhala Subtitles on MovieStream.`;
+                    `${cleanTitle}${yearNote} is ready to stream online or download in HD MP4 with Sinhala Subtitles on MovieStream.`;
             }
 
             const magicTitle = document.getElementById("mv_magic_title");
-            if (magicTitle) magicTitle.textContent = `${cleanTitle} • CineMagic HD`;
+            if (magicTitle) magicTitle.textContent = `${cleanTitle} • HD`;
 
             renderCastAndCrew();
 
@@ -572,23 +569,25 @@
             }
 
             const mirrorCount = Array.isArray(mvMirrors) ? mvMirrors.length : 0;
-            const qSummary = mirrorCount
-                ? mvMirrors.slice(0, 3).map(m => String(m.quality_info || m.quality || "HD").split("•")[0].trim()).join(" • ")
-                : (mvMovie.quality || "480p • 720p • 1080p");
             const isTg = mvMovie.source === "sinhala" || mvMovie.source === "telegram" || String(mvMovie.url || "").includes("t.me/");
+            const qSummary = isTg
+                ? "Single HD File"
+                : (mirrorCount
+                    ? mvMirrors.slice(0, 3).map(m => MovieStream.stripDirectLabel(String(m.quality_info || m.quality || "HD").split("•")[0].trim())).join(" • ")
+                    : (mvMovie.quality || "HD MP4"));
             specEl.innerHTML = `
-                <div class="ms-spec-tile" style="cursor:pointer;" data-no-ad="1" onclick="openWatchQualityPicker()">
+                <button type="button" class="ms-spec-tile ms-btn" style="text-align:left;width:100%;" onclick="openWatchQualityPicker()">
                     <div class="ms-spec-label">Watch Online HD</div>
-                    <div class="ms-spec-value" style="color:var(--ms-red);">&#9654; Choose Quality &amp; Play</div>
-                </div>
-                <div class="ms-spec-tile" style="cursor:pointer;" data-no-ad="1" onclick="openDedicatedDownloadPage()">
-                    <div class="ms-spec-label">Direct Download</div>
+                    <div class="ms-spec-value" style="color:var(--ms-red);">&#9654; Play Video</div>
+                </button>
+                <button type="button" class="ms-spec-tile ms-btn" style="text-align:left;width:100%;" onclick="openDedicatedDownloadPage()">
+                    <div class="ms-spec-label">Download</div>
                     <div class="ms-spec-value" style="color:var(--ms-blue);">&#8595; ${MovieStream.escapeHtml(qSummary)}</div>
-                </div>
-                <div class="ms-spec-tile" style="cursor:pointer;" data-no-ad="1" onclick="openWhatsAppQualityPopup()">
-                    <div class="ms-spec-label">WhatsApp Delivery</div>
-                    <div class="ms-spec-value" style="color:var(--ms-green);">&#9889; Instant Quality Bot</div>
-                </div>
+                </button>
+                <button type="button" class="ms-spec-tile ms-btn" style="text-align:left;width:100%;" onclick="openWhatsAppQualityPopup()">
+                    <div class="ms-spec-label">WhatsApp</div>
+                    <div class="ms-spec-value" style="color:var(--ms-green);">&#9889; Send via WhatsApp</div>
+                </button>
                 <div class="ms-spec-tile">
                     <div class="ms-spec-label">Release &amp; Audio</div>
                     <div class="ms-spec-value">${MovieStream.escapeHtml([mvMovie.year || "2026", mvMovie.language || (isTg ? "Sinhala" : "Sinhala Sub")].filter(Boolean).join(" • "))}</div>
@@ -601,19 +600,19 @@
             if (!grid) return;
 
             if (!mvMirrors || !mvMirrors.length) {
-                grid.innerHTML = `<div style="grid-column:1/-1;padding:14px;border-radius:12px;background:var(--ms-surface-alt);border:1px solid var(--ms-border);font-size:0.82rem;font-weight:600;color:var(--ms-text-muted);">No direct inline mirror loaded yet. Click Download or WhatsApp Bot above to select a quality.</div>`;
+                grid.innerHTML = `<div style="grid-column:1/-1;padding:14px;border-radius:12px;background:var(--ms-surface-alt);border:1px solid var(--ms-border);font-size:0.82rem;font-weight:600;color:var(--ms-text-muted);">No inline mirror loaded yet. Click Download or WhatsApp above.</div>`;
                 return;
             }
 
             grid.innerHTML = mvMirrors.map((lk, idx) => {
-                const rawLabel = lk.quality_info || lk.quality || lk.server || `Mirror ${idx + 1}`;
+                const rawLabel = MovieStream.stripDirectLabel(lk.quality_info || lk.quality || lk.server || `Mirror ${idx + 1}`);
                 const size = MovieStream.parseQualitySize(rawLabel, lk.size);
                 const over = MovieStream.isSizeOver2GB(size);
                 return `
                 <button type="button" class="ms-mirror-btn ${idx === mvSelectedMirrorIdx ? "active" : ""}" onclick="selectMirror(${idx})">
                     <div style="min-width:0;">
                         <div style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${MovieStream.escapeHtml(rawLabel)}</div>
-                        <div style="font-size:0.72rem;font-weight:600;color:var(--ms-text-muted);margin-top:2px;">${MovieStream.escapeHtml(size)} ${over ? "• >2GB Direct" : "• Fast Stream"}</div>
+                        <div style="font-size:0.72rem;font-weight:600;color:var(--ms-text-muted);margin-top:2px;">${MovieStream.escapeHtml(size)} ${over ? "• >2GB File" : "• Fast Stream"}</div>
                     </div>
                     <span class="ms-chip ${idx === mvSelectedMirrorIdx ? "active" : ""}" style="font-size:0.68rem;padding:3px 8px;">${idx === mvSelectedMirrorIdx ? "ACTIVE" : "PICK"}</span>
                 </button>`;
@@ -621,7 +620,7 @@
 
             const active = mvMirrors[mvSelectedMirrorIdx];
             if (label && active) {
-                label.textContent = `Selected Server: ${active.quality_info || active.quality || "HD Stream"} — Tap Play to watch.`;
+                label.textContent = `Selected Server: ${MovieStream.stripDirectLabel(active.quality_info || active.quality || "HD Stream")} — Tap Play to watch.`;
             }
         }
 
@@ -637,6 +636,12 @@
         let _magicBound = false;
         let _magicIdleTimer = null;
         let _magicLastTapTs = 0;
+        let _magicLastTapZone = "";
+        let _magicTapTimer = null;
+        let _magicSkipSide = "";
+        let _magicSkipAccum = 0;
+        let _magicSkipChainUntil = 0;
+        let _magicWokeOnTouchTs = 0;
         const _magicSpeeds = [1, 1.25, 1.5, 2, 0.75];
         let _magicSpeedIdx = 0;
 
@@ -657,6 +662,18 @@
             b.classList.remove("is-anim");
             void b.offsetWidth;
             b.classList.add("is-anim");
+        }
+
+        function flashSideSkip(side, totalSeconds) {
+            const el = document.getElementById(side === "right" ? "mv_magic_skip_right" : "mv_magic_skip_left");
+            if (!el) return;
+            const span = el.querySelector("span");
+            if (span) {
+                span.textContent = side === "right" ? `${totalSeconds}s \u00BB` : `\u00AB ${totalSeconds}s`;
+            }
+            el.classList.remove("is-anim");
+            void el.offsetWidth;
+            el.classList.add("is-anim");
         }
 
         function wakeMagicControls() {
@@ -685,12 +702,17 @@
             wakeMagicControls();
         }
 
-        function seekMagicBy(delta) {
+        function seekMagicBy(delta, useSideOverlay = false) {
             const v = document.getElementById("mv_video");
             if (!v || v.classList.contains("hidden")) return;
-            const target = Math.max(0, Math.min(v.duration || Infinity, (v.currentTime || 0) + delta));
-            v.currentTime = target;
-            flashMagicBurst(delta > 0 ? `+${delta}s` : `${delta}s`);
+            const dur = isFinite(v.duration) && v.duration > 0 ? v.duration : Infinity;
+            const target = Math.max(0, Math.min(dur, (v.currentTime || 0) + delta));
+            try { v.currentTime = target; } catch (_) {}
+            const seek = document.getElementById("mv_magic_seek");
+            const timeEl = document.getElementById("mv_magic_time");
+            if (seek && isFinite(dur)) seek.value = Math.round((target / dur) * 1000);
+            if (timeEl && isFinite(dur)) timeEl.textContent = `${fmtMagicTime(target)} / ${fmtMagicTime(dur)}`;
+            if (!useSideOverlay) flashMagicBurst(delta > 0 ? `+${delta}s` : `${delta}s`);
             wakeMagicControls();
         }
 
@@ -727,43 +749,49 @@
             wakeMagicControls();
         }
 
-        function toggleMagicAura() {
-            const wrap = document.getElementById("mv_magic_wrap");
-            const btn = document.getElementById("mv_aura_btn");
-            if (!wrap || !btn) return;
-            const on = wrap.classList.toggle("aura-on");
-            btn.classList.toggle("active", on);
-        }
-
-        function toggleTheaterMode() {
+        async function toggleMagicFullscreen() {
             const stage = document.getElementById("mv_player_stage");
-            const btn = document.getElementById("mv_theater_btn");
-            if (!stage || !btn) return;
-            const on = stage.classList.toggle("is-theater");
-            btn.classList.toggle("active", on);
-        }
-
-        async function toggleMagicPiP() {
-            const v = document.getElementById("mv_video");
-            if (!v || !document.pictureInPictureEnabled) {
-                MovieStream.showToast("Picture-in-Picture is not supported on this browser.");
+            const video = document.getElementById("mv_video");
+            if (!stage) return;
+            const fsEl = document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement;
+            if (fsEl) {
+                try {
+                    if (document.exitFullscreen) await document.exitFullscreen();
+                    else if (document.webkitExitFullscreen) document.webkitExitFullscreen();
+                } catch (_) {}
+                try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (_) {}
                 return;
             }
             try {
-                if (document.pictureInPictureElement) await document.exitPictureInPicture();
-                else await v.requestPictureInPicture();
+                if (stage.requestFullscreen) {
+                    await stage.requestFullscreen();
+                } else if (stage.webkitRequestFullscreen) {
+                    stage.webkitRequestFullscreen();
+                } else if (stage.mozRequestFullScreen) {
+                    stage.mozRequestFullScreen();
+                } else if (video && video.webkitEnterFullscreen) {
+                    video.webkitEnterFullscreen();
+                }
+            } catch (_) {
+                try { if (video && video.webkitEnterFullscreen) video.webkitEnterFullscreen(); } catch (_) {}
+            }
+            try {
+                if (screen.orientation && screen.orientation.lock) {
+                    await screen.orientation.lock("landscape");
+                }
             } catch (_) {}
         }
 
-        function toggleMagicFullscreen() {
-            const stage = document.getElementById("mv_player_stage");
-            if (!stage) return;
-            if (document.fullscreenElement) {
-                document.exitFullscreen().catch(() => {});
-            } else if (stage.requestFullscreen) {
-                stage.requestFullscreen().catch(() => {});
+        document.addEventListener("fullscreenchange", () => {
+            if (!document.fullscreenElement) {
+                try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (_) {}
             }
-        }
+        });
+        document.addEventListener("webkitfullscreenchange", () => {
+            if (!document.webkitFullscreenElement) {
+                try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (_) {}
+            }
+        });
 
         function initMagicPlayerBindings() {
             if (_magicBound) return;
@@ -804,23 +832,103 @@
                 });
             }
 
+            stage.addEventListener("touchstart", () => {
+                if (stage.classList.contains("is-idle")) {
+                    _magicWokeOnTouchTs = Date.now();
+                }
+                wakeMagicControls();
+            }, { passive: true });
+
             v.addEventListener("click", (e) => {
                 const rect = v.getBoundingClientRect();
                 const xPct = (e.clientX - rect.left) / Math.max(1, rect.width);
+                const zone = xPct <= 0.40 ? "left" : (xPct >= 0.60 ? "right" : "center");
                 const now = Date.now();
-                if (now - _magicLastTapTs < 280) {
-                    if (xPct < 0.35) seekMagicBy(-10);
-                    else if (xPct > 0.65) seekMagicBy(10);
-                    else toggleMagicFullscreen();
+
+                // Consecutive rapid skip chain (YouTube-style +10s -> +20s -> +30s on right, -10s on left)
+                if ((zone === "right" || zone === "left") && _magicSkipSide === zone && now <= _magicSkipChainUntil) {
+                    clearTimeout(_magicTapTimer);
+                    _magicTapTimer = null;
+                    _magicSkipAccum += 10;
+                    _magicSkipChainUntil = now + 750;
+                    seekMagicBy(zone === "right" ? 10 : -10, true);
+                    flashSideSkip(zone, _magicSkipAccum);
                     _magicLastTapTs = 0;
-                } else {
-                    _magicLastTapTs = now;
-                    toggleMagicPlay();
+                    return;
                 }
+
+                // Double-click / Double-tap (Right = skip +10s, Left = skip -10s, Center = fullscreen; NEVER pauses)
+                if (_magicLastTapTs && (now - _magicLastTapTs) < 360 && _magicLastTapZone === zone) {
+                    clearTimeout(_magicTapTimer);
+                    _magicTapTimer = null;
+                    _magicLastTapTs = 0;
+                    if (zone === "right") {
+                        _magicSkipSide = "right";
+                        _magicSkipAccum = 10;
+                        _magicSkipChainUntil = now + 750;
+                        seekMagicBy(10, true);
+                        flashSideSkip("right", 10);
+                    } else if (zone === "left") {
+                        _magicSkipSide = "left";
+                        _magicSkipAccum = 10;
+                        _magicSkipChainUntil = now + 750;
+                        seekMagicBy(-10, true);
+                        flashSideSkip("left", 10);
+                    } else {
+                        _magicSkipSide = "";
+                        _magicSkipAccum = 0;
+                        toggleMagicFullscreen();
+                    }
+                    return;
+                }
+
+                // Single click / tap anywhere on video surface: wake or toggle controls ONLY (never pauses playback!)
+                _magicSkipSide = "";
+                _magicSkipAccum = 0;
+                _magicLastTapTs = now;
+                _magicLastTapZone = zone;
+                clearTimeout(_magicTapTimer);
+
+                if (now - _magicWokeOnTouchTs < 400 || stage.classList.contains("is-idle")) {
+                    wakeMagicControls();
+                    return;
+                }
+
+                _magicTapTimer = setTimeout(() => {
+                    _magicTapTimer = null;
+                    if (v && !v.paused && !v.ended) {
+                        stage.classList.toggle("is-idle");
+                        if (!stage.classList.contains("is-idle")) wakeMagicControls();
+                    } else {
+                        wakeMagicControls();
+                    }
+                }, 260);
             });
 
             stage.addEventListener("mousemove", wakeMagicControls);
-            stage.addEventListener("touchstart", wakeMagicControls, { passive: true });
+
+            document.addEventListener("keydown", (e) => {
+                if (!v || v.classList.contains("hidden")) return;
+                if (e.target && e.target.closest && e.target.closest("input, textarea, select, button, a")) return;
+                if (e.key === "ArrowRight") {
+                    e.preventDefault();
+                    seekMagicBy(10, true);
+                    flashSideSkip("right", 10);
+                } else if (e.key === "ArrowLeft") {
+                    e.preventDefault();
+                    seekMagicBy(-10, true);
+                    flashSideSkip("left", 10);
+                } else if (e.key === " " || e.key.toLowerCase() === "k") {
+                    e.preventDefault();
+                    toggleMagicPlay();
+                } else if (e.key.toLowerCase() === "f") {
+                    e.preventDefault();
+                    toggleMagicFullscreen();
+                } else if (e.key.toLowerCase() === "m") {
+                    e.preventDefault();
+                    toggleMagicMute();
+                }
+            });
         }
 
         function closeMoviePlayer() {
@@ -880,13 +988,18 @@
                 return;
             }
             if (!resolved.url) {
-                MovieStream.showToast("No direct stream link ready yet — click Download for mirrors.");
+                MovieStream.showToast("No inline stream link ready yet — click Download for mirrors.");
                 return;
             }
 
+            MovieStream.saveWatchHistory({
+                ...mvMovie,
+                imgUrl: MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image),
+                episodeLabel: mvEpisodeLabel || ""
+            }, 45);
+
             initMagicPlayerBindings();
             if (ph) ph.style.display = "none";
-            if (topbar) topbar.classList.remove("hidden");
             if (status) {
                 status.textContent = "Playing";
                 status.style.background = "var(--ms-red)";
@@ -894,12 +1007,14 @@
             }
 
             if (resolved.mode === "iframe") {
+                if (topbar) topbar.classList.add("hidden");
                 if (controls) controls.classList.add("hidden");
                 video.classList.add("hidden");
                 video.pause();
                 iframe.classList.remove("hidden");
                 iframe.src = resolved.url;
             } else {
+                if (topbar) topbar.classList.remove("hidden");
                 iframe.classList.add("hidden");
                 iframe.src = "";
                 if (controls) controls.classList.remove("hidden");
@@ -907,7 +1022,7 @@
                 video.onerror = function () {
                     if (errBanner && errText) {
                         errText.textContent = resolved.externalTelegram
-                            ? "Stream server node is restarting. Click Download or choose WhatsApp Bot quality."
+                            ? "Stream server node is restarting. Click Download or choose WhatsApp."
                             : "Unable to play this mirror inline. Pick another mirror or click Download.";
                         errBanner.classList.remove("hidden");
                     }
@@ -1021,6 +1136,11 @@
         }
 
         function openWatchQualityPicker() {
+            const isTg = mvMovie.source === "sinhala" || mvMovie.source === "telegram" || String(mvMovie.url || "").includes("t.me/");
+            if (isTg) {
+                startMoviePlayback();
+                return;
+            }
             MovieStream.openDownloadModal(buildQualityPopupPayload(), "watch");
         }
 
@@ -1127,6 +1247,10 @@
 
             updateHeroMeta();
             renderRelatedMovies();
+            MovieStream.saveWatchHistory({
+                ...mvMovie,
+                imgUrl: MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image)
+            }, 20);
 
             if (window.location.port !== "5500") {
                 setTimeout(() => {
@@ -1151,25 +1275,13 @@
             if (isTg) {
                 mvMirrors = [
                     {
-                        quality_info: "480p SD • Data Saver",
-                        size: "~450 MB",
-                        url: mvMovie.url,
-                        real_direct_download_url: mvMovie.url
-                    },
-                    {
-                        quality_info: "720p HD • Recommended",
-                        size: "~950 MB",
-                        url: mvMovie.url,
-                        real_direct_download_url: mvMovie.url
-                    },
-                    {
-                        quality_info: "1080p Full HD • Master",
-                        size: "~1.8 GB",
+                        quality_info: "Full Movie HD",
+                        size: "MP4 File",
                         url: mvMovie.url,
                         real_direct_download_url: mvMovie.url
                     }
                 ];
-                mvSelectedMirrorIdx = 1;
+                mvSelectedMirrorIdx = 0;
                 renderMirrors();
                 renderCastAndCrew();
                 applyAutoplayMirror();
@@ -1180,11 +1292,18 @@
                 try {
                     const data = await MovieStream.fetchCineSubzAPI(`/api/details?url=${encodeURIComponent(mvMovie.url)}`);
                     const d = data?.details || data || {};
+                    const hadValidPassedPoster = Boolean(mvMovie.imgUrl && mvMovie.imgUrl !== MovieStream.FALLBACK_POSTER && !mvMovie.imgUrl.includes("seo-banner"));
+                    const apiPoster = (d.poster && d.poster !== "N/A") ? d.poster : ((d.image && d.image !== "N/A") ? d.image : "");
+                    const apiBackdrop = (d.backdrop && d.backdrop !== "N/A") ? d.backdrop : "";
+                    const resolvedPoster = (apiPoster && (!apiBackdrop || apiPoster !== apiBackdrop || !hadValidPassedPoster))
+                        ? apiPoster
+                        : mvMovie.imgUrl;
                     mvMovie = {
                         ...mvMovie,
                         ...d,
                         title: d.title || mvMovie.title,
-                        imgUrl: d.poster || d.image || mvMovie.imgUrl,
+                        imgUrl: resolvedPoster || mvMovie.imgUrl,
+                        backdrop: apiBackdrop || resolvedPoster || mvMovie.imgUrl,
                         url: mvMovie.url
                     };
                     if (Array.isArray(d.seasons) && d.seasons.length > 0) {
@@ -1197,6 +1316,10 @@
                         renderMirrors();
                     }
                     updateHeroMeta();
+                    MovieStream.saveWatchHistory({
+                        ...mvMovie,
+                        imgUrl: MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image)
+                    }, 20);
                     applyAutoplayMirror();
                 } catch (_) {
                     if (cachedMatch?.download_links?.length) {
