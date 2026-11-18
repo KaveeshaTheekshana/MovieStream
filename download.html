@@ -11,7 +11,7 @@
     <meta name="theme-color" content="#ffffff" />
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest.webmanifest?v=10" />
     <link rel="canonical" href="https://moviestream.top/download.html" />
 
     <meta property="og:type" content="website" />
@@ -34,7 +34,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css?v=20261118" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261119" />
 </head>
 <body>
     <header class="ms-header">
@@ -276,8 +276,9 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-top:26px;padding-top:16px;border-top:1px solid var(--ms-border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:0.78rem;color:var(--ms-text-subtle);">
-                <span>&copy; 2026 MovieStream.top &mdash; Protected by KaveezCloud.</span>
+            <div class="ms-footer-bottom">
+                <span>&copy; <span class="ms-copy-year">2026</span> MovieStream.top &mdash; Protected by KaveezCloud.</span>
+                <span>Developer: <a href="https://kaveesha.top/" target="_blank" rel="noopener noreferrer" class="ms-dev-link">Kaveesha Theekshana</a></span>
             </div>
         </div>
     </footer>
@@ -306,8 +307,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js?v=20261118"></script>
-    <script defer src="assets/app-core.js?v=20261118"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261119"></script>
+    <script defer src="assets/app-core.js?v=20261119"></script>
     <script>
         document.addEventListener("DOMContentLoaded", async function () {
             if (window.__KV_BLOCKED) return;
@@ -356,7 +357,7 @@
             prefEngine.onchange = () => localStorage.setItem("ms_dl_pref_engine", prefEngine.value);
 
             titleEl.textContent = MS.cleanDisplayTitle(stateData.title);
-            posterEl.src = MS.optimizePosterUrl(stateData.imgUrl);
+            MS.applyPosterImageElement(posterEl, stateData.imgUrl, stateData.title, stateData.movieUrl || stateData.url);
             if (stateData.year) yearEl.textContent = stateData.year;
             sourceEl.textContent = stateData.source === "sinhala" ? "Sinhala Movies" : "Sinhala Subtitles";
 
@@ -380,7 +381,7 @@
                         <div class="ms-quality-card selected" style="cursor:default;">
                             <div>
                                 <div style="font-weight:800;font-size:0.9rem;color:var(--ms-text);">Full Movie HD</div>
-                                <div style="font-size:0.75rem;color:var(--ms-text-muted);">Telegram Vault &bull; MP4 File</div>
+                                <div style="font-size:0.75rem;color:var(--ms-text-muted);">Sinhala Movies Vault &bull; HD Video</div>
                             </div>
                             <span class="ms-chip active">Full HD</span>
                         </div>`;
@@ -393,9 +394,9 @@
                     return;
                 }
 
-                const filtered = (links || []).map((l) => {
+                const filtered = MS.filterCleanMirrors(links || []).map((l) => {
                     const raw = MS.unwrapNestedDownloadUrl(l.real_direct_download_url || l.url || l.link || l.cinesubz_link || "");
-                    const label = MS.stripDirectLabel(l.quality_info || l.quality || l.name || "HD MP4", "HD MP4");
+                    const label = MS.stripDirectLabel(l.quality_info || l.quality || l.name || "HD", "HD");
                     const cleanSize = MS.parseQualitySize(label, l.size);
                     return { label, raw, size: cleanSize };
                 }).filter(x => x.raw && !x.raw.includes("CineSubzAdmin"));
@@ -454,7 +455,7 @@
                     const apiPoster = (details.poster && details.poster !== "N/A") ? details.poster : ((details.image && details.image !== "N/A") ? details.image : "");
                     const apiBackdrop = (details.backdrop && details.backdrop !== "N/A") ? details.backdrop : "";
                     if (apiPoster && (!apiBackdrop || apiPoster !== apiBackdrop)) {
-                        posterEl.src = MS.optimizePosterUrl(apiPoster);
+                        MS.applyPosterImageElement(posterEl, apiPoster, stateData.title, stateData.movieUrl || stateData.url);
                     }
 
                     if (Array.isArray(details.seasons) && details.seasons.length) {
