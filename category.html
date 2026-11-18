@@ -43,7 +43,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261118" />
 
     <script type="application/ld+json">
     {
@@ -139,7 +139,7 @@
 
         <!-- Clean White Multi-Filter Panel -->
         <section id="cat_filter_section" class="ms-filter-bar" aria-label="Catalog Filters">
-            <form id="cat_filter_form" class="ms-filter-controls" onsubmit="event.preventDefault(); applyCatalogFilters(1, true);">
+            <form id="cat_filter_form" class="ms-filter-controls is-six" onsubmit="event.preventDefault(); applyCatalogFilters(1, true);">
                 <div class="ms-field">
                     <label for="cf_cat">Collection</label>
                     <select id="cf_cat" class="ms-select">
@@ -172,7 +172,17 @@
                     </select>
                 </div>
                 <div class="ms-field">
-                    <label for="cf_q">Title / Quality</label>
+                    <label for="cf_quality">Quality</label>
+                    <select id="cf_quality" class="ms-select">
+                        <option value="all">All Qualities</option>
+                        <option value="web">WEB-DL / WEBRip</option>
+                        <option value="bluray">BluRay HD</option>
+                        <option value="complete">Complete Season</option>
+                        <option value="cam">CAM / HDCam</option>
+                    </select>
+                </div>
+                <div class="ms-field">
+                    <label for="cf_q">Search Title</label>
                     <input id="cf_q" type="search" class="ms-input" placeholder="e.g. Jailer, 2026, S01..." />
                 </div>
                 <div style="display:flex;gap:8px;align-items:center;">
@@ -198,12 +208,6 @@
                 <button type="button" id="cat_next_btn" onclick="goToCatalogPage(_catPage + 1)" class="ms-btn ms-btn-primary hidden" style="padding:9px 16px;font-size:0.84rem;" data-no-ad="1">Next &rsaquo;</button>
             </div>
         </section>
-
-        <!-- Adsterra Native Banner Slot -->
-        <div class="ms-ad-slot">
-            <span style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--ms-text-subtle);margin-bottom:4px;">SPONSORED</span>
-            <div id="container-7571eb086837a548fa62ae1cc60dbfed"></div>
-        </div>
     </main>
 
     <!-- Movie Preview & Watch Online Modal -->
@@ -328,13 +332,14 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js"></script>
-    <script defer src="assets/app-core.js"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261118"></script>
+    <script defer src="assets/app-core.js?v=20261118"></script>
     <script>
         let _catPage = 1;
         let _catAccumulated = [];
         let _catIsTelegram = false;
         let _catPerson = null;
+        let _catRequestSeq = 0;
 
         function toggleMobileNav() {
             const drawer = document.getElementById("mobile_nav_drawer");
@@ -447,6 +452,7 @@
             let lang = params.get("lang") || params.get("language") || "all";
             let genre = params.get("genre") || "all";
             let year = params.get("year") || "all";
+            let quality = params.get("quality") || "all";
             const q = params.get("q") || "";
             const mode = params.get("mode") || "";
             const legacyUrl = params.get("url") || "";
@@ -498,6 +504,7 @@
             const langEl = document.getElementById("cf_lang");
             const genreEl = document.getElementById("cf_genre");
             const yearEl = document.getElementById("cf_year");
+            const qualEl = document.getElementById("cf_quality");
             const qEl = document.getElementById("cf_q");
 
             if (catEl && [...catEl.options].some(o => o.value === cat)) {
@@ -515,6 +522,9 @@
             }
             if (genreEl && [...genreEl.options].some(o => o.value === genre)) genreEl.value = genre;
             if (yearEl && [...yearEl.options].some(o => o.value === year)) yearEl.value = year;
+            if (qualEl && [...qualEl.options].some(o => o.value.toLowerCase() === quality.toLowerCase())) {
+                qualEl.value = [...qualEl.options].find(o => o.value.toLowerCase() === quality.toLowerCase()).value;
+            }
             if (qEl) qEl.value = q;
 
             const parsedPage = parseInt(params.get("page") || "1", 10);
@@ -602,7 +612,7 @@
             applyCatalogFilters(p, true);
         }
 
-        function buildReadableLabel(cat, lang, genre, year, q) {
+        function buildReadableLabel(cat, lang, genre, year, quality, q) {
             const parts = [];
             const catNames = {
                 trending: "Trending Movies",
@@ -612,6 +622,12 @@
                 incomplete: "Ongoing Series",
                 imdbtop250: "Top IMDB 250",
                 sinhala: "Sinhala Movies"
+            };
+            const qualNames = {
+                web: "WEB-DL",
+                bluray: "BluRay",
+                complete: "Complete Season",
+                cam: "CAM"
             };
             if (cat && cat !== "all") parts.push(catNames[cat] || cat);
             if (lang && lang !== "all") {
@@ -623,6 +639,7 @@
                 parts.push(gObj ? gObj.name : genre);
             }
             if (year && year !== "all") parts.push(`Year ${year}`);
+            if (quality && quality !== "all") parts.push(qualNames[quality.toLowerCase()] || quality.toUpperCase());
             if (q) parts.push(`"${q}"`);
             return parts.length ? parts.join(" • ") : "All Sinhala Subtitled Releases";
         }
@@ -633,9 +650,11 @@
             const lang = document.getElementById("cf_lang")?.value || "all";
             const genre = document.getElementById("cf_genre")?.value || "all";
             const year = document.getElementById("cf_year")?.value || "all";
+            const quality = document.getElementById("cf_quality")?.value || "all";
             const q = (document.getElementById("cf_q")?.value || "").trim();
 
             page = Math.max(1, parseInt(page, 10) || 1);
+            const reqId = ++_catRequestSeq;
             _catPage = page;
             _catAccumulated = [];
 
@@ -649,6 +668,7 @@
                     if (lang !== "all") nextQs.set("lang", lang);
                     if (genre !== "all") nextQs.set("genre", genre);
                     if (year !== "all") nextQs.set("year", year);
+                    if (quality !== "all") nextQs.set("quality", quality);
                     if (q) nextQs.set("q", q);
                 }
                 if (page > 1) nextQs.set("page", String(page));
@@ -658,7 +678,13 @@
 
             const label = _catPerson && _catPerson.slug
                 ? `Filmography: ${_catPerson.name || formatPersonTitleCase(_catPerson.slug)}`
-                : buildReadableLabel(cat, lang, genre, year, q);
+                : buildReadableLabel(cat, lang, genre, year, quality, q);
+            const headEl = document.getElementById("cat_heading");
+            const bcEl = document.getElementById("cat_breadcrumb_label");
+            const pillEl = document.getElementById("cat_count_pill");
+            if (headEl) headEl.textContent = label;
+            if (bcEl) bcEl.textContent = label;
+            if (pillEl) pillEl.textContent = page > 1 ? `Page ${page} • Loading...` : "Loading...";
             const grid = document.getElementById("cat_results_grid");
 
             if (grid) {
@@ -672,6 +698,7 @@
                 _catIsTelegram = false;
                 try {
                     let data = await MS.fetchCineSubzAPI(`/api/person?slug=${encodeURIComponent(_catPerson.slug)}&type=${encodeURIComponent(_catPerson.type)}&page=${page}`);
+                    if (reqId !== _catRequestSeq) return;
                     let batch = data?.results || [];
                     if (!batch.length && page === 1) {
                         const pSlug = _catPerson.slug.toLowerCase();
@@ -698,6 +725,7 @@
                     }
                     if (!batch.length) {
                         const qFallback = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(_catPerson.name || _catPerson.slug)}&page=${page}`);
+                        if (reqId !== _catRequestSeq) return;
                         if (qFallback?.results?.length) {
                             data = qFallback;
                             batch = qFallback.results;
@@ -728,7 +756,13 @@
             const isSinhalaLang = (lang === "sinhala" || lang === "sinhala-sub");
             if (cat === "sinhala" || (isSinhalaLang && cat === "all" && genre === "all")) {
                 _catIsTelegram = true;
-                const allItems = await MS.fetchSinhalaMovies(q, year === "all" ? "" : year);
+                let allItems = await MS.fetchSinhalaMovies(q, year === "all" ? "" : year);
+                if (reqId !== _catRequestSeq) return;
+                if (quality !== "all") {
+                    const qKey = quality.toLowerCase();
+                    const qualFiltered = allItems.filter(it => `${it.title || ""} ${it.quality || ""}`.toLowerCase().includes(qKey));
+                    if (qualFiltered.length) allItems = qualFiltered;
+                }
                 const isFallback = MS.isSinhalaFallbackActive ? MS.isSinhalaFallbackActive() : false;
                 const perPage = 24;
                 const totalPages = Math.max(1, Math.ceil(allItems.length / perPage));
@@ -750,27 +784,31 @@
             }
 
             _catIsTelegram = false;
+            const effectiveCat = (cat === "all" && quality === "complete") ? "complete" : cat;
+            const effectiveQuality = (quality === "complete") ? "all" : quality;
             const qs = new URLSearchParams();
             qs.set("page", String(page));
 
-            if (cat !== "all") {
-                if (cat === "movies" || cat === "tvshows") qs.set("media_type", cat);
-                else qs.set("category", cat);
+            if (effectiveCat !== "all") {
+                if (effectiveCat === "movies" || effectiveCat === "tvshows") qs.set("media_type", effectiveCat);
+                else qs.set("category", effectiveCat);
             }
             if (lang !== "all") qs.set("language", lang);
             if (genre !== "all") qs.set("genre", genre);
             if (year !== "all") qs.set("year", year);
+            if (effectiveQuality !== "all") qs.set("quality", effectiveQuality);
             if (q) qs.set("q", q);
 
             try {
                 let data;
-                if (q && cat === "all" && lang === "all" && genre === "all" && year === "all") {
+                if (q && effectiveCat === "all" && lang === "all" && genre === "all" && year === "all" && effectiveQuality === "all") {
                     data = await MS.fetchCineSubzAPI(`/api/search?q=${encodeURIComponent(q)}&page=${page}`);
-                } else if (cat !== "all" && lang === "all" && genre === "all" && year === "all" && !q) {
-                    data = await MS.fetchCineSubzAPI(`/api/category?type=${encodeURIComponent(cat)}&page=${page}`);
+                } else if (effectiveCat !== "all" && lang === "all" && genre === "all" && year === "all" && effectiveQuality === "all" && !q) {
+                    data = await MS.fetchCineSubzAPI(`/api/category?type=${encodeURIComponent(effectiveCat)}&page=${page}`);
                 } else {
                     data = await MS.fetchCineSubzAPI(`/api/filter?${qs.toString()}`);
                 }
+                if (reqId !== _catRequestSeq) return;
 
                 const batch = data?.results || [];
                 _catAccumulated = batch;
@@ -835,13 +873,20 @@
                                 applyCatalogFilters(1, true);
                             });
                         }
-                        if (lang !== "all" && (cat !== "all" || genre !== "all" || year !== "all" || q)) {
+                        if (quality !== "all") {
+                            addRelaxBtn("All Qualities", () => {
+                                if (document.getElementById("cf_quality")) document.getElementById("cf_quality").value = "all";
+                                applyCatalogFilters(1, true);
+                            });
+                        }
+                        if (lang !== "all" && (cat !== "all" || genre !== "all" || year !== "all" || quality !== "all" || q)) {
                             const langSel = document.getElementById("cf_lang");
                             const langLabel = langSel && langSel.selectedOptions[0] ? langSel.selectedOptions[0].text : lang;
                             addRelaxBtn(`Explore ${langLabel} Only`, () => {
                                 document.getElementById("cf_cat").value = "all";
                                 document.getElementById("cf_genre").value = "all";
                                 document.getElementById("cf_year").value = "all";
+                                if (document.getElementById("cf_quality")) document.getElementById("cf_quality").value = "all";
                                 document.getElementById("cf_q").value = "";
                                 applyCatalogFilters(1, true);
                             });
@@ -852,10 +897,11 @@
                     }
                 }
 
-                const isCombined = [cat !== "all", lang !== "all", genre !== "all", year !== "all", Boolean(q)].filter(Boolean).length > 1;
-                const hasMorePages = !data?.offline && cat !== "trending" && (isCombined ? batch.length > 0 : batch.length >= 12);
+                const isCombined = [effectiveCat !== "all", lang !== "all", genre !== "all", year !== "all", effectiveQuality !== "all", Boolean(q)].filter(Boolean).length > 1;
+                const hasMorePages = !data?.offline && effectiveCat !== "trending" && (isCombined ? batch.length > 0 : batch.length >= 12);
                 renderCategoryPagination(page, hasMorePages, Boolean(data?.offline));
             } catch (_) {
+                if (reqId !== _catRequestSeq) return;
                 if (grid) {
                     grid.innerHTML = `<div style="grid-column:1/-1;padding:24px;color:var(--ms-red-dark);font-weight:700;">Failed to load catalog entries. Please try again.</div>`;
                 }
@@ -875,6 +921,7 @@
             document.getElementById("cf_lang").value = "all";
             document.getElementById("cf_genre").value = "all";
             document.getElementById("cf_year").value = "all";
+            if (document.getElementById("cf_quality")) document.getElementById("cf_quality").value = "all";
             document.getElementById("cf_q").value = "";
             applyCatalogFilters(1, true);
         }
@@ -884,16 +931,6 @@
             populateTaxonomyControls();
             syncControlsFromUrl();
             applyCatalogFilters(_catPage, false);
-
-            if (window.location.port !== "5500") {
-                setTimeout(() => {
-                    const s = document.createElement("script");
-                    s.async = true;
-                    s.setAttribute("data-cfasync", "false");
-                    s.src = "https://pl31408761.profitableratecpmnetwork.com/7571eb086837a548fa62ae1cc60dbfed/invoke.js";
-                    document.body.appendChild(s);
-                }, 1800);
-            }
         });
     </script>
 </body>
