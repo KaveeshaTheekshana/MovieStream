@@ -40,6 +40,10 @@ function isAuthorizedOrigin(request) {
         const tok = url.searchParams.get("token") || url.searchParams.get("enc") || "";
         if (tok.startsWith("enc_") && tok.length > 16) return true;
     }
+    if ((request.method === "GET" || request.method === "HEAD") &&
+        (url.pathname.startsWith("/api/bot-image/") || url.pathname === "/api/img")) {
+        return true;
+    }
     if (url.pathname.startsWith("/api/stream/")) {
         if (url.searchParams.get("download") === "1" || url.searchParams.get("filename")) return true;
     }
@@ -102,6 +106,50 @@ export async function onRequest(context) {
                 "X-Content-Type-Options": "nosniff"
             }
         });
+    }
+
+    const ALLOWED_IMAGE_HOSTS = new Set([
+        "cinesubz.net", "cinesubz.lk", "cinesubz.co", "cinesubz.xyz",
+        "image.tmdb.org", "media.themoviedb.org", "m.media-amazon.com", "a.ltrbxd.com"
+    ]);
+    if (url.pathname === "/api/img" && (request.method === "GET" || request.method === "HEAD")) {
+        const rawTarget = url.searchParams.get("u") || "";
+        let targetParsed = null;
+        try { targetParsed = new URL(rawTarget); } catch (_) {}
+        if (!targetParsed || targetParsed.protocol !== "https:" || !ALLOWED_IMAGE_HOSTS.has(targetParsed.hostname.toLowerCase())) {
+            return new Response("Invalid image URL", { status: 400, headers: { "Access-Control-Allow-Origin": resolvedOrigin } });
+        }
+        const candidates = [
+            { fetchUrl: targetParsed.toString(), referer: "https://cinesubz.net/" },
+            { fetchUrl: `${PRIMARY_BACKEND}/api/img?u=${encodeURIComponent(targetParsed.toString())}`, referer: "https://moviestream.top/" }
+        ];
+        for (const cand of candidates) {
+            try {
+                const imgRes = await fetch(cand.fetchUrl, {
+                    method: request.method,
+                    headers: {
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36",
+                        "Referer": cand.referer,
+                        "Accept": "image/avif,image/webp,image/apng,image/*,*/*;q=0.8",
+                        "X-Edge-Proxy": "moviestream-cf"
+                    },
+                    redirect: "follow"
+                });
+                const ct = (imgRes.headers.get("content-type") || "").toLowerCase();
+                if (imgRes.ok && (ct.startsWith("image/") || ct.includes("octet-stream"))) {
+                    return new Response(request.method === "HEAD" ? null : imgRes.body, {
+                        status: 200,
+                        headers: {
+                            "Content-Type": ct || "image/jpeg",
+                            "Cache-Control": "public, max-age=86400",
+                            "Access-Control-Allow-Origin": "*",
+                            "X-Content-Type-Options": "nosniff"
+                        }
+                    });
+                }
+            } catch (_) {}
+        }
+        return new Response("Image unavailable", { status: 502, headers: { "Access-Control-Allow-Origin": "*" } });
     }
 
     const isTgDownload = url.pathname === "/api/download" && (
