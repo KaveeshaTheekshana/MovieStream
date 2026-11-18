@@ -58,7 +58,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261118" />
 
     <!-- Structured Data for Google Search Rich Snippets -->
     <script type="application/ld+json">
@@ -327,7 +327,7 @@
                             <option value="web">WEB-DL / WEBRip</option>
                             <option value="bluray">BluRay HD</option>
                             <option value="complete">Complete Season</option>
-                            <option value="cam">CamCopy / Theatre</option>
+                            <option value="cam">CAM / HDCam</option>
                         </select>
                     </div>
                     <div style="display:flex;gap:8px;align-items:center;">
@@ -467,15 +467,6 @@
             </div>
             <div id="row_sinhala" class="ms-track no-scrollbar"></div>
         </section>
-
-        <!-- Adsterra Native Banner Slot -->
-        <div class="ms-container">
-            <div class="ms-ad-slot">
-                <span
-                    style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--ms-text-subtle);margin-bottom:4px;">SPONSORED</span>
-                <div id="container-7571eb086837a548fa62ae1cc60dbfed"></div>
-            </div>
-        </div>
 
         <!-- Complete TV Series (CineSubz /keywords/complete/) -->
         <section class="ms-container ms-section" aria-label="Complete TV Series">
@@ -729,14 +720,6 @@
             </div>
             <div id="row_animation" class="ms-track no-scrollbar"></div>
         </section>
-
-        <!-- Secondary Ad Banner 320x50 -->
-        <div class="ms-container">
-            <div id="ad_banner_320_slot" class="ms-ad-slot">
-                <span
-                    style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--ms-text-subtle);">ADVERTISEMENT</span>
-            </div>
-        </div>
 
         <!-- Clean Interactive Tabbed Cinema Explorer (Structured, Zero Clutter) -->
         <section class="ms-container ms-section" aria-label="Explore MovieStream Directory">
@@ -1016,8 +999,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js"></script>
-    <script defer src="assets/app-core.js"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261118"></script>
+    <script defer src="assets/app-core.js?v=20261118"></script>
     <script>
         let _heroSlides = [];
         let _heroIdx = 0;
@@ -1360,14 +1343,16 @@
             }
 
             const apiQs = new URLSearchParams();
-            if (type !== "all") {
-                if (type === "movies" || type === "tvshows") apiQs.set("media_type", type);
-                else apiQs.set("category", type);
+            const effectiveType = (type === "all" && quality === "complete") ? "complete" : type;
+            const effectiveQuality = (quality === "complete") ? "all" : quality;
+            if (effectiveType !== "all") {
+                if (effectiveType === "movies" || effectiveType === "tvshows") apiQs.set("media_type", effectiveType);
+                else apiQs.set("category", effectiveType);
             }
             if (lang !== "all") apiQs.set("language", isSinhalaHome ? "sinhala" : lang);
             if (genre !== "all") apiQs.set("genre", genre);
             if (year !== "all") apiQs.set("year", year);
-            if (quality !== "all") apiQs.set("quality", quality);
+            if (effectiveQuality !== "all") apiQs.set("quality", effectiveQuality);
 
             try {
                 const data = await MS.fetchCineSubzAPI(`/api/filter?${apiQs.toString()}`);
@@ -1390,32 +1375,6 @@
                 return;
             }
             el.innerHTML = list.map(m => window.MovieStream.renderPosterCard(m, opts)).join("");
-        }
-
-        function loadDeferredAds() {
-            if (window.location.port === "5500") return;
-            setTimeout(() => {
-                const nativeScript = document.createElement("script");
-                nativeScript.async = true;
-                nativeScript.setAttribute("data-cfasync", "false");
-                nativeScript.src = "https://pl31408761.profitableratecpmnetwork.com/7571eb086837a548fa62ae1cc60dbfed/invoke.js";
-                document.body.appendChild(nativeScript);
-
-                const slot = document.getElementById("ad_banner_320_slot");
-                if (slot) {
-                    window.atOptions = {
-                        key: "a2ee54167305e50b95a6a0de22dcad20",
-                        format: "iframe",
-                        height: 50,
-                        width: 320,
-                        params: {}
-                    };
-                    const s = document.createElement("script");
-                    s.src = "https://www.highrevenueformat.com/a2ee54167305e50b95a6a0de22dcad20/invoke.js";
-                    s.async = true;
-                    slot.appendChild(s);
-                }
-            }, 1800);
         }
 
         document.addEventListener("DOMContentLoaded", async function () {
@@ -1516,8 +1475,6 @@
                     </div>
                 </div>`;
             }
-
-            loadDeferredAds();
         });
     </script>
 </body>
