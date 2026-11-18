@@ -208,7 +208,17 @@
     }
 
     function getFallbackSinhalaList(query = "", year = "") {
-        const fbRaw = Array.isArray(global.CINESUBZ_FALLBACK_SINHALA) ? global.CINESUBZ_FALLBACK_SINHALA : [];
+        let fbRaw = [];
+        try {
+            const cachedStr = localStorage.getItem("ms_sinhala_live_cache_v1");
+            if (cachedStr) {
+                const parsed = JSON.parse(cachedStr);
+                if (Array.isArray(parsed) && parsed.length > 0) fbRaw = parsed;
+            }
+        } catch (_) {}
+        if (!fbRaw.length && Array.isArray(global.CINESUBZ_FALLBACK_SINHALA)) {
+            fbRaw = global.CINESUBZ_FALLBACK_SINHALA;
+        }
         let list = fbRaw.map(normalizeSinhalaRecord);
         const q = String(query || "").trim().toLowerCase();
         if (q) {
@@ -236,30 +246,36 @@
         const queryStr = qs.toString() ? `?${qs.toString()}` : "";
 
         for (const base of getBotOriginCandidates()) {
-            try {
-                const res = await fetch(`${base}/api/sinhala-movies${queryStr}`, {
-                    headers,
-                    signal: AbortSignal.timeout ? AbortSignal.timeout(6500) : undefined
-                });
-                if (res.status === 403) {
-                    const data403 = await res.json().catch(() => ({}));
-                    if (data403 && data403.code === "ERR_ORIGIN_VERIFICATION" && !isLocalLiveServer() && typeof global.__KV_RENDER_403 === "function") {
-                        global.__KV_RENDER_403();
-                        return [];
+            for (let attempt = 0; attempt < 2; attempt++) {
+                try {
+                    const res = await fetch(`${base}/api/sinhala-movies${queryStr}`, {
+                        headers,
+                        signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined
+                    });
+                    if (res.status === 403) {
+                        const data403 = await res.json().catch(() => ({}));
+                        if (data403 && data403.code === "ERR_ORIGIN_VERIFICATION" && !isLocalLiveServer() && typeof global.__KV_RENDER_403 === "function") {
+                            global.__KV_RENDER_403();
+                            return [];
+                        }
+                        break;
                     }
-                    continue;
-                }
-                if (!res.ok) continue;
-                const upstreamOffline = (res.headers.get("X-Upstream-Status") || "").toLowerCase() === "offline";
-                const data = await res.json();
-                const list = Array.isArray(data) ? data : (Array.isArray(data?.movies) ? data.movies : (Array.isArray(data?.items) ? data.items : null));
-                if (upstreamOffline) continue;
-                if (list) {
-                    if (list.length === 0 && !query) continue;
-                    _lastSinhalaWasFallback = false;
-                    return list.map(normalizeSinhalaRecord);
-                }
-            } catch (_) {}
+                    if (!res.ok) continue;
+                    const upstreamOffline = (res.headers.get("X-Upstream-Status") || "").toLowerCase() === "offline";
+                    const data = await res.json();
+                    const list = Array.isArray(data) ? data : (Array.isArray(data?.movies) ? data.movies : (Array.isArray(data?.items) ? data.items : null));
+                    if (upstreamOffline) continue;
+                    if (list) {
+                        if (list.length === 0 && !query) continue;
+                        _lastSinhalaWasFallback = false;
+                        const normList = list.map(normalizeSinhalaRecord);
+                        if (!query && (!year || year === "all") && normList.length > 0) {
+                            try { localStorage.setItem("ms_sinhala_live_cache_v1", JSON.stringify(list)); } catch (_) {}
+                        }
+                        return normList;
+                    }
+                } catch (_) {}
+            }
         }
 
         _lastSinhalaWasFallback = true;
@@ -629,13 +645,179 @@
         return false;
     }
 
-    function optimizePosterUrl(url) {
-        if (!url || url === "N/A") return FALLBACK_POSTER;
-        let out = String(url).trim();
+    let _catalogPosterIndex = null;
+
+    function isInvalidPosterString(url) {
+        if (!url || url === "N/A") return true;
+        const low = String(url).trim().toLowerCase();
+        return (
+            !low ||
+            low.startsWith("data:") ||
+            low.includes("lazy") ||
+            low.includes("placeholder") ||
+            low.includes("blank.gif") ||
+            low.includes("spacer") ||
+            low.includes("no-img")
+        );
+    }
+
+    function normalizePosterKeyUrl(u) {
+        return String(u || "").trim().toLowerCase().replace(/^https?:\/\/[^/]+/, "").replace(/\/+$/, "");
+    }
+
+    function normalizePosterKeyTitle(t) {
+        return cleanDisplayTitle(t || "").toLowerCase().replace(/[^a-z0-9\u0D80-\u0DFF]+/g, "");
+    }
+
+    function normalizePosterBaseTitle(t) {
+        return cleanDisplayTitle(t || "")
+            .replace(/\b(?:19\d{2}|20\d{2})\b.*$/i, "")
+            .replace(/\b(?:tv\s*series|s\d{1,2}(?:\s*[-–]\s*s?\d{1,2})?|complete|incomplete|with)\b.*$/i, "")
+            .toLowerCase()
+            .replace(/[^a-z0-9\u0D80-\u0DFF]+/g, "");
+    }
+
+    function getCatalogPosterIndex() {
+        if (_catalogPosterIndex) return _catalogPosterIndex;
+        const byUrl = new Map();
+        const byTitle = new Map();
+        const byBaseTitle = new Map();
+        const addItem = (item) => {
+            if (!item || typeof item !== "object") return;
+            const rawImg = String(item.poster || item.image || item.imageUrl || "").trim();
+            if (isInvalidPosterString(rawImg)) return;
+            const uk = normalizePosterKeyUrl(item.url || item.downloadLink || "");
+            const tk = normalizePosterKeyTitle(item.title || item.name || "");
+            const bk = normalizePosterBaseTitle(item.title || item.name || "");
+            if (uk && !byUrl.has(uk)) byUrl.set(uk, rawImg);
+            if (tk && !byTitle.has(tk)) byTitle.set(tk, rawImg);
+            if (bk && bk.length >= 4 && !byBaseTitle.has(bk)) byBaseTitle.set(bk, rawImg);
+        };
+        try {
+            Object.values(global.CINESUBZ_FALLBACK_HOMEPAGE || {}).forEach(arr => {
+                if (Array.isArray(arr)) arr.forEach(addItem);
+            });
+            Object.values(global.CINESUBZ_FALLBACK_ARCHIVES || {}).forEach(arr => {
+                if (Array.isArray(arr)) arr.forEach(addItem);
+            });
+            (global.CINESUBZ_FALLBACK_DETAILS || []).forEach(addItem);
+            (global.CINESUBZ_FALLBACK_SINHALA || []).forEach(addItem);
+        } catch (_) {}
+        _catalogPosterIndex = { byUrl, byTitle, byBaseTitle };
+        return _catalogPosterIndex;
+    }
+
+    function findCatalogPoster(titleHint, urlHint) {
+        const idx = getCatalogPosterIndex();
+        const uk = normalizePosterKeyUrl(urlHint);
+        if (uk && idx.byUrl.has(uk)) return idx.byUrl.get(uk);
+        const tk = normalizePosterKeyTitle(titleHint);
+        if (tk && idx.byTitle.has(tk)) return idx.byTitle.get(tk);
+        const bk = normalizePosterBaseTitle(titleHint);
+        if (bk && bk.length >= 4 && idx.byBaseTitle.has(bk)) return idx.byBaseTitle.get(bk);
+        return "";
+    }
+
+    function rewritePosterForCdn(url) {
+        let out = String(url || "").trim();
         if (out.includes("image.tmdb.org/t/p/original")) {
             out = out.replace("/t/p/original/", "/t/p/w500/");
         }
+        // Rewrite CineSubz TMDB-hashed uploads (.jpg/.jpeg/.png) to global TMDB CDN (100% verified unthrottled)
+        const csHashMatch = out.match(/^https?:\/\/cinesubz\.(?:net|lk|co|xyz)\/wp-content\/uploads\/.*\/([a-zA-Z0-9]{24,32})(?:-\d+x\d+)?\.(?:jpg|jpeg|png)(?:\?.*)?$/i);
+        if (csHashMatch) {
+            return `https://image.tmdb.org/t/p/w500/${csHashMatch[1]}.jpg`;
+        }
         return out;
+    }
+
+    function optimizePosterUrl(url, titleHint = "", urlHint = "") {
+        let candidate = String(url || "").trim();
+        if (isInvalidPosterString(candidate)) {
+            candidate = findCatalogPoster(titleHint, urlHint);
+        }
+        if (isInvalidPosterString(candidate)) return FALLBACK_POSTER;
+        return rewritePosterForCdn(candidate);
+    }
+
+    function getOriginRawPosterUrl(url, titleHint = "", urlHint = "") {
+        let candidate = String(url || "").trim();
+        if (isInvalidPosterString(candidate)) {
+            candidate = findCatalogPoster(titleHint, urlHint);
+        }
+        return isInvalidPosterString(candidate) ? FALLBACK_POSTER : candidate;
+    }
+
+    function isOwnApiImageUrl(url) {
+        const s = String(url || "");
+        return s.includes("/api/bot-image/") || s.includes("/api/img");
+    }
+
+    function applyPosterImageElement(imgEl, rawUrl, titleHint = "", urlHint = "") {
+        if (!imgEl) return;
+        const origRaw = getOriginRawPosterUrl(rawUrl, titleHint, urlHint);
+        const cdnUrl = optimizePosterUrl(origRaw, titleHint, urlHint);
+        imgEl.dataset.fbStep = "0";
+        if (origRaw !== cdnUrl && origRaw !== FALLBACK_POSTER) {
+            imgEl.dataset.origSrc = origRaw;
+        } else {
+            delete imgEl.dataset.origSrc;
+        }
+        imgEl.referrerPolicy = isOwnApiImageUrl(cdnUrl) ? "strict-origin-when-cross-origin" : "no-referrer";
+        imgEl.onerror = function () { handleImgError(this); };
+        imgEl.src = cdnUrl;
+    }
+
+    function handleImgError(imgEl) {
+        if (!imgEl) return;
+        const step = Number(imgEl.dataset.fbStep || "0");
+        const orig = imgEl.dataset.origSrc || "";
+        const cur = imgEl.getAttribute("src") || "";
+
+        if (step < 1 && orig && orig !== cur && !isInvalidPosterString(orig)) {
+            imgEl.dataset.fbStep = "1";
+            imgEl.referrerPolicy = isOwnApiImageUrl(orig) ? "strict-origin-when-cross-origin" : "no-referrer";
+            imgEl.src = orig;
+            return;
+        }
+
+        const proxyCandidate = orig || cur;
+        if (
+            step < 2 &&
+            /^https?:\/\/cinesubz\./i.test(proxyCandidate) &&
+            /^https?:/i.test(window.location.protocol)
+        ) {
+            imgEl.dataset.fbStep = "2";
+            imgEl.referrerPolicy = "strict-origin-when-cross-origin";
+            imgEl.src = `${getApiBase()}/api/img?u=${encodeURIComponent(proxyCandidate)}`;
+            return;
+        }
+
+        imgEl.dataset.fbStep = "3";
+        imgEl.onerror = null;
+        if (cur !== FALLBACK_POSTER) {
+            imgEl.referrerPolicy = "no-referrer";
+            imgEl.src = FALLBACK_POSTER;
+        }
+    }
+
+    function filterCleanMirrors(rawLinks) {
+        if (!Array.isArray(rawLinks) || !rawLinks.length) return [];
+        const hasRealSizedMirror = rawLinks.some(l => {
+            if (!l) return false;
+            const s = `${l.quality_info || l.quality || l.label || ""} ${l.size || ""}`;
+            return /\b\d+(?:\.\d+)?\s*(?:GB|MB)\b/i.test(s);
+        });
+        if (!hasRealSizedMirror || rawLinks.length <= 1) return rawLinks;
+        const filtered = rawLinks.filter(l => {
+            if (!l) return false;
+            const qRaw = stripDirectLabel(l.quality_info || l.quality || l.label || "", "");
+            const szRaw = String(l.size || "").trim();
+            const hasSize = /\b\d+(?:\.\d+)?\s*(?:GB|MB)\b/i.test(`${qRaw} ${szRaw}`);
+            const isSyntheticStub = !hasSize && /^(?:720p\s*•\s*HD|1080p\s*•\s*(?:FHD|HD Stream)|480p\s*•\s*(?:SD|SD Stream)|HD\s*(?:Stream|Mirror))$/i.test(qRaw);
+            return !isSyntheticStub;
+        });
+        return filtered.length ? filtered : rawLinks;
     }
 
     function cleanDisplayTitle(title) {
@@ -656,7 +838,13 @@
         const rawTitle = m.title || m.name || "Untitled";
         const yearMatch = rawTitle.match(/\b(19\d{2}|20\d{2})\b/);
         const year = m.year || (yearMatch ? yearMatch[1] : "");
-        const imgUrl = optimizePosterUrl(isTg ? m.imageUrl : (m.image || m.imageUrl));
+        const rawPosterInput = isTg ? m.imageUrl : (m.image || m.imageUrl);
+        const origImgUrl = getOriginRawPosterUrl(rawPosterInput, rawTitle, rawUrl);
+        const imgUrl = optimizePosterUrl(origImgUrl, rawTitle, rawUrl);
+        const origDataAttr = (origImgUrl !== imgUrl && origImgUrl !== FALLBACK_POSTER)
+            ? ` data-orig-src="${escapeHtml(origImgUrl)}"`
+            : "";
+        const refPolicy = isOwnApiImageUrl(imgUrl) ? "strict-origin-when-cross-origin" : "no-referrer";
         let quality = String(m.quality || (isTg ? "SINHALA" : "HD")).replace(/IMDb:.*$/i, "").trim();
         if (!quality || quality.toUpperCase() === "N/A") quality = "HD";
         const rating = m.rating && m.rating !== "N/A" ? m.rating : "";
@@ -683,9 +871,9 @@
             onclick="MovieStream.handleCardActivate(this)"
             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();MovieStream.handleCardActivate(this)}">
             <div class="ms-card-thumb">
-                <img src="${escapeHtml(imgUrl)}" alt="${escapeHtml(title)} - Sinhala Subtitles" width="220" height="330"
-                    loading="lazy" decoding="async" referrerpolicy="no-referrer"
-                    onerror="this.onerror=null;this.src='${FALLBACK_POSTER}';">
+                <img src="${escapeHtml(imgUrl)}"${origDataAttr} alt="${escapeHtml(title)} - Sinhala Subtitles" width="220" height="330"
+                    loading="${opts.lazy === true ? "lazy" : "eager"}" decoding="async" referrerpolicy="${refPolicy}"
+                    onerror="MovieStream.handleImgError(this)">
                 <div class="ms-card-badges">
                     <span class="ms-badge-q ${isTg ? "tg" : ""}">${escapeHtml(quality)}</span>
                     ${rating ? `<span class="ms-badge-rate">&#9733; ${escapeHtml(rating)}</span>` : ""}
@@ -723,12 +911,13 @@
         container.innerHTML = items.slice(0, 10).map((m) => {
             const payloadAttr = encodeURIComponent(JSON.stringify(m)).replace(/'/g, "%27");
             const pct = Math.min(95, Math.max(15, Number(m.progress || 42)));
+            const cwImg = optimizePosterUrl(m.imgUrl, m.title, m.url);
             return `
             <article class="ms-cw-card" tabindex="0" role="button" data-movie-payload="${payloadAttr}"
                 onclick="MovieStream.handleCardActivate(this)">
                 <div class="ms-cw-thumb">
-                    <img src="${escapeHtml(optimizePosterUrl(m.imgUrl))}" alt="${escapeHtml(cleanDisplayTitle(m.title))}" loading="lazy" referrerpolicy="no-referrer"
-                        onerror="this.onerror=null;this.src='${SEO_FALLBACK_POSTER}'">
+                    <img src="${escapeHtml(cwImg)}" alt="${escapeHtml(cleanDisplayTitle(m.title))}" loading="eager" decoding="async" referrerpolicy="${isOwnApiImageUrl(cwImg) ? "strict-origin-when-cross-origin" : "no-referrer"}"
+                        onerror="MovieStream.handleImgError(this)">
                     <div class="ms-cw-progress"><div class="ms-cw-progress-fill" style="width:${pct}%"></div></div>
                 </div>
                 <div class="ms-card-body">
@@ -794,9 +983,10 @@
                 m.episodeLabel || "",
                 m.source === "sinhala" || m.source === "telegram" ? "Sinhala Movies" : "Sinhala Subtitles"
             ].filter(Boolean).join(" • ");
+            const recImg = optimizePosterUrl(m.imgUrl, m.title, m.url);
             return `
             <button type="button" class="ms-recent-item" data-movie-payload="${payloadAttr}" onclick="MovieStream.closeRecentModal(); MovieStream.handleCardActivate(this);">
-                <img src="${escapeHtml(optimizePosterUrl(m.imgUrl))}" alt="${escapeHtml(cleanDisplayTitle(m.title))}" referrerpolicy="no-referrer" onerror="this.onerror=null;this.src='${FALLBACK_POSTER}';" />
+                <img src="${escapeHtml(recImg)}" alt="${escapeHtml(cleanDisplayTitle(m.title))}" referrerpolicy="${isOwnApiImageUrl(recImg) ? "strict-origin-when-cross-origin" : "no-referrer"}" onerror="MovieStream.handleImgError(this);" />
                 <div class="ms-recent-item-info">
                     <div class="ms-recent-item-title">${escapeHtml(cleanDisplayTitle(m.title))}</div>
                     <div class="ms-recent-item-meta">${escapeHtml(subBits || "Recently Viewed")}</div>
@@ -945,22 +1135,23 @@
                 ];
             }
         }
-        let list = Array.isArray(rawLinks) ? rawLinks.map((lnk, i) => {
+        const cleanRaw = filterCleanMirrors(Array.isArray(rawLinks) ? rawLinks : []);
+        let list = cleanRaw.map((lnk, i) => {
             const rawTarget = unwrapNestedDownloadUrl(lnk.real_direct_download_url || lnk.url || lnk.link || lnk.cinesubz_link || "");
             const qInfo = stripDirectLabel(lnk.quality_info || lnk.quality || lnk.label || "HD", "HD");
             const size = parseQualitySize(qInfo, lnk.size);
             return { quality_info: qInfo, size, url: rawTarget, over2gb: isSizeOver2GB(size), origIdx: i };
-        }).filter(x => Boolean(x.url)) : [];
+        }).filter(x => Boolean(x.url));
 
         if (!list.length && movieObj.directLink) {
-            const q = stripDirectLabel(movieObj.quality || "720p HD", "720p HD");
-            list.push({ quality_info: q, size: "HD MP4", url: unwrapNestedDownloadUrl(movieObj.directLink), over2gb: false, origIdx: 0 });
+            const q = stripDirectLabel(movieObj.quality || "HD", "HD");
+            list.push({ quality_info: q, size: "HD Video", url: unwrapNestedDownloadUrl(movieObj.directLink), over2gb: false, origIdx: 0 });
         }
 
         if (!list.length && movieObj.url) {
             const resolvedBase = unwrapNestedDownloadUrl(movieObj.url);
             list = [
-                { quality_info: stripDirectLabel(movieObj.quality || "720p HD", "720p HD"), size: "HD MP4", url: resolvedBase, over2gb: false, origIdx: 0 }
+                { quality_info: stripDirectLabel(movieObj.quality || "HD", "HD"), size: "HD Video", url: resolvedBase, over2gb: false, origIdx: 0 }
             ];
         }
         return list;
@@ -1311,7 +1502,7 @@
         const statusEl = document.getElementById("ms_dlp_status");
         if (statusEl) delete statusEl.dataset.sticky;
         if (titleEl) titleEl.textContent = cleanDisplayTitle(normalized.title || "Select Quality");
-        if (posterEl) posterEl.src = normalized.imgUrl || FALLBACK_POSTER;
+        if (posterEl) applyPosterImageElement(posterEl, normalized.imgUrl, normalized.title, normalized.url);
         const cleanMetaQuality = stripDirectLabel(String(normalized.quality || "").replace(/IMDb:.*$/i, "").trim());
         if (metaEl) {
             metaEl.innerHTML = [
@@ -1457,7 +1648,7 @@
         const actionBox = document.getElementById("modal_action_box");
         const loader = document.getElementById("modal_loader");
 
-        if (heroImg) heroImg.src = optimizePosterUrl(obj.imgUrl || obj.image);
+        if (heroImg) applyPosterImageElement(heroImg, obj.imgUrl || obj.image, obj.title, obj.url);
         if (titleEl) titleEl.textContent = cleanDisplayTitle(obj.title);
         if (metaEl) {
             metaEl.innerHTML = [
@@ -1496,7 +1687,7 @@
                 imgUrl: details.poster || details.image || obj.imgUrl,
                 url: obj.url
             };
-            if (heroImg && currentModalMovie.imgUrl) heroImg.src = optimizePosterUrl(currentModalMovie.imgUrl);
+            if (heroImg && currentModalMovie.imgUrl) applyPosterImageElement(heroImg, currentModalMovie.imgUrl, currentModalMovie.title, currentModalMovie.url);
             if (descEl) {
                 descEl.textContent = details.description || details.synopsis || details.plot ||
                     `${cleanDisplayTitle(currentModalMovie.title)} with Sinhala Subtitles. Stream live or click Download for instant HD & WhatsApp quality options.`;
@@ -1810,6 +2001,9 @@
         escapeHtml,
         cleanDisplayTitle,
         optimizePosterUrl,
+        applyPosterImageElement,
+        handleImgError,
+        filterCleanMirrors,
         hydrateSocialLinks,
         FALLBACK_POSTER,
         SEO_FALLBACK_POSTER
@@ -1817,6 +2011,10 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         hydrateSocialLinks();
+        const currentYear = String(new Date().getFullYear());
+        document.querySelectorAll(".ms-copy-year").forEach((el) => {
+            el.textContent = currentYear;
+        });
         setActiveMobileTab();
         document.addEventListener("keydown", function (e) {
             if (e.key === "Escape") {
