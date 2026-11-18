@@ -18,7 +18,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest.webmanifest?v=10" />
     <link rel="canonical" href="https://moviestream.top/" />
 
     <!-- Open Graph / WhatsApp / Facebook Link Preview -->
@@ -58,7 +58,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css?v=20261118" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261119" />
 
     <!-- Structured Data for Google Search Rich Snippets -->
     <script type="application/ld+json">
@@ -165,8 +165,8 @@
         <section class="ms-container ms-hero-wrap" aria-label="Featured Releases">
             <div class="ms-hero-stage" id="hero_stage">
                 <img id="hero_backdrop" src="https://cinesubz.net/wp-content/uploads/2026/11/Ramayana-cam.webp"
-                    alt="Ramayana (2026) Sinhala Subtitles" width="1280" height="430" class="ms-hero-backdrop"
-                    referrerpolicy="no-referrer" fetchpriority="high" />
+                    alt="Ramayana (2026) Sinhala Subtitles" width="1280" height="472" class="ms-hero-backdrop"
+                    referrerpolicy="no-referrer" fetchpriority="high" onerror="MovieStream.handleImgError(this)" />
                 <div class="ms-hero-scrim" aria-hidden="true"></div>
 
                 <div class="ms-hero-content">
@@ -214,8 +214,10 @@
                     </div>
 
                     <div class="ms-hero-poster-card">
+                        <span id="hero_poster_badge" class="ms-hero-poster-badge">HD</span>
                         <img id="hero_poster" src="https://cinesubz.net/wp-content/uploads/2026/11/Ramayana-cam.webp"
-                            alt="Featured Movie Poster" width="195" height="292" referrerpolicy="no-referrer" />
+                            alt="Featured Movie Poster" width="214" height="321" referrerpolicy="no-referrer"
+                            onerror="MovieStream.handleImgError(this)" />
                     </div>
                 </div>
 
@@ -443,8 +445,6 @@
                 <h2 class="ms-section-title">
                     <span class="ms-accent-bar" style="background:var(--ms-green);"></span>
                     <span>Sinhala Movies</span>
-                    <span id="sinhala_status_badge" class="ms-chip"
-                        style="font-size:11px;padding:3px 9px;">Syncing...</span>
                 </h2>
                 <div class="ms-row-controls">
                     <a href="category.html?cat=sinhala" class="ms-see-all"
@@ -950,9 +950,9 @@
                     </div>
                 </div>
             </div>
-            <div
-                style="margin-top:26px;padding-top:16px;border-top:1px solid var(--ms-border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:0.78rem;color:var(--ms-text-subtle);">
-                <span>&copy; 2026 MovieStream.top &mdash; Protected by KaveezCloud.</span>
+            <div class="ms-footer-bottom">
+                <span>&copy; <span class="ms-copy-year">2026</span> MovieStream.top &mdash; Protected by KaveezCloud.</span>
+                <span>Developer: <a href="https://kaveesha.top/" target="_blank" rel="noopener noreferrer" class="ms-dev-link">Kaveesha Theekshana</a></span>
             </div>
         </div>
     </footer>
@@ -999,8 +999,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js?v=20261118"></script>
-    <script defer src="assets/app-core.js?v=20261118"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261119"></script>
+    <script defer src="assets/app-core.js?v=20261119"></script>
     <script>
         let _heroSlides = [];
         let _heroIdx = 0;
@@ -1041,25 +1041,28 @@
             const item = _heroSlides[idx];
             if (!item) return;
             const MS = window.MovieStream;
-            const img = MS.optimizePosterUrl(item.image || item.imgUrl);
+            const rawImg = item.image || item.imgUrl || "";
+            const img = MS.optimizePosterUrl(rawImg, item.title, item.url);
 
             const bg = document.getElementById("hero_backdrop");
             const poster = document.getElementById("hero_poster");
+            const posterBadge = document.getElementById("hero_poster_badge");
             const title = document.getElementById("hero_title");
             const eyebrow = document.getElementById("hero_eyebrow");
             const meta = document.getElementById("hero_meta");
             const watchBtn = document.getElementById("hero_watch_btn");
             const dlBtn = document.getElementById("hero_download_btn");
 
-            if (bg) { bg.src = img; bg.alt = MS.cleanDisplayTitle(item.title); }
-            if (poster) { poster.src = img; poster.alt = MS.cleanDisplayTitle(item.title); }
+            if (bg) { MS.applyPosterImageElement(bg, rawImg, item.title, item.url); bg.alt = MS.cleanDisplayTitle(item.title); }
+            if (poster) { MS.applyPosterImageElement(poster, rawImg, item.title, item.url); poster.alt = MS.cleanDisplayTitle(item.title); }
+            if (posterBadge) posterBadge.textContent = String(item.quality || "HD").replace(/IMDb:.*$/i, "").trim() || "HD";
             if (title) title.textContent = MS.cleanDisplayTitle(item.title);
             if (eyebrow) eyebrow.textContent = item.media_type === "tvshows" ? "FEATURED COMPLETE TV SERIES" : "FEATURED SINHALA SUBTITLED RELEASE";
             if (meta) {
                 meta.innerHTML = [
-                    item.rating ? `<span class="ms-star-pill">&#9733; ${MS.escapeHtml(item.rating)}</span>` : "",
+                    item.rating && item.rating !== "N/A" ? `<span class="ms-star-pill">&#9733; ${MS.escapeHtml(item.rating)} IMDb</span>` : "",
                     item.year ? `<span class="ms-tag-pill">${MS.escapeHtml(item.year)}</span>` : "",
-                    item.quality ? `<span class="ms-tag-pill">${MS.escapeHtml(item.quality)}</span>` : "",
+                    item.quality ? `<span class="ms-tag-pill">${MS.escapeHtml(String(item.quality).replace(/IMDb:.*$/i, "").trim())}</span>` : "",
                     `<span class="ms-tag-pill">Sinhala Subtitles</span>`
                 ].join("");
             }
@@ -1091,7 +1094,7 @@
 
             // Warm-cache upcoming slide silently in background
             const nextItem = _heroSlides[(idx + 1) % _heroSlides.length];
-            if (nextItem) preloadHeroImage(MS.optimizePosterUrl(nextItem.image || nextItem.imgUrl));
+            if (nextItem) preloadHeroImage(MS.optimizePosterUrl(nextItem.image || nextItem.imgUrl, nextItem.title, nextItem.url));
         }
 
         async function renderHeroSlide(idx, instant = false) {
@@ -1100,7 +1103,7 @@
             const stage = document.getElementById("hero_stage");
             const item = _heroSlides[_heroIdx];
             const MS = window.MovieStream;
-            const img = MS.optimizePosterUrl(item.image || item.imgUrl);
+            const img = MS.optimizePosterUrl(item.image || item.imgUrl, item.title, item.url);
 
             if (instant || !stage) {
                 applyHeroSlideDom(_heroIdx);
@@ -1241,7 +1244,7 @@
                     const gradBg = g.gradient || gm.grad || "linear-gradient(135deg,#dc2626,#7f1d1d)";
                     return `
                     <a href="category.html?genre=${encodeURIComponent(g.slug)}" class="ms-genre-card" style="background:${gradBg};">
-                        <img class="ms-genre-bg" src="${MS.escapeHtml(imgSrc)}" alt="${MS.escapeHtml(g.name)} Movies" loading="lazy" decoding="async" width="360" height="184" onerror="this.style.display='none'" />
+                        <img class="ms-genre-bg" src="${MS.escapeHtml(imgSrc)}" alt="${MS.escapeHtml(g.name)} Movies" decoding="async" width="360" height="184" onerror="this.style.display='none'" />
                         <span>${MS.escapeHtml(g.name)}<small>Explore &rsaquo;</small></span>
                     </a>`;
                 }).join("");
@@ -1442,27 +1445,10 @@
             }
 
             // Populate Sinhala Movies (Live API + Seamless Standby Cache)
-            const tgBadge = document.getElementById("sinhala_status_badge");
             const tgList = (tgRes.status === "fulfilled" && Array.isArray(tgRes.value)) ? tgRes.value : [];
-            const isTgStandby = MS.isSinhalaFallbackActive ? MS.isSinhalaFallbackActive() : true;
             if (tgList.length > 0 && tgEl) {
                 tgEl.innerHTML = tgList.map(m => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz" })).join("");
-                if (tgBadge) {
-                    if (!isTgStandby) {
-                        tgBadge.textContent = `${tgList.length} Live HD`;
-                        tgBadge.className = "ms-chip active";
-                        tgBadge.style.background = "var(--ms-green)";
-                        tgBadge.style.borderColor = "var(--ms-green)";
-                    } else {
-                        tgBadge.textContent = `Standby Cache • ${tgList.length} Ready`;
-                        tgBadge.className = "ms-chip";
-                        tgBadge.style.background = "#fffbeb";
-                        tgBadge.style.color = "#b45309";
-                        tgBadge.style.borderColor = "#fde68a";
-                    }
-                }
             } else if (tgEl) {
-                if (tgBadge) tgBadge.textContent = "Sinhala Vault Standby";
                 tgEl.innerHTML = `
                 <div style="padding:18px;border-radius:14px;background:var(--ms-surface);border:1px solid var(--ms-border);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;width:100%;">
                     <div>
