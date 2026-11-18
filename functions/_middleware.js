@@ -153,7 +153,13 @@ export async function onRequest(context) {
     newHeaders.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     newHeaders.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     if (isAsset && !url.pathname.endsWith('sitemap.xml')) {
-      newHeaders.set('Cache-Control', 'public, max-age=604800, stale-while-revalidate=86400');
+      const isScriptOrStyle = /\.(js|css)$/i.test(url.pathname);
+      newHeaders.set(
+        'Cache-Control',
+        isScriptOrStyle
+          ? 'public, max-age=300, must-revalidate'
+          : 'public, max-age=604800, stale-while-revalidate=86400'
+      );
     }
 
     return new Response(response.body, {
