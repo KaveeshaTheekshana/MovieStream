@@ -36,7 +36,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261118" />
     <style>
         @media (max-width: 767px) {
             .ms-footer { padding-bottom: 138px; }
@@ -229,12 +229,6 @@
             <div id="mv_episodes_grid" class="ms-ep-grid"></div>
         </section>
 
-        <!-- Clean White Ad Slot -->
-        <div class="ms-ad-slot">
-            <span style="font-size:10px;font-weight:700;letter-spacing:0.08em;color:var(--ms-text-subtle);">SPONSORED</span>
-            <div id="container-7571eb086837a548fa62ae1cc60dbfed"></div>
-        </div>
-
         <!-- Related Movies Row -->
         <section class="ms-section" aria-label="Recommended Movies">
             <div class="ms-section-head">
@@ -361,8 +355,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js"></script>
-    <script defer src="assets/app-core.js"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261118"></script>
+    <script defer src="assets/app-core.js?v=20261118"></script>
     <script>
         let mvMovie = {};
         let mvMirrors = [];
@@ -442,14 +436,14 @@
                 if (mvMovie.genre) bits.push(String(mvMovie.genre).replace(/,\s*,+/g, ", ").replace(/^,\s*|,\s*$/g, ""));
                 if (mvMovie.language) bits.push(`Language: ${mvMovie.language}`);
                 if (mvMovie.runtime) bits.push(mvMovie.runtime);
-                subEl.textContent = bits.filter(Boolean).join(" • ") || "HD MP4 • Ready for Online Stream & Download";
+                subEl.textContent = bits.filter(Boolean).join(" • ") || "HD Video • Ready for Online Stream & Download";
             }
 
             if (synEl) {
                 const hasYear = mvMovie.year ? cleanTitle.includes(String(mvMovie.year)) : /\(\d{4}\)/.test(cleanTitle);
                 const yearNote = !hasYear ? ` (${mvMovie.year || "HD"})` : "";
                 synEl.textContent = mvMovie.synopsis || mvMovie.description || mvMovie.plot ||
-                    `${cleanTitle}${yearNote} is ready to stream online or download in HD MP4 with Sinhala Subtitles on MovieStream.`;
+                    `${cleanTitle}${yearNote} is ready to stream online or download in HD with Sinhala Subtitles on MovieStream.`;
             }
 
             const magicTitle = document.getElementById("mv_magic_title");
@@ -1020,14 +1014,21 @@
                 if (controls) controls.classList.remove("hidden");
                 video.classList.remove("hidden");
                 video.onerror = function () {
+                    const code = video.error ? video.error.code : 0;
                     if (errBanner && errText) {
-                        errText.textContent = resolved.externalTelegram
-                            ? "Stream server node is restarting. Click Download or choose WhatsApp."
-                            : "Unable to play this mirror inline. Pick another mirror or click Download.";
+                        if (code === 4) {
+                            errText.textContent = resolved.externalTelegram
+                                ? "This Telegram release uses a codec or container (such as MKV/HEVC) that your browser cannot play inline. Click Download to save and play it in VLC/MX Player, or request via WhatsApp."
+                                : "This mirror's video format/codec cannot play inside this browser. Switch mirror below or click Select Download Quality to play natively.";
+                        } else {
+                            errText.textContent = resolved.externalTelegram
+                                ? "Stream server node is reconnecting. Click Download or choose WhatsApp."
+                                : "Unable to play this mirror inline. Pick another mirror or click Select Download Quality.";
+                        }
                         errBanner.classList.remove("hidden");
                     }
                     if (status) {
-                        status.textContent = "Mirror Switch";
+                        status.textContent = code === 4 ? "Download Recommended" : "Mirror Switch";
                         status.style.background = "#d97706";
                         status.style.borderColor = "#d97706";
                     }
@@ -1252,16 +1253,6 @@
                 imgUrl: MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image)
             }, 20);
 
-            if (window.location.port !== "5500") {
-                setTimeout(() => {
-                    const s = document.createElement("script");
-                    s.async = true;
-                    s.setAttribute("data-cfasync", "false");
-                    s.src = "https://pl31408761.profitableratecpmnetwork.com/7571eb086837a548fa62ae1cc60dbfed/invoke.js";
-                    document.body.appendChild(s);
-                }, 1500);
-            }
-
             const mirrorParam = parseInt(qs.get("mirror") || "", 10);
             const applyAutoplayMirror = () => {
                 if (!Number.isNaN(mirrorParam) && mirrorParam >= 0 && mirrorParam < mvMirrors.length) {
@@ -1276,7 +1267,7 @@
                 mvMirrors = [
                     {
                         quality_info: "Full Movie HD",
-                        size: "MP4 File",
+                        size: "HD Video",
                         url: mvMovie.url,
                         real_direct_download_url: mvMovie.url
                     }
