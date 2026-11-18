@@ -14,7 +14,7 @@
     <meta name="mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <link rel="manifest" href="manifest.webmanifest" />
+    <link rel="manifest" href="manifest.webmanifest?v=10" />
     <link rel="canonical" href="https://moviestream.top/category.html" />
 
     <!-- Open Graph / Social Link Preview -->
@@ -43,7 +43,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css?v=20261118" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261119" />
 
     <script type="application/ld+json">
     {
@@ -117,9 +117,6 @@
                 <h1 id="cat_heading" style="margin:0 0 4px;font-size:clamp(1.4rem,3vw,2.1rem);font-weight:900;letter-spacing:-0.02em;color:var(--ms-text);">
                     All Sinhala Subtitled Releases
                 </h1>
-                <p id="cat_subheading" style="margin:0;font-size:0.88rem;color:var(--ms-text-muted);">
-                    Filter easily by Collection, Language (20), Genre (19), Release Year (1973–2026), Quality, or Keyword.
-                </p>
             </div>
             <span id="cat_count_pill" class="ms-chip active" style="font-size:0.8rem;">Loading...</span>
         </div>
@@ -302,8 +299,9 @@
                     </div>
                 </div>
             </div>
-            <div style="margin-top:26px;padding-top:16px;border-top:1px solid var(--ms-border);display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;font-size:0.78rem;color:var(--ms-text-subtle);">
-                <span>&copy; 2026 MovieStream.top &mdash; Protected by KaveezCloud.</span>
+            <div class="ms-footer-bottom">
+                <span>&copy; <span class="ms-copy-year">2026</span> MovieStream.top &mdash; Protected by KaveezCloud.</span>
+                <span>Developer: <a href="https://kaveesha.top/" target="_blank" rel="noopener noreferrer" class="ms-dev-link">Kaveesha Theekshana</a></span>
             </div>
         </div>
     </footer>
@@ -332,8 +330,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js?v=20261118"></script>
-    <script defer src="assets/app-core.js?v=20261118"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261119"></script>
+    <script defer src="assets/app-core.js?v=20261119"></script>
     <script>
         let _catPage = 1;
         let _catAccumulated = [];
