@@ -13,7 +13,6 @@
         tiktok: "https://www.tiktok.com/@kaveez.exe"
     };
 
-    global.SMART_LINK_URL = "https://www.profitableratecpmnetwork.com/bimt4xwp4f?key=4d93b0e7c4433b4547dc0a98e66fb34a";
     const FALLBACK_POSTER = "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg";
     const SEO_FALLBACK_POSTER = "https://moviestream.top/images/seo-banner.jpg?v=8";
     const MOVIE_SECRET_KEY = "MovieStream_Stealth_Key_2026";
@@ -140,7 +139,7 @@
             try {
                 const res = await fetch(`${base}${path}`, {
                     headers,
-                    signal: AbortSignal.timeout ? AbortSignal.timeout(12000) : undefined
+                    signal: AbortSignal.timeout ? AbortSignal.timeout(15000) : undefined
                 });
                 if (res.status === 403) {
                     const data403 = await res.json().catch(() => ({}));
@@ -514,6 +513,8 @@
                             if (!["web", "web-dl", "webrip", "hdrip"].some(k => combinedQ.includes(k))) return false;
                         } else if (quality === "bluray") {
                             if (!["bluray", "blu-ray", "bdrip", "brrip"].some(k => combinedQ.includes(k))) return false;
+                        } else if (quality === "complete") {
+                            if (!(m.is_complete === true || combinedQ.includes("complete") || uStr.includes("/tvshows/"))) return false;
                         } else if (quality === "cam") {
                             if (!["cam", "hdcam", "ts", "theatre", "theater", "tc"].some(k => combinedQ.includes(k))) return false;
                         } else if (!ql.includes(quality) && !t.includes(quality)) {
@@ -873,19 +874,7 @@
         if (mirrorIdx !== null && mirrorIdx !== undefined) params.set("mirror", String(mirrorIdx));
 
         const targetUrl = `movie.html?${params.toString()}`;
-        const adOpenedRecently = Boolean(global.__KV_AD_OPENED_AT && (Date.now() - global.__KV_AD_OPENED_AT) < 400);
-        if (adOpenedRecently) {
-            window.location.href = targetUrl;
-            return;
-        }
-        try {
-            const win = window.open(targetUrl, "_blank");
-            if (!win || win.closed || typeof win.closed === "undefined") {
-                window.location.href = targetUrl;
-            }
-        } catch (_) {
-            window.location.href = targetUrl;
-        }
+        window.location.href = targetUrl;
     }
 
     let _dlModalState = {
@@ -952,7 +941,7 @@
             const tgBase = unwrapNestedDownloadUrl(movieObj.directLink || movieObj.url || "");
             if (tgBase) {
                 return [
-                    { quality_info: "Full Movie HD", size: "MP4 File", url: tgBase, over2gb: false, origIdx: 0, isSingleTelegram: true }
+                    { quality_info: "Full Movie HD", size: "HD Video", url: tgBase, over2gb: false, origIdx: 0, isSingleTelegram: true }
                 ];
             }
         }
@@ -1198,7 +1187,9 @@
         if (dlUrl.startsWith("/") || dlUrl.startsWith(window.location.origin) || dlUrl.includes("/api/download") || dlUrl.includes("/api/stream")) {
             const a = document.createElement("a");
             a.href = dlUrl;
-            a.download = fileName;
+            if (!dlUrl.includes("/api/download") && !dlUrl.includes("/api/stream")) {
+                a.download = fileName;
+            }
             a.rel = "noopener noreferrer";
             a.style.display = "none";
             document.body.appendChild(a);
@@ -1213,7 +1204,7 @@
             statusEl.className = "ms-dlp-status is-success";
             statusEl.innerHTML = `
                 <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;width:100%;">
-                    <span>Downloading <b>${escapeHtml(qLabel)}</b> (${escapeHtml(fileName)})</span>
+                    <span>Downloading <b>${escapeHtml(qLabel)}</b>...</span>
                     <a href="${escapeHtml(dlUrl)}" target="_blank" rel="noopener noreferrer" class="ms-btn ms-btn-blue" style="padding:6px 12px;font-size:0.75rem;">Restart Link</a>
                 </div>`;
         }
@@ -1772,58 +1763,6 @@
         });
     }
 
-    // 11. Alternating Adsterra SmartLink Handler (Strictly 1st Click -> Ad Only, 2nd Click -> Real Action)
-    function initAlternatingSmartLink() {
-        if (global.__KV_BLOCKED) return;
-        let lastEventTs = 0;
-
-        function isAdTurn() {
-            return sessionStorage.getItem("ms_ad_turn") === "1";
-        }
-        function setAdTurn(val) {
-            sessionStorage.setItem("ms_ad_turn", val ? "1" : "0");
-        }
-        if (sessionStorage.getItem("ms_ad_turn") === null) {
-            setAdTurn(true);
-        }
-
-        function isExcludedElement(el) {
-            if (!el) return true;
-            if (el.closest("[data-no-ad], .ms-modal-close, .ms-magic-icon-btn, #mv_magic_seek, #ms_vol_slider, .ms-search-pill, .ms-mobile-toggle")) {
-                return true;
-            }
-            const tag = (el.tagName || "").toLowerCase();
-            if (tag === "input" || tag === "select" || tag === "textarea" || tag === "option" || tag === "label") return true;
-            return false;
-        }
-
-        document.addEventListener("click", function (e) {
-            const target = e.target;
-            if (!target || typeof target.closest !== "function") return;
-            const interactive = target.closest(
-                "button, .ms-card, .ms-cw-card, .ms-btn, .ms-dlq-card, .ms-quality-card, .ms-ep-btn, .ms-mirror-btn, .ms-dlp-tab, .ms-chip, .ms-genre-card, .ms-bento-card, .ms-year-chip, .ms-see-all, .ms-hero-channel-link, .ms-mob-tab, .ms-nav-link, .ms-cast-card, .ms-crew-pill, .ms-recent-item, .ms-hero-arrow, .ms-row-arrow"
-            );
-            if (!interactive || isExcludedElement(interactive)) return;
-
-            const now = Date.now();
-            if (now - lastEventTs < 60) return;
-            lastEventTs = now;
-
-            if (isAdTurn()) {
-                e.preventDefault();
-                e.stopPropagation();
-                e.stopImmediatePropagation();
-                setAdTurn(false);
-                global.__KV_AD_OPENED_AT = Date.now();
-                try {
-                    window.open(global.SMART_LINK_URL, "_blank", "noopener,noreferrer");
-                } catch (_) {}
-            } else {
-                setAdTurn(true);
-            }
-        }, true);
-    }
-
     // Expose Global Namespace
     global.MovieStream = {
         getApiBase,
@@ -1879,7 +1818,6 @@
     document.addEventListener("DOMContentLoaded", function () {
         hydrateSocialLinks();
         setActiveMobileTab();
-        initAlternatingSmartLink();
         document.addEventListener("keydown", function (e) {
             if (e.key === "Escape") {
                 closeSearch();
