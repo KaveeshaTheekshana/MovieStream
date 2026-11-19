@@ -731,6 +731,44 @@
         return out;
     }
 
+    const HERO_BACKDROPS_BY_BASE_TITLE = {
+        ramayana: "https://image.tmdb.org/t/p/w1280/yHVZncPRZr63mezRX20IyKLrSkv.jpg",
+        ranabaali: "https://image.tmdb.org/t/p/w1280/xpImgnsxuqb3VOp0QRtXTS5uBRi.jpg",
+        anireekshitaatithigalu: "https://image.tmdb.org/t/p/w1280/lfylCBKf7iqb4hORKPFigUrizPZ.jpg",
+        jailer2: "https://image.tmdb.org/t/p/w1280/zpHTOdRl7GEPqFsDGqsN6Hi9Ylt.jpg",
+        othermommy: "https://image.tmdb.org/t/p/w1280/ncm7djsVTHQQMX2HEbEVxMUFchG.jpg",
+        betweensteps: "https://image.tmdb.org/t/p/w1280/wwSoLQrLyiXXUbRnZq1eWBbHaRR.jpg",
+        eyes: "https://image.tmdb.org/t/p/w1280/q4BYjFASgKG7LdbjYfd0xxo0TSr.jpg",
+        crystallake: "https://image.tmdb.org/t/p/w1280/6thBvfTt3j29UOmyi9ycCRems0q.jpg",
+        diveintoyou: "https://image.tmdb.org/t/p/w1280/jseW3HucgNjN2CwJa3MiOlF4xMO.jpg",
+        gameofthrones: "https://image.tmdb.org/t/p/w1280/suopoADq0k8YZr4dQXcU6pToj6s.jpg",
+        houseofthedragon: "https://image.tmdb.org/t/p/w1280/Aa9TLpNpBMyRkD8sPJ7ACKLjt0l.jpg",
+        from: "https://image.tmdb.org/t/p/w1280/hR2pFXMxVihldEk5WoSrV7Yq2ra.jpg",
+        avatarfireandash: "https://image.tmdb.org/t/p/w1280/sdZSjtGUTSN8B3al5o0f2WoQfQQ.jpg",
+        spidermanbrandnewday: "https://image.tmdb.org/t/p/w1280/qeQJx07rK2xm8SD2sJxFKhE7gs0.jpg",
+        jananayagan: "https://image.tmdb.org/t/p/w1280/v3lNH2gCojWYXVuXcT9FZLBxcSq.jpg"
+    };
+
+    function resolveHeroBackdropUrl(rawBackdrop, titleHint = "", urlHint = "") {
+        const cand = String(rawBackdrop || "").trim();
+        if (!isInvalidPosterString(cand) && !cand.includes("zt_backdrop")) {
+            let out = cand;
+            if (out.includes("image.tmdb.org/t/p/w780/") || out.includes("image.tmdb.org/t/p/w500/") || out.includes("image.tmdb.org/t/p/original/")) {
+                out = out.replace(/\/t\/p\/(?:w780|w500|original)\//, "/t/p/w1280/");
+            }
+            return out;
+        }
+        const keys = [
+            normalizePosterBaseTitle(titleHint),
+            normalizePosterKeyTitle(titleHint),
+            normalizePosterKeyTitle(String(urlHint || "").split("/").filter(Boolean).pop() || "")
+        ].filter(Boolean);
+        for (const k of keys) {
+            if (HERO_BACKDROPS_BY_BASE_TITLE[k]) return HERO_BACKDROPS_BY_BASE_TITLE[k];
+        }
+        return "";
+    }
+
     function optimizePosterUrl(url, titleHint = "", urlHint = "") {
         let candidate = String(url || "").trim();
         if (isInvalidPosterString(candidate)) {
@@ -793,11 +831,18 @@
             return;
         }
 
-        imgEl.dataset.fbStep = "3";
-        imgEl.onerror = null;
-        if (cur !== FALLBACK_POSTER) {
+        if (step < 3 && cur !== FALLBACK_POSTER) {
+            imgEl.dataset.fbStep = "3";
             imgEl.referrerPolicy = "no-referrer";
             imgEl.src = FALLBACK_POSTER;
+            return;
+        }
+
+        imgEl.dataset.fbStep = "4";
+        imgEl.onerror = null;
+        if (!cur.includes("images/seo-banner.jpg")) {
+            imgEl.referrerPolicy = "strict-origin-when-cross-origin";
+            imgEl.src = "images/seo-banner.jpg";
         }
     }
 
@@ -1587,6 +1632,7 @@
     function scrollRow(trackId, dir) {
         const el = document.getElementById(trackId);
         if (!el) return;
+        el.querySelectorAll('img[loading="lazy"]').forEach((im) => { im.loading = "eager"; });
         const step = Math.max(el.clientWidth * 0.78, 320);
         el.scrollBy({ left: dir * step, behavior: "smooth" });
     }
@@ -2001,6 +2047,7 @@
         escapeHtml,
         cleanDisplayTitle,
         optimizePosterUrl,
+        resolveHeroBackdropUrl,
         applyPosterImageElement,
         handleImgError,
         filterCleanMirrors,
