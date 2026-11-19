@@ -58,7 +58,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css?v=20261119" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261119b" />
 
     <!-- Structured Data for Google Search Rich Snippets -->
     <script type="application/ld+json">
@@ -164,7 +164,7 @@
         <!-- Streamverse Multi-Slide Hero Carousel -->
         <section class="ms-container ms-hero-wrap" aria-label="Featured Releases">
             <div class="ms-hero-stage" id="hero_stage">
-                <img id="hero_backdrop" src="https://cinesubz.net/wp-content/uploads/2026/11/Ramayana-cam.webp"
+                <img id="hero_backdrop" src="https://image.tmdb.org/t/p/w1280/yHVZncPRZr63mezRX20IyKLrSkv.jpg"
                     alt="Ramayana (2026) Sinhala Subtitles" width="1280" height="472" class="ms-hero-backdrop"
                     referrerpolicy="no-referrer" fetchpriority="high" onerror="MovieStream.handleImgError(this)" />
                 <div class="ms-hero-scrim" aria-hidden="true"></div>
@@ -999,8 +999,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js?v=20261119"></script>
-    <script defer src="assets/app-core.js?v=20261119"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261119b"></script>
+    <script defer src="assets/app-core.js?v=20261119b"></script>
     <script>
         let _heroSlides = [];
         let _heroIdx = 0;
@@ -1037,12 +1037,49 @@
             });
         }
 
+        const _heroBackdropCache = new Map();
+
+        async function hydrateHeroBackdropAsync(item, slideIndex) {
+            if (!item || !item.url || window.innerWidth < 768) return;
+            const MS = window.MovieStream;
+            if (_heroBackdropCache.has(item.url)) {
+                const cachedBg = _heroBackdropCache.get(item.url);
+                if (cachedBg && _heroIdx === slideIndex) {
+                    const bg = document.getElementById("hero_backdrop");
+                    if (bg) {
+                        bg.classList.remove("is-portrait-fallback");
+                        MS.applyPosterImageElement(bg, cachedBg, item.title, item.url);
+                    }
+                }
+                return;
+            }
+            _heroBackdropCache.set(item.url, "");
+            try {
+                const res = await MS.fetchCineSubzAPI(`/api/details?url=${encodeURIComponent(item.url)}`);
+                const d = res?.details || res || {};
+                const foundBg = MS.resolveHeroBackdropUrl(d.backdrop || "", item.title, item.url);
+                if (foundBg) {
+                    item.backdrop = foundBg;
+                    _heroBackdropCache.set(item.url, foundBg);
+                    if (_heroIdx === slideIndex && window.innerWidth >= 768) {
+                        const bg = document.getElementById("hero_backdrop");
+                        if (bg) {
+                            bg.classList.remove("is-portrait-fallback");
+                            MS.applyPosterImageElement(bg, foundBg, item.title, item.url);
+                        }
+                    }
+                }
+            } catch (_) {}
+        }
+
         function applyHeroSlideDom(idx) {
             const item = _heroSlides[idx];
             if (!item) return;
             const MS = window.MovieStream;
             const rawImg = item.image || item.imgUrl || "";
             const img = MS.optimizePosterUrl(rawImg, item.title, item.url);
+            const isMobileHero = window.innerWidth < 768;
+            const widescreenBg = isMobileHero ? "" : MS.resolveHeroBackdropUrl(item.backdrop || item.og_image || "", item.title, item.url);
 
             const bg = document.getElementById("hero_backdrop");
             const poster = document.getElementById("hero_poster");
@@ -1053,7 +1090,20 @@
             const watchBtn = document.getElementById("hero_watch_btn");
             const dlBtn = document.getElementById("hero_download_btn");
 
-            if (bg) { MS.applyPosterImageElement(bg, rawImg, item.title, item.url); bg.alt = MS.cleanDisplayTitle(item.title); }
+            if (bg) {
+                if (isMobileHero) {
+                    bg.classList.remove("is-portrait-fallback");
+                    MS.applyPosterImageElement(bg, rawImg, item.title, item.url);
+                } else if (widescreenBg) {
+                    bg.classList.remove("is-portrait-fallback");
+                    MS.applyPosterImageElement(bg, widescreenBg, item.title, item.url);
+                } else {
+                    bg.classList.add("is-portrait-fallback");
+                    MS.applyPosterImageElement(bg, rawImg, item.title, item.url);
+                    hydrateHeroBackdropAsync(item, idx);
+                }
+                bg.alt = MS.cleanDisplayTitle(item.title);
+            }
             if (poster) { MS.applyPosterImageElement(poster, rawImg, item.title, item.url); poster.alt = MS.cleanDisplayTitle(item.title); }
             if (posterBadge) posterBadge.textContent = String(item.quality || "HD").replace(/IMDb:.*$/i, "").trim() || "HD";
             if (title) title.textContent = MS.cleanDisplayTitle(item.title);
@@ -1092,9 +1142,14 @@
                 ).join("");
             }
 
-            // Warm-cache upcoming slide silently in background
+            // Warm-cache upcoming slide (matched to viewport orientation) silently in background
             const nextItem = _heroSlides[(idx + 1) % _heroSlides.length];
-            if (nextItem) preloadHeroImage(MS.optimizePosterUrl(nextItem.image || nextItem.imgUrl, nextItem.title, nextItem.url));
+            if (nextItem) {
+                const nextBg = isMobileHero
+                    ? MS.optimizePosterUrl(nextItem.image || nextItem.imgUrl, nextItem.title, nextItem.url)
+                    : (MS.resolveHeroBackdropUrl(nextItem.backdrop || nextItem.og_image || "", nextItem.title, nextItem.url) || MS.optimizePosterUrl(nextItem.image || nextItem.imgUrl, nextItem.title, nextItem.url));
+                preloadHeroImage(nextBg);
+            }
         }
 
         async function renderHeroSlide(idx, instant = false) {
@@ -1103,7 +1158,10 @@
             const stage = document.getElementById("hero_stage");
             const item = _heroSlides[_heroIdx];
             const MS = window.MovieStream;
-            const img = MS.optimizePosterUrl(item.image || item.imgUrl, item.title, item.url);
+            const isMobileHero = window.innerWidth < 768;
+            const preloadTarget = isMobileHero
+                ? MS.optimizePosterUrl(item.image || item.imgUrl, item.title, item.url)
+                : (MS.resolveHeroBackdropUrl(item.backdrop || item.og_image || "", item.title, item.url) || MS.optimizePosterUrl(item.image || item.imgUrl, item.title, item.url));
 
             if (instant || !stage) {
                 applyHeroSlideDom(_heroIdx);
@@ -1115,7 +1173,7 @@
             stage.classList.remove("is-playing");
             stage.classList.add("is-transitioning");
             await Promise.all([
-                preloadHeroImage(img),
+                preloadHeroImage(preloadTarget),
                 new Promise(r => setTimeout(r, 170))
             ]);
             if (token !== _heroTransitionToken) return;
@@ -1165,6 +1223,10 @@
                     pauseHeroAutoplay(false);
                     if (Math.abs(dx) > 45) moveHeroSlide(dx < 0 ? 1 : -1);
                 }, { passive: true });
+                const mqDesktop = window.matchMedia && window.matchMedia("(min-width: 768px)");
+                if (mqDesktop && mqDesktop.addEventListener) {
+                    mqDesktop.addEventListener("change", () => { if (_heroSlides.length) applyHeroSlideDom(_heroIdx); });
+                }
             });
         })();
 
@@ -1377,7 +1439,8 @@
                 el.innerHTML = `<div style="padding:14px;color:var(--ms-text-muted);font-size:0.85rem;">No releases available in this section right now.</div>`;
                 return;
             }
-            el.innerHTML = list.map(m => window.MovieStream.renderPosterCard(m, opts)).join("");
+            const eagerCount = typeof opts.eagerCount === "number" ? opts.eagerCount : 0;
+            el.innerHTML = list.map((m, idx) => window.MovieStream.renderPosterCard(m, { ...opts, lazy: idx >= eagerCount })).join("");
         }
 
         document.addEventListener("DOMContentLoaded", async function () {
@@ -1399,21 +1462,21 @@
                 restartHeroAutoplay();
             }
 
-            fillRow("row_trending", fb["Trending Now"] || fb["All Movies"]);
-            fillRow("row_complete", fb["Complete Series"]);
-            fillRow("row_tvshows", fb["TV Shows"]);
-            fillRow("row_imdb", fb["Top IMDB 250"]);
-            fillRow("row_tamil", fb["Tamil"]);
-            fillRow("row_hindi", fb["Hindi"]);
-            fillRow("row_malayalam", fb["Malayalam"]);
-            fillRow("row_korean", fb["Korean"]);
-            fillRow("row_animation", fb["Animation"]);
+            fillRow("row_trending", fb["Trending Now"] || fb["All Movies"], { eagerCount: 8 });
+            fillRow("row_complete", fb["Complete Series"], { eagerCount: 0 });
+            fillRow("row_tvshows", fb["TV Shows"], { eagerCount: 0 });
+            fillRow("row_imdb", fb["Top IMDB 250"], { eagerCount: 0 });
+            fillRow("row_tamil", fb["Tamil"], { eagerCount: 0 });
+            fillRow("row_hindi", fb["Hindi"], { eagerCount: 0 });
+            fillRow("row_malayalam", fb["Malayalam"], { eagerCount: 0 });
+            fillRow("row_korean", fb["Korean"], { eagerCount: 0 });
+            fillRow("row_animation", fb["Animation"], { eagerCount: 0 });
 
             // Pre-hydrate Sinhala Movies immediately from CINESUBZ_FALLBACK_SINHALA for zero-delay paint
             const initialSinhala = Array.isArray(window.CINESUBZ_FALLBACK_SINHALA) ? window.CINESUBZ_FALLBACK_SINHALA : [];
             const tgEl = document.getElementById("row_sinhala");
             if (tgEl && initialSinhala.length) {
-                tgEl.innerHTML = initialSinhala.map(m => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz" })).join("");
+                tgEl.innerHTML = initialSinhala.map((m, idx) => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz", lazy: idx >= 8 })).join("");
             }
 
             // Fetch Live Homepage + Sinhala Telegram Vault in parallel
@@ -1433,21 +1496,21 @@
                     renderHeroSlide(0, true);
                     restartHeroAutoplay();
                 }
-                if (hp["Trending Now"] || hp["All Movies"]) fillRow("row_trending", hp["Trending Now"] || hp["All Movies"]);
-                if (hp["Complete Series"]) fillRow("row_complete", hp["Complete Series"]);
-                if (hp["TV Shows"] || hp["Latest TV Series"]) fillRow("row_tvshows", hp["TV Shows"] || hp["Latest TV Series"]);
-                if (hp["Top IMDB 250"]) fillRow("row_imdb", hp["Top IMDB 250"]);
-                if (hp["Tamil"] || hp["Tamil Movies"]) fillRow("row_tamil", hp["Tamil"] || hp["Tamil Movies"]);
-                if (hp["Hindi"] || hp["Hindi Movies"]) fillRow("row_hindi", hp["Hindi"] || hp["Hindi Movies"]);
-                if (hp["Malayalam"] || hp["Malayalam Movies"]) fillRow("row_malayalam", hp["Malayalam"] || hp["Malayalam Movies"]);
-                if (hp["Korean"] || hp["Korean Dramas"]) fillRow("row_korean", hp["Korean"] || hp["Korean Dramas"]);
-                if (hp["Animation"]) fillRow("row_animation", hp["Animation"]);
+                if (hp["Trending Now"] || hp["All Movies"]) fillRow("row_trending", hp["Trending Now"] || hp["All Movies"], { eagerCount: 8 });
+                if (hp["Complete Series"]) fillRow("row_complete", hp["Complete Series"], { eagerCount: 0 });
+                if (hp["TV Shows"] || hp["Latest TV Series"]) fillRow("row_tvshows", hp["TV Shows"] || hp["Latest TV Series"], { eagerCount: 0 });
+                if (hp["Top IMDB 250"]) fillRow("row_imdb", hp["Top IMDB 250"], { eagerCount: 0 });
+                if (hp["Tamil"] || hp["Tamil Movies"]) fillRow("row_tamil", hp["Tamil"] || hp["Tamil Movies"], { eagerCount: 0 });
+                if (hp["Hindi"] || hp["Hindi Movies"]) fillRow("row_hindi", hp["Hindi"] || hp["Hindi Movies"], { eagerCount: 0 });
+                if (hp["Malayalam"] || hp["Malayalam Movies"]) fillRow("row_malayalam", hp["Malayalam"] || hp["Malayalam Movies"], { eagerCount: 0 });
+                if (hp["Korean"] || hp["Korean Dramas"]) fillRow("row_korean", hp["Korean"] || hp["Korean Dramas"], { eagerCount: 0 });
+                if (hp["Animation"]) fillRow("row_animation", hp["Animation"], { eagerCount: 0 });
             }
 
             // Populate Sinhala Movies (Live API + Seamless Standby Cache)
             const tgList = (tgRes.status === "fulfilled" && Array.isArray(tgRes.value)) ? tgRes.value : [];
             if (tgList.length > 0 && tgEl) {
-                tgEl.innerHTML = tgList.map(m => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz" })).join("");
+                tgEl.innerHTML = tgList.map((m, idx) => MS.renderPosterCard(m, { isTelegram: m.source !== "cinesubz", lazy: idx >= 8 })).join("");
             } else if (tgEl) {
                 tgEl.innerHTML = `
                 <div style="padding:18px;border-radius:14px;background:var(--ms-surface);border:1px solid var(--ms-border);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:14px;width:100%;">
