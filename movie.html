@@ -40,7 +40,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css?v=20261119" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261119b" />
     <style>
         @media (max-width: 767px) {
             .ms-footer {
@@ -507,8 +507,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js?v=20261119"></script>
-    <script defer src="assets/app-core.js?v=20261119"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261119b"></script>
+    <script defer src="assets/app-core.js?v=20261119b"></script>
     <script>
         let mvMovie = {};
         let mvMirrors = [];
@@ -719,25 +719,19 @@
             const qSummary = isTg
                 ? "Single HD File"
                 : (mirrorCount
-                    ? mvMirrors.slice(0, 3).map(m => MovieStream.stripDirectLabel(String(m.quality_info || m.quality || "HD").split("•")[0].trim())).join(" • ")
+                    ? [...new Set(mvMirrors.slice(0, 4).map(m => MovieStream.stripDirectLabel(String(m.quality_info || m.quality || "HD").split("•")[0].trim())).filter(Boolean))].join(" • ") || "HD MP4"
                     : (mvMovie.quality || "HD MP4"));
-            specEl.innerHTML = `
-                <button type="button" class="ms-spec-tile ms-btn" style="text-align:left;width:100%;" onclick="openWatchQualityPicker()">
-                    <div class="ms-spec-label">Watch Online HD</div>
-                    <div class="ms-spec-value" style="color:var(--ms-red);">&#9654; Play Video</div>
-                </button>
-                <button type="button" class="ms-spec-tile ms-btn" style="text-align:left;width:100%;" onclick="openDedicatedDownloadPage()">
-                    <div class="ms-spec-label">Download</div>
-                    <div class="ms-spec-value" style="color:var(--ms-blue);">&#8595; ${MovieStream.escapeHtml(qSummary)}</div>
-                </button>
-                <button type="button" class="ms-spec-tile ms-btn" style="text-align:left;width:100%;" onclick="openWhatsAppQualityPopup()">
-                    <div class="ms-spec-label">WhatsApp</div>
-                    <div class="ms-spec-value" style="color:var(--ms-green);">&#9889; Send via WhatsApp</div>
-                </button>
+            const metaTiles = [
+                { label: "Release & Audio", value: [mvMovie.year || "2026", mvMovie.language || (isTg ? "Sinhala" : "Sinhala Sub")].filter(Boolean).join(" • ") },
+                { label: "Available Quality", value: qSummary },
+                mvMovie.country ? { label: "Country", value: mvMovie.country } : null,
+                mvMovie.runtime ? { label: "Duration", value: mvMovie.runtime } : null
+            ].filter(Boolean);
+            specEl.innerHTML = metaTiles.map(tile => `
                 <div class="ms-spec-tile">
-                    <div class="ms-spec-label">Release &amp; Audio</div>
-                    <div class="ms-spec-value">${MovieStream.escapeHtml([mvMovie.year || "2026", mvMovie.language || (isTg ? "Sinhala" : "Sinhala Sub")].filter(Boolean).join(" • "))}</div>
-                </div>`;
+                    <div class="ms-spec-label">${MovieStream.escapeHtml(tile.label)}</div>
+                    <div class="ms-spec-value">${MovieStream.escapeHtml(tile.value)}</div>
+                </div>`).join("");
         }
 
         function renderMirrors() {
