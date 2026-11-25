@@ -532,6 +532,12 @@
                 }
 
                 MS.saveWatchHistory({ ...stateData, imgUrl: posterEl.src || stateData.imgUrl }, 35);
+                if (MS.trackEvent) {
+                    MS.trackEvent("download", {
+                        ...stateData,
+                        imageUrl: posterEl.src || stateData.imgUrl
+                    });
+                }
                 const finalUrl = buildFinalDownloadUrl();
                 const fn = document.getElementById("dl_filename_preview").textContent;
 
@@ -573,6 +579,12 @@
                 const rawTarget = MS.unwrapNestedDownloadUrl(stateData.selectedUrl || stateData.url);
                 if (!rawTarget) return MS.showToast("No stream URL available.");
                 MS.saveWatchHistory({ ...stateData, imgUrl: posterEl.src || stateData.imgUrl }, 45);
+                if (MS.trackEvent) {
+                    MS.trackEvent("watch", {
+                        ...stateData,
+                        imageUrl: posterEl.src || stateData.imgUrl
+                    });
+                }
                 const wrap = document.getElementById("dl_player_wrap");
                 const video = document.getElementById("dl_video_player");
                 const iframe = document.getElementById("dl_iframe_player");
