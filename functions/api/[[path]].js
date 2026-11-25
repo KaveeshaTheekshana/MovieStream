@@ -3,9 +3,9 @@
 // Exposes clean https://moviestream.top/api/* endpoints to the browser, IDM, and video players.
 
 const PRIMARY_BACKEND = "https://cinesubz.kaveez.top";
-const VPS_FALLBACK = "http://92.5.25.67:6555";
+const VPS_FALLBACK = "http://172.236.134.207:6555";
 const BOT_PRIMARY = "https://moviestream.kaveez.top";
-const BOT_FALLBACK = "http://92.5.25.67:8443";
+const BOT_FALLBACK = "http://172.236.134.207:8443";
 
 const ALLOWED_DOMAIN = "moviestream.top";
 
@@ -220,7 +220,7 @@ export async function onRequest(context) {
                 body: bodyBuffer !== null ? bodyBuffer : undefined,
                 redirect: "follow",
             };
-            if (base.startsWith("http://92.5.") && typeof AbortSignal !== "undefined" && AbortSignal.timeout) {
+            if (base.startsWith("http://172.236.") && typeof AbortSignal !== "undefined" && AbortSignal.timeout) {
                 fetchOpts.signal = AbortSignal.timeout(4500);
             }
             const candidateRes = await fetch(candidateUrl.toString(), fetchOpts);
