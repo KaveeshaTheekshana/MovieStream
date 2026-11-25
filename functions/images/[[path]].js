@@ -3,7 +3,7 @@
 // and proxies dynamic /images/sinhala/* movie posters from VPS storage at https://moviestream.kaveez.top/images/*
 
 const BOT_PRIMARY = "https://moviestream.kaveez.top";
-const BOT_FALLBACK = "http://92.5.25.67:8443";
+const BOT_FALLBACK = "http://172.236.134.207:8443";
 const FALLBACK_POSTER = "https://image.tmdb.org/t/p/w500/8cdWjvZQUExUUTzyp4t6EDMubfO.jpg";
 
 export async function onRequest(context) {
