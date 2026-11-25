@@ -1181,6 +1181,16 @@
                 imgUrl: MovieStream.optimizePosterUrl(mvMovie.imgUrl || mvMovie.poster || mvMovie.image),
                 episodeLabel: mvEpisodeLabel || ""
             }, 45);
+            try {
+                const trackKey = `${mvMovie.url || mvMovie.title}|${mvEpisodeLabel || ""}|${mvSelectedMirrorIdx}`;
+                if (window.__msLastTrackedWatchKey !== trackKey && MovieStream.trackEvent) {
+                    window.__msLastTrackedWatchKey = trackKey;
+                    MovieStream.trackEvent("watch", {
+                        ...mvMovie,
+                        title: mvEpisodeLabel ? `${mvMovie.title || "Series"} (${mvEpisodeLabel})` : mvMovie.title
+                    });
+                }
+            } catch (_) {}
 
             initMagicPlayerBindings();
             if (ph) ph.style.display = "none";
