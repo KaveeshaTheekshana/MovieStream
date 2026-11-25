@@ -243,6 +243,7 @@
         const qs = new URLSearchParams();
         if (query) qs.set("q", query);
         if (year && year !== "all") qs.set("year", year);
+        qs.set("limit", "500");
         const queryStr = qs.toString() ? `?${qs.toString()}` : "";
 
         for (const base of getBotOriginCandidates()) {
@@ -1420,6 +1421,14 @@
             return;
         }
 
+        const epTrackTag = (movieObj.season && movieObj.episode)
+            ? ` S${String(movieObj.season).padStart(2, "0")}E${String(movieObj.episode).padStart(2, "0")}`
+            : "";
+        trackEvent("download", {
+            ...movieObj,
+            title: `${cleanTitle}${epTrackTag} (${qLabel})`
+        });
+
         if (dlUrl.startsWith("/") || dlUrl.startsWith(window.location.origin) || dlUrl.includes("/api/download") || dlUrl.includes("/api/stream")) {
             const a = document.createElement("a");
             a.href = dlUrl;
@@ -1991,6 +2000,34 @@
         }, 380);
     }
 
+    // 9b. Live Website Traffic & Engagement Tracking
+    async function trackEvent(action, movieObj = {}) {
+        if (global.__KV_BLOCKED) return;
+        try {
+            const act = String(action || "visit").replace(/[^a-z_-]/gi, "").toLowerCase();
+            if (!act) return;
+            const rawUrl = movieObj.url || movieObj.downloadLink || "";
+            const tgMatch = String(rawUrl).match(/(?:t\.me\/c\/\d+\/|\/api\/stream\/|tg-msg-id:)(\d+)/);
+            const derivedId = movieObj.movieId || movieObj._id || (tgMatch ? `tg_${tgMatch[1]}` : "") ||
+                (rawUrl ? String(rawUrl).replace(/^https?:\/\/[^/]+/, "").slice(0, 120) : "general");
+            const payload = {
+                movieId: derivedId || "general",
+                title: movieObj.title ? cleanDisplayTitle(movieObj.title) : "",
+                imageUrl: movieObj.imageUrl || movieObj.imgUrl || movieObj.poster || movieObj.image || ""
+            };
+            const headers = await genApiHeaders();
+            headers["Content-Type"] = "application/json";
+            const candidates = getBotOriginCandidates();
+            const base = candidates[0] || "";
+            fetch(`${base}/api/moviestream/track-${encodeURIComponent(act)}`, {
+                method: "POST",
+                headers,
+                keepalive: true,
+                body: JSON.stringify(payload)
+            }).catch(() => {});
+        } catch (_) {}
+    }
+
     // 10. Social Media Footer Hydration
     function hydrateSocialLinks() {
         const cfg = global.KAVEEZ_SOCIAL_CONFIG || {};
@@ -2011,6 +2048,7 @@
         genApiHeaders,
         fetchCineSubzAPI,
         fetchSinhalaMovies,
+        trackEvent,
         isSinhalaFallbackActive,
         renderPosterCard,
         renderContinueWatchingRow,
@@ -2058,6 +2096,16 @@
 
     document.addEventListener("DOMContentLoaded", function () {
         hydrateSocialLinks();
+        try {
+            const nowTs = Date.now();
+            const prevTs = parseInt(sessionStorage.getItem("ms_visit_ts") || "0", 10) || 0;
+            if (!prevTs || (nowTs - prevTs) > 30000) {
+                sessionStorage.setItem("ms_visit_ts", String(nowTs));
+                trackEvent("visit", { movieId: "general" });
+            }
+        } catch (_) {
+            trackEvent("visit", { movieId: "general" });
+        }
         const currentYear = String(new Date().getFullYear());
         document.querySelectorAll(".ms-copy-year").forEach((el) => {
             el.textContent = currentYear;
