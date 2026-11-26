@@ -23,6 +23,18 @@
     var touchStartX = 0;
     var touchStartY = 0;
     var touchMoved = false;
+    var shadowHostToRoot = typeof WeakMap === "function" ? new WeakMap() : null;
+
+    if (global.Element && global.Element.prototype && typeof global.Element.prototype.attachShadow === "function") {
+        var origAttachShadow = global.Element.prototype.attachShadow;
+        global.Element.prototype.attachShadow = function () {
+            var sr = origAttachShadow.apply(this, arguments);
+            try {
+                if (shadowHostToRoot && sr) shadowHostToRoot.set(this, sr);
+            } catch (_) {}
+            return sr;
+        };
+    }
 
     function isNextClickAd() {
         try {
@@ -125,7 +137,7 @@
                 var path = e.composedPath();
                 if (path && path.length && path[0] && path[0].closest) return path[0];
             }
-        } catch (_) {}
+        } catch (_) { }
         return (e.target && e.target.closest) ? e.target : null;
     }
 
@@ -260,17 +272,51 @@
         return false;
     }
 
+    function getShadowRootAny(node) {
+        if (!node) return null;
+        if (node.shadowRoot) return node.shadowRoot;
+        try {
+            if (shadowHostToRoot && shadowHostToRoot.has(node)) return shadowHostToRoot.get(node);
+        } catch (_) {}
+        return null;
+    }
+
+    function hasVisibleIframeContent(node) {
+        if (!node || node.tagName !== "IFRAME") return false;
+        if (node.$IG$ === true || (node.hasAttribute && node.hasAttribute("srcdoc"))) return true;
+        try {
+            var doc = node.contentDocument;
+            if (doc && doc.body) {
+                if ((doc.body.innerText || "").trim().length > 0) return true;
+                if (doc.body.querySelectorAll("button, table, a, img, svg").length > 0) return true;
+            }
+        } catch (_) {}
+        return false;
+    }
+
+    function hasSiblingAdIframe(node) {
+        try {
+            var p = node && node.previousElementSibling;
+            var n = node && node.nextElementSibling;
+            if (p && p.tagName === "IFRAME" && (p.$IG$ || (p.hasAttribute && p.hasAttribute("srcdoc")))) return true;
+            if (n && n.tagName === "IFRAME" && (n.$IG$ || (n.hasAttribute && n.hasAttribute("srcdoc")))) return true;
+        } catch (_) {}
+        return false;
+    }
+
     function isVisibleDialogOrPushWidget(node, st) {
         try {
+            if (hasVisibleIframeContent(node)) return true;
+            if (hasSiblingAdIframe(node) && st && st.cursor === "pointer") return true;
             if (st && parseFloat(st.opacity) < 0.08) return false;
-            var root = node.shadowRoot || node;
+            var root = getShadowRootAny(node) || node;
             var btnCount = root.querySelectorAll ? root.querySelectorAll("button, [role='button'], input").length : 0;
             if (btnCount > 0) return true;
             var txt = (root.textContent || "").trim();
             var bg = st ? (st.backgroundColor || "") : "";
             var hasSolidBg = Boolean(bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent");
             if (txt.length >= 8 && hasSolidBg) return true;
-        } catch (_) {}
+        } catch (_) { }
         return false;
     }
 
@@ -279,11 +325,17 @@
             if (!node || node.nodeType !== 1) return;
             var tag = node.tagName;
             if (tag !== "DIV" && tag !== "A" && tag !== "IFRAME" && tag !== "SPAN" && tag !== "INS" && tag !== "SECTION") return;
-            if (node.getAttribute("data-ms-ad-overlay") === "1" || isKnownUiRootElement(node)) return;
+            if (isKnownUiRootElement(node)) return;
             var st = global.getComputedStyle ? global.getComputedStyle(node) : null;
             if (!st) return;
+            if (isVisibleDialogOrPushWidget(node, st)) {
+                if (node.getAttribute("data-ms-ad-overlay") === "1") {
+                    node.removeAttribute("data-ms-ad-overlay");
+                }
+                return;
+            }
+            if (node.getAttribute("data-ms-ad-overlay") === "1") return;
             if (st.position !== "fixed" && st.position !== "absolute") return;
-            if (isVisibleDialogOrPushWidget(node, st)) return;
             var vw = global.innerWidth || 360;
             var vh = global.innerHeight || 640;
             var rect = node.getBoundingClientRect();
@@ -340,7 +392,7 @@
                         }
                         return fn.apply(this, arguments);
                     };
-                    try { fn[prop] = wrappedFn; } catch (_) {}
+                    try { fn[prop] = wrappedFn; } catch (_) { }
                 }
                 return origAEL.call(this, type, wrappedFn, opts);
             }
@@ -418,10 +470,42 @@
         return true;
     }
 
+    function bindIframeDocPointerListeners(iframeEl) {
+        try {
+            if (!iframeEl || iframeEl.tagName !== "IFRAME") return;
+            var doc = iframeEl.contentDocument;
+            if (!doc || doc.__msPointerBound) return;
+            doc.__msPointerBound = true;
+            var onIframeTap = function (e) {
+                var target = (e && e.target) ? e.target : iframeEl;
+                var now = Date.now();
+                if (target !== doc && target !== doc.documentElement && target !== doc.body && isAdCloseButton(target)) {
+                    lastAdWidgetCloseAt = now;
+                    lastAdWidgetContinueAt = 0;
+                } else {
+                    lastAdWidgetContinueAt = now;
+                    lastAdWidgetCloseAt = 0;
+                }
+            };
+            origAEL.call(doc, "pointerdown", onIframeTap, true);
+            origAEL.call(doc, "mousedown", onIframeTap, true);
+            origAEL.call(doc, "touchstart", onIframeTap, { capture: true, passive: true });
+            origAEL.call(doc, "click", onIframeTap, true);
+        } catch (_) {}
+    }
+
     function guardIframeWindowOpen(node) {
         try {
             if (!node || node.nodeType !== 1 || node.tagName !== "IFRAME") return;
             if (node.id && /^(?:ms_|mv_|cat_|dl_)/.test(node.id)) return;
+            bindIframeDocPointerListeners(node);
+            if (!node.__msLoadBound) {
+                node.__msLoadBound = true;
+                origAEL.call(node, "load", function () {
+                    bindIframeDocPointerListeners(node);
+                    checkAndFlagOverlayNode(node);
+                }, false);
+            }
             var cw = node.contentWindow;
             if (!cw || typeof cw.open !== "function" || cw.__msOpenGuarded) return;
             var cwOrigOpen = cw.open;
@@ -503,23 +587,23 @@
     }
 
     syncTurnBodyClass();
+    if (typeof global.MutationObserver === "function" && global.document && global.document.documentElement) {
+        var earlyMo = new global.MutationObserver(function (mutations) {
+            for (var m = 0; m < mutations.length; m++) {
+                var added = mutations[m].addedNodes;
+                if (!added) continue;
+                for (var a = 0; a < added.length; a++) {
+                    if (added[a] && added[a].nodeType === 1) {
+                        flagInvisibleFullOverlays(added[a]);
+                    }
+                }
+            }
+        });
+        earlyMo.observe(global.document.documentElement, { childList: true, subtree: true });
+    }
     origAEL.call(global.document, "DOMContentLoaded", function () {
         syncTurnBodyClass();
         flagInvisibleFullOverlays(global.document.body);
-        if (typeof global.MutationObserver === "function" && global.document.documentElement) {
-            var mo = new global.MutationObserver(function (mutations) {
-                for (var m = 0; m < mutations.length; m++) {
-                    var added = mutations[m].addedNodes;
-                    if (!added) continue;
-                    for (var a = 0; a < added.length; a++) {
-                        if (added[a] && added[a].nodeType === 1) {
-                            flagInvisibleFullOverlays(added[a]);
-                        }
-                    }
-                }
-            });
-            mo.observe(global.document.documentElement, { childList: true, subtree: true });
-        }
     });
     origAEL.call(global, "pageshow", syncTurnBodyClass);
     origAEL.call(global, "focus", syncTurnBodyClass);
