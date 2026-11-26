@@ -6,7 +6,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <script src="assets/sentinel.js"></script>
-    <script src="assets/ad-gate.js?v=20261126e"></script>
+    <script src="assets/ad-gate.js?v=20261126f"></script>
 
     <!-- Primary SEO Meta Tags (Sri Lanka + Global Cinema) -->
     <title>MovieStream.top - Sinhala Subtitled Movies, Complete TV Series &amp; Sinhala Film Download</title>
@@ -60,7 +60,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=DM+Sans:wght@500;700;800&family=Noto+Sans+Sinhala:wght@400;500;600;700;800&display=swap" />
 
-    <link rel="stylesheet" href="assets/styles.css?v=20261126e" />
+    <link rel="stylesheet" href="assets/styles.css?v=20261126f" />
 
     <!-- Structured Data for Google Search Rich Snippets -->
     <script type="application/ld+json">
@@ -1042,8 +1042,8 @@
         </button>
     </nav>
 
-    <script defer src="assets/catalog-fallback.js?v=20261126e"></script>
-    <script defer src="assets/app-core.js?v=20261126e"></script>
+    <script defer src="assets/catalog-fallback.js?v=20261126f"></script>
+    <script defer src="assets/app-core.js?v=20261126f"></script>
     <script>
         let _heroSlides = [];
         let _heroIdx = 0;
@@ -1076,7 +1076,7 @@
                 im.onload = done;
                 im.onerror = done;
                 im.src = url;
-                setTimeout(done, 450);
+                setTimeout(done, 220);
             });
         }
 
@@ -1215,9 +1215,12 @@
             const token = ++_heroTransitionToken;
             stage.classList.remove("is-playing");
             stage.classList.add("is-transitioning");
-            await Promise.all([
-                preloadHeroImage(preloadTarget),
-                new Promise(r => setTimeout(r, 170))
+            await Promise.race([
+                Promise.all([
+                    preloadHeroImage(preloadTarget),
+                    new Promise(r => setTimeout(r, 90))
+                ]),
+                new Promise(r => setTimeout(r, 150))
             ]);
             if (token !== _heroTransitionToken) return;
 
@@ -1248,7 +1251,40 @@
                 if (!_heroPaused && !document.hidden) {
                     renderHeroSlide(_heroIdx + 1);
                 }
-            }, 7000);
+            }, 3000);
+        }
+
+        let _genresTimer = null;
+        let _genresPaused = false;
+        function startGenresAutoplay(rowEl) {
+            const row = rowEl || document.getElementById("row_genres");
+            if (!row) return;
+            if (!row.dataset.msAutoBound) {
+                row.dataset.msAutoBound = "1";
+                let resumeTimer = null;
+                row.addEventListener("mouseenter", () => { clearTimeout(resumeTimer); _genresPaused = true; });
+                row.addEventListener("mouseleave", () => { _genresPaused = false; });
+                row.addEventListener("touchstart", () => { clearTimeout(resumeTimer); _genresPaused = true; }, { passive: true });
+                row.addEventListener("touchend", () => {
+                    clearTimeout(resumeTimer);
+                    resumeTimer = setTimeout(() => { _genresPaused = false; }, 2200);
+                }, { passive: true });
+            }
+            clearInterval(_genresTimer);
+            _genresTimer = setInterval(() => {
+                if (_genresPaused || document.hidden) return;
+                if (document.querySelector(".ms-modal-backdrop:not(.hidden)")) return;
+                const el = document.getElementById("row_genres");
+                if (!el) return;
+                const maxScroll = el.scrollWidth - el.clientWidth;
+                if (maxScroll <= 10) return;
+                if (el.scrollLeft >= maxScroll - 8) {
+                    el.scrollTo({ left: 0, behavior: "smooth" });
+                } else {
+                    const step = Math.max(194, Math.min(Math.round(el.clientWidth * 0.45), 390));
+                    el.scrollBy({ left: step, behavior: "smooth" });
+                }
+            }, 3000);
         }
         (function initHeroGestures() {
             document.addEventListener("DOMContentLoaded", () => {
@@ -1353,6 +1389,7 @@
                         <span>${MS.escapeHtml(g.name)}<small>Explore &rsaquo;</small></span>
                     </a>`;
                 }).join("");
+                startGenresAutoplay(rowGenres);
             }
 
             const colColors = ["#dc2626", "#2563eb", "#7c3aed", "#059669", "#d97706", "#0284c7", "#15803d"];
@@ -1536,8 +1573,11 @@
                 ];
                 if (liveHero.length) {
                     _heroSlides = liveHero;
-                    renderHeroSlide(0, true);
-                    restartHeroAutoplay();
+                    _heroIdx = _heroIdx > 0 ? (_heroIdx % _heroSlides.length) : 0;
+                    applyHeroSlideDom(_heroIdx);
+                    const stageEl = document.getElementById("hero_stage");
+                    if (stageEl) stageEl.classList.add("is-playing");
+                    if (_heroTransitionToken === 0) restartHeroAutoplay();
                 }
                 if (hp["Trending Now"] || hp["All Movies"]) fillRow("row_trending", hp["Trending Now"] || hp["All Movies"], { eagerCount: 8 });
                 if (hp["Complete Series"]) fillRow("row_complete", hp["Complete Series"], { eagerCount: 0 });

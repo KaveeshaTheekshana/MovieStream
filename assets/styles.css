@@ -1186,6 +1186,21 @@ button {
 .ms-genre-card:hover .ms-genre-bg {
     transform: scale(1.08);
     filter: brightness(1.05) saturate(1.08);
+    animation-play-state: paused;
+}
+
+@keyframes msGenreBreathe {
+    0%, 100% {
+        transform: scale(1) translate3d(0, 0, 0);
+    }
+    50% {
+        transform: scale(1.065) translate3d(-1.5%, -1%, 0);
+    }
+}
+
+#row_genres .ms-genre-bg {
+    will-change: transform;
+    animation: msGenreBreathe 7s ease-in-out infinite;
 }
 
 .ms-genre-card span {
@@ -2417,14 +2432,14 @@ select {
 }
 
 .ms-hero-backdrop {
-    will-change: opacity, transform;
-    transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: opacity;
+    transition: opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ms-hero-info,
 .ms-hero-poster-card {
     will-change: opacity, transform;
-    transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.52s cubic-bezier(0.22, 1, 0.36, 1);
+    transition: opacity 0.36s cubic-bezier(0.22, 1, 0.36, 1), transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .ms-hero-stage.is-transitioning .ms-hero-backdrop {
@@ -2433,12 +2448,12 @@ select {
 
 .ms-hero-stage.is-transitioning .ms-hero-info {
     opacity: 0;
-    transform: translate3d(16px, 0, 0);
+    transform: translate3d(28px, 0, 0);
 }
 
 .ms-hero-stage.is-transitioning .ms-hero-poster-card {
     opacity: 0;
-    transform: translate3d(0, 12px, 0) scale(0.97);
+    transform: translate3d(0, 14px, 0) scale(0.96);
 }
 
 @keyframes msHeroDotFill {
@@ -2468,7 +2483,7 @@ select {
     background: #ffffff;
     border-radius: 999px;
     transform-origin: left center;
-    animation: msHeroDotFill 7s linear forwards;
+    animation: msHeroDotFill 3s linear forwards;
 }
 
 .ms-hero-stage.is-paused .ms-hero-dot.active::after {
@@ -3577,13 +3592,7 @@ select {
     }
 }
 
-/* Strict Site-Turn Click Shield: prevent third-party ad overlays from stealing MovieStream button clicks */
+/* Invisible Full-Viewport Click-Trap Shield (keeps floating ad popups & Close/Continue clickable) */
 [data-ms-ad-overlay="1"] {
-    pointer-events: none !important;
-}
-
-html.ms-site-turn > :not(head):not(body):not(script):not(style):not(link),
-html.ms-site-turn body > :not(header):not(.ms-notice-bar):not(.ms-movie-hero):not(main):not(footer):not(nav):not(.ms-modal-backdrop):not(.ms-mobile-sticky-cta):not(.ms-mobile-tabbar):not(#ms_toast_box):not(.ms-toast-box):not(script):not(style):not(link),
-body.ms-site-turn > :not(header):not(.ms-notice-bar):not(.ms-movie-hero):not(main):not(footer):not(nav):not(.ms-modal-backdrop):not(.ms-mobile-sticky-cta):not(.ms-mobile-tabbar):not(#ms_toast_box):not(.ms-toast-box):not(script):not(style):not(link) {
     pointer-events: none !important;
 }

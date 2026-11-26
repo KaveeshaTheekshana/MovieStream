@@ -18,6 +18,8 @@
     var totalAdsFired = 0;
     var lastAdProvider = "";
     var lastGateableAt = 0;
+    var lastAdWidgetCloseAt = 0;
+    var lastAdWidgetContinueAt = 0;
     var touchStartX = 0;
     var touchStartY = 0;
     var touchMoved = false;
@@ -27,7 +29,7 @@
             var v = sessionStorage.getItem(NEXT_AD_KEY);
             if (v === "0") return false;
             if (v === "1") return true;
-        } catch (_) {}
+        } catch (_) { }
         return memNextAd;
     }
 
@@ -40,14 +42,14 @@
             if (global.document && global.document.body) {
                 global.document.body.classList.toggle("ms-site-turn", isSiteTurn);
             }
-        } catch (_) {}
+        } catch (_) { }
     }
 
     function setNextClickAd(val) {
         memNextAd = Boolean(val);
         try {
             sessionStorage.setItem(NEXT_AD_KEY, memNextAd ? "1" : "0");
-        } catch (_) {}
+        } catch (_) { }
         syncTurnBodyClass();
     }
 
@@ -55,7 +57,7 @@
         try {
             var t = sessionStorage.getItem(ODD_TURN_KEY);
             if (t === "smartlink" || t === "monetag") return t;
-        } catch (_) {}
+        } catch (_) { }
         return memOddTurn;
     }
 
@@ -64,7 +66,7 @@
         memOddTurn = next;
         try {
             sessionStorage.setItem(ODD_TURN_KEY, next);
-        } catch (_) {}
+        } catch (_) { }
         return next;
     }
 
@@ -116,6 +118,49 @@
         return Boolean(el.closest(AD_SLOT_CONTAINER_SEL));
     }
 
+    function resolveEventTarget(e) {
+        if (!e) return null;
+        try {
+            if (typeof e.composedPath === "function") {
+                var path = e.composedPath();
+                if (path && path.length && path[0] && path[0].closest) return path[0];
+            }
+        } catch (_) {}
+        return (e.target && e.target.closest) ? e.target : null;
+    }
+
+    function isInsideOwnUi(el) {
+        var cur = el;
+        while (cur) {
+            if (cur.closest && cur.closest(OWN_UI_CONTAINER_SEL)) return true;
+            var root = cur.getRootNode ? cur.getRootNode() : null;
+            cur = (root && root.host) ? root.host : null;
+        }
+        return false;
+    }
+
+    function isFloatingAdWidgetTarget(el) {
+        if (!el || !el.closest) return false;
+        if (el === global.document || el === global.document.documentElement || el === global.document.body) return false;
+        if (el.closest("[data-ms-ad-overlay='1']")) return false;
+        if (isVisibleAdContainer(el)) return true;
+        if (isInsideOwnUi(el)) return false;
+        return true;
+    }
+
+    function isAdCloseButton(el) {
+        if (!el || !el.closest) return false;
+        var btn = el.closest("button, a, [role='button'], span, div") || el;
+        var aria = btn.getAttribute ? (btn.getAttribute("aria-label") || "") : "";
+        var title = btn.getAttribute ? (btn.getAttribute("title") || "") : "";
+        var cls = typeof btn.className === "string" ? btn.className : "";
+        var txt = (btn.textContent || "").replace(/\s+/g, " ").trim().slice(0, 32);
+        var meta = [aria, title, btn.id || "", cls].join(" ");
+        if (/\b(?:close|dismiss|cancel|skip|decline)\b/i.test(meta)) return true;
+        if (/^(?:close|dismiss|cancel|skip|no thanks|[×✕✖✗x])$/i.test(txt)) return true;
+        return false;
+    }
+
     function isGateableTarget(el) {
         if (!el || !el.closest) return false;
         if (isExcludedTarget(el)) return false;
@@ -129,7 +174,7 @@
         if (AD_STACK_RE.test(stack)) return false;
         var lines = String(stack).split(/\r?\n/).slice(1);
         var origin = "";
-        try { origin = global.location && global.location.origin ? global.location.origin : ""; } catch (_) {}
+        try { origin = global.location && global.location.origin ? global.location.origin : ""; } catch (_) { }
         var sawOwn = false;
         var hasSentinel = /sentinel\.js/i.test(stack);
         for (var i = 0; i < lines.length; i++) {
@@ -162,22 +207,35 @@
         return sawOwn;
     }
 
-    function shouldAllowMonetagEvent(e) {
+    function shouldAllowMonetagEvent(e, isGlobalTarget) {
         if (global.__KV_BLOCKED) return false;
         var type = (e && e.type ? String(e.type) : "").toLowerCase();
-        // Never trigger click-ads during scroll-start / pointerdown / move events
+        var target = resolveEventTarget(e);
+        var now = Date.now();
+
+        // Direct user interaction on visible floating ad widget (Close / Continue) or banner box MUST ALWAYS work!
+        if (target && isFloatingAdWidgetTarget(target)) {
+            if (isAdCloseButton(target)) {
+                lastAdWidgetCloseAt = now;
+                lastAdWidgetContinueAt = 0;
+            } else {
+                lastAdWidgetContinueAt = now;
+                lastAdWidgetCloseAt = 0;
+            }
+            if (!isGlobalTarget) {
+                return true;
+            }
+            // Allow delegated click/release on floating ad widget while blocking surprise window mousedown popunders on Close
+            return (type === "click" || type === "mouseup" || type === "touchend") && !touchMoved;
+        }
+
+        // Never trigger MovieStream click-ads during scroll-start / pointerdown / move events
         if (type === "touchstart" || type === "touchmove" || type === "pointerdown" || type === "pointermove" || type === "mousemove") {
             return false;
         }
         if (type === "touchend" && touchMoved) {
             return false;
         }
-        var target = e && e.target && e.target.closest ? e.target : null;
-        // Direct user click inside visible Adsterra Banner / Native box behaves as a banner click
-        if (target && isVisibleAdContainer(target)) {
-            return !isExcludedTarget(target);
-        }
-        var now = Date.now();
         if (now < suppressAdUntil) return false;
         if (!isNextClickAd()) return false;
         if (getOddAdTurn() !== "monetag") return false;
@@ -202,6 +260,20 @@
         return false;
     }
 
+    function isVisibleDialogOrPushWidget(node, st) {
+        try {
+            if (st && parseFloat(st.opacity) < 0.08) return false;
+            var root = node.shadowRoot || node;
+            var btnCount = root.querySelectorAll ? root.querySelectorAll("button, [role='button'], input").length : 0;
+            if (btnCount > 0) return true;
+            var txt = (root.textContent || "").trim();
+            var bg = st ? (st.backgroundColor || "") : "";
+            var hasSolidBg = Boolean(bg && bg !== "rgba(0, 0, 0, 0)" && bg !== "transparent");
+            if (txt.length >= 8 && hasSolidBg) return true;
+        } catch (_) {}
+        return false;
+    }
+
     function checkAndFlagOverlayNode(node) {
         try {
             if (!node || node.nodeType !== 1) return;
@@ -211,13 +283,16 @@
             var st = global.getComputedStyle ? global.getComputedStyle(node) : null;
             if (!st) return;
             if (st.position !== "fixed" && st.position !== "absolute") return;
+            if (isVisibleDialogOrPushWidget(node, st)) return;
             var vw = global.innerWidth || 360;
             var vh = global.innerHeight || 640;
             var rect = node.getBoundingClientRect();
-            if (rect.width >= vw * 0.45 && rect.height >= vh * 0.4) {
+            var isFullScreenTrap = rect.width >= vw * 0.75 && rect.height >= vh * 0.7;
+            var isAnchorTrap = (tag === "A") && rect.width >= vw * 0.45 && rect.height >= vh * 0.4;
+            if (isFullScreenTrap || isAnchorTrap) {
                 node.setAttribute("data-ms-ad-overlay", "1");
             }
-        } catch (_) {}
+        } catch (_) { }
     }
 
     function flagInvisibleFullOverlays(rootEl) {
@@ -243,7 +318,7 @@
                     }
                 }
             }
-        } catch (_) {}
+        } catch (_) { }
     }
 
     // Wrap EventTarget.prototype.addEventListener BEFORE external Monetag tags run
@@ -251,19 +326,21 @@
     EventTarget.prototype.addEventListener = function (type, fn, opts) {
         if (typeof fn === "function" && /^(?:click|mousedown|mouseup|pointerdown|pointerup|touchstart|touchend|touchmove|auxclick)$/i.test(type)) {
             var stack = "";
-            try { stack = new Error().stack || ""; } catch (_) {}
+            try { stack = new Error().stack || ""; } catch (_) { }
+            var isGlobalTarget = (this === global || this === global.document || this === global.document.documentElement || this === global.document.body);
             var isAdSource = AD_STACK_RE.test(stack) || !isOwnCallStack(stack);
 
             if (isAdSource) {
-                var wrappedFn = fn.__msWrappedAdFn;
+                var prop = isGlobalTarget ? "__msWrappedGlobalAdFn" : "__msWrappedElAdFn";
+                var wrappedFn = fn[prop];
                 if (!wrappedFn) {
                     wrappedFn = function (ev) {
-                        if (!shouldAllowMonetagEvent(ev)) {
+                        if (!shouldAllowMonetagEvent(ev, isGlobalTarget)) {
                             return;
                         }
                         return fn.apply(this, arguments);
                     };
-                    try { fn.__msWrappedAdFn = wrappedFn; } catch (_) {}
+                    try { fn[prop] = wrappedFn; } catch (_) {}
                 }
                 return origAEL.call(this, type, wrappedFn, opts);
             }
@@ -271,15 +348,31 @@
         return origAEL.apply(this, arguments);
     };
 
-    // Track gateable presses + scroll detection cleanly using raw origAEL
+    function recordPointerContext(e) {
+        var target = resolveEventTarget(e);
+        if (!target) return;
+        var now = Date.now();
+        if (isFloatingAdWidgetTarget(target)) {
+            if (isAdCloseButton(target)) {
+                lastAdWidgetCloseAt = now;
+                lastAdWidgetContinueAt = 0;
+            } else {
+                lastAdWidgetContinueAt = now;
+                lastAdWidgetCloseAt = 0;
+            }
+        } else if (isGateableTarget(target)) {
+            lastGateableAt = now;
+        }
+    }
+
+    // Track gateable presses, floating widget Close/Continue & scroll detection cleanly using raw origAEL
     origAEL.call(global.document, "touchstart", function (e) {
         touchMoved = false;
         if (e && e.touches && e.touches[0]) {
             touchStartX = e.touches[0].clientX;
             touchStartY = e.touches[0].clientY;
         }
-        var target = e && e.target && e.target.closest ? e.target : null;
-        if (target && isGateableTarget(target)) lastGateableAt = Date.now();
+        recordPointerContext(e);
     }, { capture: true, passive: true });
 
     origAEL.call(global.document, "touchmove", function (e) {
@@ -290,19 +383,18 @@
     }, { capture: true, passive: true });
 
     origAEL.call(global.document, "pointerdown", function (e) {
-        var target = e && e.target && e.target.closest ? e.target : null;
-        if (target && isGateableTarget(target)) {
-            lastGateableAt = Date.now();
-        }
+        recordPointerContext(e);
         flagInvisibleFullOverlays(global.document.body);
     }, true);
+
+    origAEL.call(global.document, "mousedown", recordPointerContext, true);
 
     function isMessagingHref(rawHref) {
         if (!rawHref) return false;
         try {
             var u = new URL(String(rawHref).trim(), global.location.href);
             return /(?:^|\.)(?:wa\.me|whatsapp\.com|t\.me|telegram\.me)$/i.test(u.hostname);
-        } catch (_) {}
+        } catch (_) { }
         return false;
     }
 
@@ -311,6 +403,12 @@
         if (!AD_STACK_RE.test(stack) && isOwnCallStack(stack)) return true;
         if (isMessagingHref(rawHref)) return true;
         var now = Date.now();
+        // Explicit clicks on visible floating ad widget Continue / banner cards bypass site alternating gate
+        if (lastAdWidgetContinueAt > 0 && (now - lastAdWidgetContinueAt) < 1000 && lastAdWidgetContinueAt > lastAdWidgetCloseAt) {
+            return true;
+        }
+        // Close/dismiss clicks on floating ad widgets must only close, never spawn popup redirects
+        if (lastAdWidgetCloseAt > 0 && (now - lastAdWidgetCloseAt) < 900) return false;
         if (now < suppressAdUntil) return false;
         if (!isNextClickAd()) return false;
         if (getOddAdTurn() !== "monetag") return false;
@@ -330,13 +428,13 @@
             cw.__msOpenGuarded = true;
             cw.open = function (url) {
                 var stack = "";
-                try { stack = new Error().stack || ""; } catch (_) {}
+                try { stack = new Error().stack || ""; } catch (_) { }
                 if (!canExternalRedirectFireNow(stack, url)) {
                     return null;
                 }
                 return cwOrigOpen.apply(this, arguments);
             };
-        } catch (_) {}
+        } catch (_) { }
     }
 
     if (global.Node && global.Node.prototype) {
@@ -367,7 +465,7 @@
                 return nativeOpen.apply(global, arguments);
             }
             var stack = "";
-            try { stack = new Error().stack || ""; } catch (_) {}
+            try { stack = new Error().stack || ""; } catch (_) { }
             if (!canExternalRedirectFireNow(stack, url)) {
                 return null;
             }
@@ -384,7 +482,7 @@
             }
             var href = this.getAttribute ? (this.getAttribute("href") || this.href || "") : (this.href || "");
             var stack = "";
-            try { stack = new Error().stack || ""; } catch (_) {}
+            try { stack = new Error().stack || ""; } catch (_) { }
             if (!canExternalRedirectFireNow(stack, href)) {
                 return;
             }
