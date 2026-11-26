@@ -2040,7 +2040,13 @@
     const SMART_LINK_URL = "https://directyp.org/4/4d93b0e7c4433b4547dc0a98e66fb34a";
     global.SMART_LINK_URL = SMART_LINK_URL;
 
+    function getAdGate() {
+        return global.__MS_AD_GATE || null;
+    }
+
     function isNextClickAd() {
+        const g = getAdGate();
+        if (g) return g.isNextClickAd();
         try {
             const v = sessionStorage.getItem("ms_sl_next_is_ad");
             if (v === "0") return false;
@@ -2050,6 +2056,8 @@
     }
 
     function setNextClickAd(val) {
+        const g = getAdGate();
+        if (g) return g.setNextClickAd(val);
         global.__msSlNextIsAd = Boolean(val);
         try {
             sessionStorage.setItem("ms_sl_next_is_ad", val ? "1" : "0");
@@ -2059,8 +2067,11 @@
     function triggerSmartlink() {
         const target = global.SMART_LINK_URL || SMART_LINK_URL;
         if (!target) return false;
+        const g = getAdGate();
         try {
-            const win = global.open(target, "_blank", "noopener,noreferrer");
+            const win = (g && typeof g.openSmartlinkTrusted === "function")
+                ? g.openSmartlinkTrusted(target)
+                : global.open(target, "_blank", "noopener,noreferrer");
             return Boolean(win);
         } catch (_) {
             return false;
@@ -2075,22 +2086,32 @@
             if (!e || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
             const el = e.target && e.target.closest ? e.target : null;
             if (!el) return;
-            // Never interrupt typing, filter selects, modal close buttons, or in-player playback controls
             if (el.closest("input, textarea, select, option, label, video, #mv_magic_controls, #mv_close_player_btn, .ms-modal-close, [aria-label*='Close']")) {
                 return;
             }
             const interactive = el.closest("a, button, [role='button'], .ms-card, .ms-bento-card, .ms-quality-card, .ms-mirror-btn, .ms-ep-btn, .ms-chip, .ms-hero-card");
             if (!interactive) return;
 
+            const g = getAdGate();
             if (isNextClickAd()) {
-                // Odd click: open exactly 1 Smartlink ad & pause this site action cleanly
+                // Odd click: exactly 1 ad fires (Monetag turn OR Smartlink), never both at once, and pauses site click for next click
                 setNextClickAd(false);
+                if (g) g.suppressAdsFor(450);
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-                triggerSmartlink();
+
+                const monetagAlreadyFired = g ? g.consumeMonetagFired() : false;
+                if (g) g.flipOddAdTurn();
+                if (!monetagAlreadyFired) {
+                    triggerSmartlink();
+                }
             } else {
-                // Even click: let the card/button work 100%, then arm Smartlink again for the next click
+                // Even click: suppress all external ad listeners for this click gesture so site action ALWAYS works!
+                if (g) {
+                    g.consumeMonetagFired();
+                    g.suppressAdsFor(450);
+                }
                 setNextClickAd(true);
             }
         }, true);

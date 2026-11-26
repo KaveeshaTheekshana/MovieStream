@@ -3440,6 +3440,77 @@ select {
 }
 
 /* ============================================================================
+   Top Free-Access & Ad Return Notice Banner (Desktop & Mobile Responsive)
+   ============================================================================ */
+.ms-notice-bar {
+    background: linear-gradient(90deg, #fff1f2 0%, #ffffff 48%, #eff6ff 100%);
+    border-bottom: 1px solid #fecdd3;
+    position: relative;
+    z-index: 20;
+}
+
+.ms-notice-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding-top: 8px;
+    padding-bottom: 8px;
+}
+
+.ms-notice-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: var(--ms-red);
+    color: #ffffff;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 999px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    box-shadow: 0 3px 10px rgba(225, 29, 72, 0.22);
+}
+
+.ms-notice-text {
+    margin: 0;
+    font-size: 0.81rem;
+    line-height: 1.45;
+    font-weight: 500;
+    color: var(--ms-text-sub);
+    text-align: center;
+}
+
+.ms-notice-text strong {
+    color: var(--ms-text);
+    font-weight: 800;
+}
+
+@media (max-width: 780px) {
+    .ms-notice-inner {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: flex-start;
+        gap: 8px;
+        padding-top: 8px;
+        padding-bottom: 8px;
+    }
+
+    .ms-notice-badge {
+        font-size: 0.66rem;
+        padding: 3px 8px;
+        margin-top: 2px;
+    }
+
+    .ms-notice-text {
+        font-size: 0.75rem;
+        line-height: 1.45;
+        text-align: left;
+    }
+}
+
+/* ============================================================================
    Clean Minimal Ad Containers (Banner 300x250 & Native Banner)
    ============================================================================ */
 .ms-ad-section {
