@@ -2038,27 +2038,27 @@
     }
 
     const SMART_LINK_URL = "https://directyp.org/4/4d93b0e7c4433b4547dc0a98e66fb34a";
-    const SMARTLINK_COOLDOWN_MS = 60000;
     global.SMART_LINK_URL = SMART_LINK_URL;
 
-    function isSmartlinkReady() {
+    function isNextClickAd() {
         try {
-            const lastTs = parseInt(sessionStorage.getItem("ms_smartlink_ts") || "0", 10) || 0;
-            return !lastTs || (Date.now() - lastTs) >= SMARTLINK_COOLDOWN_MS;
-        } catch (_) {
-            return !global.__msSlFiredAt || (Date.now() - global.__msSlFiredAt) >= SMARTLINK_COOLDOWN_MS;
-        }
+            const v = sessionStorage.getItem("ms_sl_next_is_ad");
+            if (v === "0") return false;
+            if (v === "1") return true;
+        } catch (_) {}
+        return global.__msSlNextIsAd !== false;
     }
 
-    function triggerSmartlink(force) {
+    function setNextClickAd(val) {
+        global.__msSlNextIsAd = Boolean(val);
+        try {
+            sessionStorage.setItem("ms_sl_next_is_ad", val ? "1" : "0");
+        } catch (_) {}
+    }
+
+    function triggerSmartlink() {
         const target = global.SMART_LINK_URL || SMART_LINK_URL;
         if (!target) return false;
-        if (!force && !isSmartlinkReady()) return false;
-        const now = Date.now();
-        global.__msSlFiredAt = now;
-        try {
-            sessionStorage.setItem("ms_smartlink_ts", String(now));
-        } catch (_) {}
         try {
             const win = global.open(target, "_blank", "noopener,noreferrer");
             return Boolean(win);
@@ -2075,16 +2075,23 @@
             if (!e || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
             const el = e.target && e.target.closest ? e.target : null;
             if (!el) return;
-            if (el.closest("input, textarea, select, option, label, video, .ms-modal-close, [aria-label*='Close']")) {
+            // Never interrupt typing, filter selects, modal close buttons, or in-player playback controls
+            if (el.closest("input, textarea, select, option, label, video, #mv_magic_controls, #mv_close_player_btn, .ms-modal-close, [aria-label*='Close']")) {
                 return;
             }
             const interactive = el.closest("a, button, [role='button'], .ms-card, .ms-bento-card, .ms-quality-card, .ms-mirror-btn, .ms-ep-btn, .ms-chip, .ms-hero-card");
             if (!interactive) return;
-            if (isSmartlinkReady()) {
+
+            if (isNextClickAd()) {
+                // Odd click: open exactly 1 Smartlink ad & pause this site action cleanly
+                setNextClickAd(false);
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
-                triggerSmartlink(true);
+                triggerSmartlink();
+            } else {
+                // Even click: let the card/button work 100%, then arm Smartlink again for the next click
+                setNextClickAd(true);
             }
         }, true);
     }
