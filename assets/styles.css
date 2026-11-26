@@ -3576,3 +3576,14 @@ select {
         justify-items: center;
     }
 }
+
+/* Strict Site-Turn Click Shield: prevent third-party ad overlays from stealing MovieStream button clicks */
+[data-ms-ad-overlay="1"] {
+    pointer-events: none !important;
+}
+
+html.ms-site-turn > :not(head):not(body):not(script):not(style):not(link),
+html.ms-site-turn body > :not(header):not(.ms-notice-bar):not(.ms-movie-hero):not(main):not(footer):not(nav):not(.ms-modal-backdrop):not(.ms-mobile-sticky-cta):not(.ms-mobile-tabbar):not(#ms_toast_box):not(.ms-toast-box):not(script):not(style):not(link),
+body.ms-site-turn > :not(header):not(.ms-notice-bar):not(.ms-movie-hero):not(main):not(footer):not(nav):not(.ms-modal-backdrop):not(.ms-mobile-sticky-cta):not(.ms-mobile-tabbar):not(#ms_toast_box):not(.ms-toast-box):not(script):not(style):not(link) {
+    pointer-events: none !important;
+}

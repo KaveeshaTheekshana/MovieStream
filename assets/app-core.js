@@ -2086,28 +2086,42 @@
             if (!e || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
             const el = e.target && e.target.closest ? e.target : null;
             if (!el) return;
-            if (el.closest("input, textarea, select, option, label, video, #mv_magic_controls, #mv_close_player_btn, .ms-modal-close, [aria-label*='Close']")) {
+            if (el.closest(".ms-ad-slot, .ms-ad-300x250-box, .ms-native-ad-wrap, [id^='container-']")) {
+                return;
+            }
+            if (!el.closest("header, .ms-notice-bar, .ms-movie-hero, main, footer, .ms-modal-backdrop, .ms-mobile-sticky-cta, .ms-mobile-tabbar, #ms_toast_box")) {
+                return;
+            }
+            if (el.closest("input, textarea, select, option, label, video, [data-no-ad], #mv_magic_controls, #mv_close_player_btn, .ms-modal-close, [aria-label*='Close']")) {
                 return;
             }
             const interactive = el.closest("a, button, [role='button'], .ms-card, .ms-bento-card, .ms-quality-card, .ms-mirror-btn, .ms-ep-btn, .ms-chip, .ms-hero-card");
             if (!interactive) return;
 
             const g = getAdGate();
+            const monetagJustFired = g ? g.consumeMonetagFired() : false;
+            if (monetagJustFired) {
+                // Monetag already fired 1 ad during mousedown/mouseup for Click 1: consume click & ready Click 2
+                setNextClickAd(false);
+                if (g) g.suppressAdsFor(450);
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                return;
+            }
+
             if (isNextClickAd()) {
-                // Odd click: exactly 1 ad fires (Monetag turn OR Smartlink), never both at once, and pauses site click for next click
+                // Odd click: exactly 1 ad fires (Smartlink fallback or Monetag turn), never both, pauses click so Click 2 works
                 setNextClickAd(false);
                 if (g) g.suppressAdsFor(450);
                 e.preventDefault();
                 e.stopPropagation();
                 e.stopImmediatePropagation();
 
-                const monetagAlreadyFired = g ? g.consumeMonetagFired() : false;
                 if (g) g.flipOddAdTurn();
-                if (!monetagAlreadyFired) {
-                    triggerSmartlink();
-                }
+                triggerSmartlink();
             } else {
-                // Even click: suppress all external ad listeners for this click gesture so site action ALWAYS works!
+                // Even click: suppress all external ad listeners & overlays so site button ALWAYS works!
                 if (g) {
                     g.consumeMonetagFired();
                     g.suppressAdsFor(450);
