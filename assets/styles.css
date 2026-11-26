@@ -3438,3 +3438,70 @@ select {
     color: var(--ms-red);
     border-color: var(--ms-red);
 }
+
+/* ============================================================================
+   Clean Minimal Ad Containers (Banner 300x250 & Native Banner)
+   ============================================================================ */
+.ms-ad-section {
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+.ms-ad-banner-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ms-ad-duo-clean {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 18px;
+    align-items: center;
+}
+
+.ms-ad-300x250-box {
+    width: 300px;
+    min-height: 250px;
+    max-width: 100%;
+    margin: 0 auto;
+    border-radius: 12px;
+    background: var(--ms-surface);
+    border: 1px solid var(--ms-border);
+    box-shadow: var(--ms-shadow-sm);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.ms-ad-300x250-box iframe {
+    display: block;
+    max-width: 100%;
+    border: 0;
+}
+
+.ms-native-ad-wrap {
+    width: 100%;
+    min-height: 90px;
+    border-radius: var(--ms-radius-lg);
+    background: var(--ms-surface);
+    border: 1px solid var(--ms-border);
+    box-shadow: var(--ms-shadow-sm);
+    padding: 12px;
+    overflow: hidden;
+}
+
+@media (max-width: 780px) {
+    .ms-ad-section {
+        margin-top: 16px;
+        margin-bottom: 16px;
+    }
+
+    .ms-ad-duo-clean {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        justify-items: center;
+    }
+}

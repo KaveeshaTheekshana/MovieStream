@@ -138,7 +138,7 @@ export async function onRequest(context) {
           status: 200,
           headers: {
             'Content-Type': 'application/manifest+json; charset=utf-8',
-            'Cache-Control': 'public, max-age=604800, stale-while-revalidate=86400',
+            'Cache-Control': 'public, max-age=3600, must-revalidate',
             'X-Content-Type-Options': 'nosniff'
           }
         });
@@ -153,10 +153,10 @@ export async function onRequest(context) {
     newHeaders.set('Referrer-Policy', 'strict-origin-when-cross-origin');
     newHeaders.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
     if (isAsset && !url.pathname.endsWith('sitemap.xml')) {
-      const isScriptOrStyle = /\.(js|css)$/i.test(url.pathname);
+      const isShortTtl = /\.(js|css|webmanifest)$/i.test(url.pathname);
       newHeaders.set(
         'Cache-Control',
-        isScriptOrStyle
+        isShortTtl
           ? 'public, max-age=300, must-revalidate'
           : 'public, max-age=604800, stale-while-revalidate=86400'
       );

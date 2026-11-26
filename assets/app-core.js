@@ -2037,9 +2037,63 @@
         });
     }
 
+    const SMART_LINK_URL = "https://directyp.org/4/4d93b0e7c4433b4547dc0a98e66fb34a";
+    const SMARTLINK_COOLDOWN_MS = 60000;
+    global.SMART_LINK_URL = SMART_LINK_URL;
+
+    function isSmartlinkReady() {
+        try {
+            const lastTs = parseInt(sessionStorage.getItem("ms_smartlink_ts") || "0", 10) || 0;
+            return !lastTs || (Date.now() - lastTs) >= SMARTLINK_COOLDOWN_MS;
+        } catch (_) {
+            return !global.__msSlFiredAt || (Date.now() - global.__msSlFiredAt) >= SMARTLINK_COOLDOWN_MS;
+        }
+    }
+
+    function triggerSmartlink(force) {
+        const target = global.SMART_LINK_URL || SMART_LINK_URL;
+        if (!target) return false;
+        if (!force && !isSmartlinkReady()) return false;
+        const now = Date.now();
+        global.__msSlFiredAt = now;
+        try {
+            sessionStorage.setItem("ms_smartlink_ts", String(now));
+        } catch (_) {}
+        try {
+            const win = global.open(target, "_blank", "noopener,noreferrer");
+            return Boolean(win);
+        } catch (_) {
+            return false;
+        }
+    }
+
+    function initSmartlinkClickGate() {
+        if (global.__msSlGateBound) return;
+        global.__msSlGateBound = true;
+        document.addEventListener("click", function (e) {
+            if (global.__KV_BLOCKED) return;
+            if (!e || e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+            const el = e.target && e.target.closest ? e.target : null;
+            if (!el) return;
+            if (el.closest("input, textarea, select, option, label, video, .ms-modal-close, [aria-label*='Close']")) {
+                return;
+            }
+            const interactive = el.closest("a, button, [role='button'], .ms-card, .ms-bento-card, .ms-quality-card, .ms-mirror-btn, .ms-ep-btn, .ms-chip, .ms-hero-card");
+            if (!interactive) return;
+            if (isSmartlinkReady()) {
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                triggerSmartlink(true);
+            }
+        }, true);
+    }
+
     // Expose Global Namespace
     global.MovieStream = {
         getApiBase,
+        SMART_LINK_URL,
+        triggerSmartlink,
         isLocalLiveServer,
         encryptMovieUrl,
         decryptMovieUrl,
@@ -2095,6 +2149,7 @@
     };
 
     document.addEventListener("DOMContentLoaded", function () {
+        initSmartlinkClickGate();
         hydrateSocialLinks();
         try {
             const nowTs = Date.now();

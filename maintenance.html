@@ -1,0 +1,171 @@
+<!DOCTYPE html><html class="dark" lang="en"><head>
+<meta charset="utf-8">
+<meta content="width=device-width, initial-scale=1.0" name="viewport">
+<title>MovieStream — System Upgrade &amp; Maintenance</title>
+<meta name="robots" content="noindex, nofollow" />
+
+<!-- Google Fonts: Inter, Plus Jakarta Sans, Bebas Neue, Space Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&amp;family=Inter:wght@300;400;500;600;700&amp;family=Plus+Jakarta+Sans:wght@600;700;800;900&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet">
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<!-- Tailwind CSS v3 -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "brand-red": "#E50914",
+            "brand-red-hover": "#b80710",
+            "brand-red-dark": "#75040a",
+            "cine-black": "#080808",
+            "cine-surface": "#121212",
+            "cine-card": "#181818",
+            "cine-border": "rgba(255, 255, 255, 0.09)",
+            "on-cine": "#E5E5E5",
+            "cine-muted": "#999999"
+          },
+          fontFamily: {
+            "netflix-title": ["Bebas Neue", "sans-serif"],
+            "display-hero": ["Plus Jakarta Sans", "sans-serif"],
+            "body-main": ["Inter", "sans-serif"],
+            "code": ["Space Mono", "monospace"]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    
+    @keyframes netflix-pulse {
+      0%, 100% { opacity: 0.3; transform: scale(1); }
+      50% { opacity: 0.8; transform: scale(1.05); }
+    }
+    .red-glow-pulse {
+      animation: netflix-pulse 3s infinite ease-in-out;
+    }
+
+    @keyframes radar-red {
+      0% { transform: scale(0.95); opacity: 0.9; }
+      50% { transform: scale(1.8); opacity: 0; }
+      100% { transform: scale(0.95); opacity: 0; }
+    }
+    .red-ring {
+      animation: radar-red 2s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+    }
+
+    .netflix-gradient-text {
+      background: linear-gradient(135deg, #FFFFFF 20%, #E5E5E5 50%, #E50914 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Ambient film grain overlay */
+    .film-grain {
+      background-image: radial-gradient(rgba(229, 9, 20, 0.08) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+  </style>
+</head>
+<body class="bg-cine-black text-on-cine min-h-screen relative flex flex-col font-body-main selection:bg-brand-red selection:text-white overflow-x-hidden">
+<!-- Ambient Cinematic Backdrops & Vignette -->
+<div class="pointer-events-none fixed inset-0 z-0 overflow-hidden">
+<!-- Subtle dark movie thumbnails collage simulation in background -->
+<div class="absolute inset-0 opacity-[0.035] film-grain"></div>
+<!-- Netflix Red Atmospheric Glow Spheres -->
+<div class="absolute -top-44 left-1/2 -translate-x-1/2 w-[850px] h-[500px] bg-brand-red/15 rounded-full blur-[160px] red-glow-pulse pointer-events-none"></div>
+<div class="absolute top-1/2 -left-48 w-[450px] h-[450px] bg-brand-red/10 rounded-full blur-[140px] pointer-events-none"></div>
+<div class="absolute -bottom-40 -right-40 w-[600px] h-[600px] bg-brand-red/10 rounded-full blur-[160px] pointer-events-none"></div>
+<!-- Cinematic Vignette / Gradients -->
+<div class="absolute inset-0 bg-gradient-to-b from-cine-black/90 via-cine-black/75 to-cine-black"></div>
+</div>
+<!-- TOP NAVIGATION BAR -->
+<header class="w-full fixed top-0 left-0 z-50 px-3 md:px-8 border-b border-white/[0.07] bg-cine-black/85 backdrop-blur-xl"><div class="max-w-[1200px] mx-auto py-3 md:py-4 flex items-center justify-between gap-2"><a class="flex items-center gap-2 md:gap-2.5 group shrink-0" href="#"><div class="w-8 h-8 md:w-9 md:h-9 rounded-lg bg-brand-red flex items-center justify-center text-white shadow-[0_0_20px_rgba(229,9,20,0.6)] group-hover:scale-105 transition-transform shrink-0"><span class="material-symbols-outlined text-[20px] md:text-[24px]" style="font-variation-settings: 'FILL' 1;">movie</span></div><div class="flex flex-col"><span class="font-netflix-title text-2xl md:text-3xl tracking-wider text-brand-red leading-none">MOVIESTREAM</span><span class="text-[7.5px] md:text-[9px] font-code tracking-[0.2em] md:tracking-[0.25em] text-white/50 -mt-0.5">WHATSAPP MOVIES</span></div></a><div class="flex items-center gap-1.5 md:gap-2 px-2.5 py-1 md:px-3 md:py-1.5 rounded-full bg-cine-card border border-brand-red/30 shrink-0"><span class="relative flex h-1.5 w-1.5 md:h-2 md:w-2 shrink-0"><span class="red-ring absolute inline-flex h-full w-full rounded-full bg-brand-red opacity-80"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 md:h-2 md:w-2 bg-brand-red"></span></span><span class="font-code text-[10px] md:text-xs text-zinc-300 tracking-wide font-medium whitespace-nowrap">Under Maintenance</span></div></div></header>
+<!-- MAIN CONTENT CANVAS -->
+<main class="relative z-10 flex-1 w-full max-w-[1200px] mx-auto px-4 md:px-8 pt-28 pb-16 flex flex-col gap-10">
+<!-- HERO SECTION WITH MULTI-LANGUAGE HEADLINE -->
+<section class="flex flex-col items-center text-center max-w-4xl mx-auto pt-4"><div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-red/10 border border-brand-red/40 shadow-[0_0_30px_rgba(229,9,20,0.3)] mb-5"><span class="w-2 h-2 rounded-full bg-brand-red animate-ping"></span><span class="font-code text-xs font-bold text-brand-red tracking-widest uppercase">SYSTEM UPDATE IN PROGRESS</span></div><h1 class="font-display-hero text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white font-extrabold tracking-tight leading-[1.15] mb-4">We're Upgrading Your <span class="netflix-gradient-text">MovieStream Experience</span></h1><p class="text-base sm:text-lg md:text-xl font-medium text-zinc-200 max-w-3xl leading-relaxed mb-4">User experience එක වැඩි දියුණු කිරීම සඳහා website update එකක් සිදුවෙමින් පවතී. කරුණාකර පැය කිහිපයකින් නැවත උත්සාහ කරන්න.</p><div class="flex items-center justify-center gap-2 text-xs sm:text-sm text-zinc-400 bg-cine-card/80 border border-white/10 px-5 py-2.5 rounded-xl"><span class="material-symbols-outlined text-brand-red text-base">info</span><span class="">Please check back in a few hours. System updates will finish shortly.</span></div></section>
+<!-- NETFLIX STYLE COUNTDOWN TIMER -->
+
+<!-- UPGRADE HIGHLIGHTS: CINEMA FEATURES (3 Cards) -->
+<section class="flex flex-col items-center justify-center py-16 w-full" id="maintenance-animation">
+  <div class="relative flex items-center justify-center w-36 h-36 mb-8 group">
+    <!-- Outer glowing ring -->
+    <div class="absolute inset-0 border-t-2 border-brand-red border-solid rounded-full animate-[spin_3s_linear_infinite] shadow-[0_0_20px_rgba(229,9,20,0.4)]"></div>
+    <!-- Inner reverse spinning ring -->
+    <div class="absolute inset-4 border-b-2 border-brand-red/60 border-solid rounded-full animate-[spin_2s_linear_infinite_reverse]"></div>
+    <!-- Center pulse core -->
+    <div class="absolute inset-8 bg-brand-red/10 rounded-full border border-brand-red/30 animate-pulse flex items-center justify-center">
+      <span class="material-symbols-outlined text-[42px] text-brand-red group-hover:scale-110 transition-transform">build_circle</span>
+    </div>
+  </div>
+  <div class="text-center max-w-2xl">
+    <h2 class="font-display-hero text-2xl md:text-3xl font-bold text-white tracking-wide mb-3">SYSTEM MAINTENANCE</h2>
+    <p class="font-code text-sm text-zinc-400 leading-relaxed">
+      We are currently deploying new features and optimizing the core engine. <br>
+      The system will be back online shortly. Thank you for your patience.
+    </p>
+  </div>
+</section>
+
+<!-- DIRECT SUPPORT ZONE -->
+<section class="grid grid-cols-1 gap-6 max-w-xl mx-auto w-full" id="contact-section">
+<div class="p-6 rounded-xl bg-cine-card/90 border border-brand-red/40 shadow-[0_8px_32px_rgba(229,9,20,0.15)] flex flex-col justify-between w-full">
+<div class="space-y-4">
+<div class="flex items-center gap-3">
+<div class="w-11 h-11 rounded-xl bg-brand-red/20 border border-brand-red flex items-center justify-center text-brand-red"><span class="material-symbols-outlined text-[24px]">support_agent</span></div>
+<div><span class="font-code text-[11px] text-brand-red uppercase tracking-wider font-semibold block">Direct Support</span><h3 class="font-display-hero text-xl text-white font-bold">Contact Developer</h3></div>
+</div>
+<div class="space-y-2 text-sm text-zinc-300 leading-relaxed"><p class="font-medium text-white">වැඩි විස්තර සඳහා Developer සම්බන්ධ කරගන්න</p><p class="text-xs text-zinc-400">Have questions regarding service downtime or updates? Reach out directly to the lead developer.</p></div>
+<div class="p-3.5 rounded-lg bg-cine-surface border border-white/[0.06] flex items-center justify-between"><div class="flex items-center gap-3"><div class="w-9 h-9 rounded-full bg-brand-red/20 flex items-center justify-center text-brand-red"><span class="material-symbols-outlined text-[18px]">person</span></div><div><p class="text-xs font-semibold text-white">Kaveesha Theekshana</p><p class="text-[11px] font-code text-zinc-400">Lead Engineer / Architect</p></div></div><span class="font-code text-[10px] px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 font-bold">ONLINE</span></div>
+</div>
+<div class="mt-5 flex flex-col sm:flex-row gap-2.5">
+<a class="flex-1 py-2.5 px-4 rounded-lg bg-brand-red hover:bg-brand-red-hover text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 shadow-[0_0_15px_rgba(229,9,20,0.5)] transition-all active:scale-95" href="https://wa.me/94710388481" target="_blank"><span class="material-symbols-outlined text-[16px]">chat</span><span class="">Message Developer</span></a>
+<a class="flex-1 py-2.5 px-4 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-white text-xs font-bold uppercase tracking-wider flex items-center justify-center gap-2 border border-white/10 transition-all active:scale-95" href="https://kaveesha.top/" rel="noopener" target="_blank"><span class="material-symbols-outlined text-[16px]">terminal</span><span class="">Portfolio / Dev</span></a>
+</div>
+</div>
+</section>
+<!-- QUICK ACCESS DIRECTORY / SUPPORT CHANNELS (3 Bento Cards) -->
+
+<!-- STREAM NODE ARCHITECTURE DIAGNOSTIC STRIP -->
+
+</main>
+<!-- FOOTER WITH PROMINENT DEVELOPER BRANDING -->
+<footer class="relative z-10 w-full border-t border-white/[0.08] py-8 px-4 md:px-8 bg-black/90"><div class="max-w-[1200px] mx-auto flex flex-col md:flex-row justify-between items-center gap-5"><div class="flex flex-col items-center md:items-start gap-1.5 text-center md:text-left"><div class="flex items-center gap-2.5"><div class="w-6 h-6 rounded bg-brand-red flex items-center justify-center text-white"><span class="material-symbols-outlined text-[16px]" style="font-variation-settings: 'FILL' 1;">movie</span></div><span class="font-netflix-title text-2xl text-brand-red tracking-wider">MOVIESTREAM</span><span class="text-[11px] text-zinc-400 font-code">System Maintenance</span></div><p class="text-xs text-zinc-400">© 2026 MovieStream. All Rights Reserved.</p><p class="text-xs text-zinc-300 font-medium">Developer: <span class="text-brand-red font-bold">Kaveesha Theekshana</span></p></div></div></footer>
+
+  
+
+<!-- Realtime Countdown Micro-Engine -->
+<script>
+  (function initCinemaCountdown() {
+    let totalSeconds = (2 * 3600) + (30 * 60) + 45;
+    const hoursEl = document.getElementById('timer-hours');
+    const minutesEl = document.getElementById('timer-minutes');
+    const secondsEl = document.getElementById('timer-seconds');
+
+    setInterval(() => {
+      if (totalSeconds > 0) {
+        totalSeconds--;
+        const hrs = Math.floor(totalSeconds / 3600);
+        const mins = Math.floor((totalSeconds % 3600) / 60);
+        const secs = totalSeconds % 60;
+
+        if (hoursEl) hoursEl.textContent = String(hrs).padStart(2, '0');
+        if (minutesEl) minutesEl.textContent = String(mins).padStart(2, '0');
+        if (secondsEl) secondsEl.textContent = String(secs).padStart(2, '0');
+      }
+    }, 1000);
+  })();
+</script>
+
+
+</body></html>
